@@ -37,7 +37,7 @@ ENABLE_ALL_REGISTERS := 0
 ENABLE_MATOZ_KEYS := 1
 
 #Messenger ( Thanks to joaquimorg https://github.com/joaquimorg )
-ENABLE_MESSENGER := 1 
+ENABLE_MESSENGER := 1
 
 #Try to implement CW Modulation like IJV
 ENABLE_CW := 0
@@ -233,13 +233,10 @@ ifeq ($(ENABLE_MATOZ_KEYS),1)
 CFLAGS += -DENABLE_MATOZ_KEYS
 endif
 ifeq ($(ENABLE_MESSENGER),1)
-	CFLAGS  += -DENABLE_MESSENGER
-endif
-ifeq ($(ENABLE_MESSENGER_4_REPEATERS),1)
-	CFLAGS  += -DENABLE_MESSENGER_4_REPEATERS
+CFLAGS += -DENABLE_MESSENGER
 endif
 ifeq ($(ENABLE_CW),1)
-	CFLAGS  += -DENABLE_CW
+CFLAGS += -DENABLE_CW
 endif
 
 ifeq ($(DEBUG),1)
