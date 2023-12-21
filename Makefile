@@ -1,3 +1,5 @@
+# People who help making this Code
+# Matoz @spm81 | Joaquim @joaquimorg | Need your name here ;)
 TARGET = firmware
 
 ENABLE_AIRCOPY := 0
@@ -12,6 +14,9 @@ ENABLE_SWD := 0
 
 #It's not 100% OFF ( Have two tones ... have to split...)
 ENABLE_TX1750 := 0
+
+#Sound Bar(s)  // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
+ENABLE_MIC_PLUS_GAIN_BAR_TX := 1
 
 #UART
 ENABLE_UART := 1
@@ -174,6 +179,9 @@ CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
 ifeq ($(ENABLE_AIRCOPY),1)
 CFLAGS += -DENABLE_AIRCOPY
+endif
+ifeq ($(ENABLE_MIC_PLUS_GAIN_BAR_TX),1)
+CFLAGS += -DENABLE_MIC_PLUS_GAIN_BAR_TX
 endif
 ifeq ($(ENABLE_AM_FIX),1)
 	CFLAGS  += -DENABLE_AM_FIX

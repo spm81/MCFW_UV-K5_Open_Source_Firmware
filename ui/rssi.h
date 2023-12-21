@@ -19,6 +19,8 @@
 
 #include <stdint.h>
 void UI_DisplayRSSIBar(int16_t rssi);
-
+#ifdef ENABLE_MIC_PLUS_GAIN_BAR_TX
+void UI_DisplayMICBar(void);
+#endif
 #endif
 

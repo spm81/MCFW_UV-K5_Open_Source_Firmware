@@ -921,10 +921,15 @@ void APP_TimeSlice10ms(void) {
       (gFlashLightBlinkCounter & 15U) == 0) {
     if (gCurrentFunction == FUNCTION_RECEIVE ||
         gCurrentFunction == FUNCTION_MONITOR ||
-        gCurrentFunction == FUNCTION_INCOMING) {
-      UI_DisplayRSSIBar(BK4819_GetRSSI());
+        gCurrentFunction == FUNCTION_INCOMING /*|| GPIO_CheckBit(&GPIOB->DATA, GPIOB_PIN_BACKLIGHT)*/) {
+#ifdef ENABLE_MIC_PLUS_GAIN_BAR_TX
+		UI_DisplayRSSIBar(BK4819_GetRSSI());
+    } else if (gCurrentFunction == FUNCTION_TRANSMIT) { UI_DisplayMICBar(); }
+	#else	
+		}
+#endif	  
     }
-  }
+  
 
   if (gReducedService) {
     return;
