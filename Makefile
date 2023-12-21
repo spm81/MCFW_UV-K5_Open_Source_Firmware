@@ -1,27 +1,40 @@
 TARGET = firmware
 
 ENABLE_AIRCOPY := 0
+
+#AM Modulation
 ENABLE_AM_FIX := 1
+#FM Radio
 ENABLE_FMRADIO := 0
+
 ENABLE_OVERLAY := 0
 ENABLE_SWD := 0
+
+#It's not 100% OFF ( Have two tones ... have to split...)
 ENABLE_TX1750 := 0
+
+#UART
 ENABLE_UART := 1
+ENABLE_UART_CAT := 0
+
 ENABLE_NOSCANTIMEOUT := 1
 ENABLE_KEEPNAMEONSAVE := 1
-ENABLE_ALL_REGISTERS := 0
 ENABLE_FASTER_CHANNEL_SCAN := 1
-ENABLE_UART_CAT := 0
+
+#Roger
 ENABLE_MDC := 0
 
 #Spectrum
 ENABLE_SPECTRUM := 1
 SPECTRUM_AUTOMATIC_SQUELCH := 1
 SPECTRUM_EXTRA_VALUES := 1
+ENABLE_ALL_REGISTERS := 0
 ENABLE_MATOZ_KEYS := 1
 
-ENABLE_MESSENGER := 1
+#Messenger ( Thanks to joaquimorg https://github.com/joaquimorg )
+ENABLE_MESSENGER := 1 
 
+#Try to implement CW Modulation like IJV
 ENABLE_CW := 0
 
 BSP_DEFINITIONS := $(wildcard hardware/*/*.def)
