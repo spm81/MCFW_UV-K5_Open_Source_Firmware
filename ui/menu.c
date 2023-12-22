@@ -85,8 +85,6 @@ static const char MenuList[][8] = {
     "PTT ID",
     "D Decd",
     "D List",
-#else
-    "PTT ID",
 #endif
     "PonMsg",
     "Roger",

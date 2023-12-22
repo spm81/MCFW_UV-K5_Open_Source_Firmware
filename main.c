@@ -121,8 +121,11 @@ void Main(void) {
     UI_DisplayWelcome();
     BACKLIGHT_TurnOn();
     SYSTEM_DelayMs(4000);
+#ifdef ENABLE_DTMF_CALLING
     gMenuListCount = 49;
-
+#else
+    gMenuListCount = 39;
+#endif
     BootMode = BOOT_GetMode();
     if (gEeprom.POWER_ON_PASSWORD < 1000000) {
       bIsInLockScreen = true;

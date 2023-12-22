@@ -65,7 +65,7 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 #ifdef ENABLE_DTMF_CALLING
 		gMenuListCount = 55;
 #else
-		gMenuListCount = 46;
+		gMenuListCount = 45;
 #endif	
 		//gMenuListCount = MENU_ITEMS_COUNT;
 		gF_LOCK = true;

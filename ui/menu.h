@@ -66,10 +66,7 @@ enum {
 	MENU_PTT_ID,
 	MENU_D_DCD,
 	MENU_D_LIST,
-#else
-	MENU_PTT_ID,
 #endif	
-
 	MENU_PONMSG,
 	MENU_ROGER,
 	MENU_VOL,
