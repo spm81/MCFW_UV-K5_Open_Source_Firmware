@@ -143,13 +143,14 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     ACTION_FM();
 #endif
 
+/*
 #ifdef ENABLE_MESSENGER
   hasNewMessage = false;
   gUpdateStatus = true;
 	gRequestDisplayScreen = DISPLAY_MAIN;
   gAppToDisplay = APP_MESSENGER;  
 #endif	
-
+*/
     break;
 
   case KEY_1:
