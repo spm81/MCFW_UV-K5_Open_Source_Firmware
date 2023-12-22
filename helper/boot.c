@@ -62,7 +62,11 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 		gMenuCursor = MENU_350TX;
 		gSubMenuSelection = gSetting_350TX;
 		GUI_SelectNextDisplay(DISPLAY_MENU);
+#ifdef ENABLE_DTMF_CALLING
 		gMenuListCount = 55;
+#else
+		gMenuListCount = 46;
+#endif	
 		//gMenuListCount = MENU_ITEMS_COUNT;
 		gF_LOCK = true;
 #if defined(ENABLE_AIRCOPY)

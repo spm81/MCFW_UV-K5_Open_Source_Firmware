@@ -15,7 +15,9 @@
  */
 
 #include "menu.h"
+#ifdef ENABLE_DTMF_CALLING
 #include "../app/dtmf.h"
+#endif
 #include "../bitmaps.h"
 #include "../dcs.h"
 #include "../driver/st7565.h"
@@ -71,6 +73,7 @@ static const char MenuList[][8] = {
     "SList1",
     // 0x20
     "SList2",
+#ifdef ENABLE_DTMF_CALLING
     "ANI ID",
     "UPCode",
     "DWCode",
@@ -82,6 +85,9 @@ static const char MenuList[][8] = {
     "PTT ID",
     "D Decd",
     "D List",
+#else
+    "PTT ID",
+#endif
     "PonMsg",
     "Roger",
     "Voltage",
@@ -135,6 +141,7 @@ static const char gSubMenu_SC_REV[3][3] = {
 
 static const char gSubMenu_MDF[4][7] = {"FREQ", "CHAN", "NAME", "NAME+F"};
 
+#ifdef ENABLE_DTMF_CALLING
 static const char gSubMenu_D_RSP[4][6] = {
     "NULL",
     "RING",
@@ -148,7 +155,7 @@ static const char gSubMenu_PTT_ID[4][5] = {
     "EOT",
     "BOTH",
 };
-
+#endif
 static const char gSubMenu_PONMSG[3][5] = {
     "FULL",
     "MSG",
@@ -202,7 +209,9 @@ uint32_t gSubMenuSelection;
 
 void UI_DisplayMenu(void) {
   char String[16];
+#ifdef ENABLE_DTMF_CALLING
   char Contact[16];
+#endif
   uint8_t i;
 
   memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
@@ -333,8 +342,10 @@ void UI_DisplayMenu(void) {
   case MENU_AUTOLK:
   case MENU_S_ADD1:
   case MENU_S_ADD2:
+#ifdef ENABLE_DTMF_CALLING
   case MENU_D_ST:
   case MENU_D_DCD:
+#endif  
   case MENU_350TX:
   case MENU_200TX:
   case MENU_500TX:
@@ -403,6 +414,7 @@ case MENU_S_LIST:
 			else
 				sprintf(String, "ALL");
 			break;
+#ifdef ENABLE_DTMF_CALLING
 			
   case MENU_ANI_ID:
     strcpy(String, gEeprom.ANI_DTMF_ID);
@@ -442,7 +454,7 @@ case MENU_S_LIST:
       memcpy(String, Contact, 8);
     }
     break;
-
+#endif
   case MENU_PONMSG:
     strcpy(String, gSubMenu_PONMSG[gSubMenuSelection]);
     break;
@@ -490,6 +502,7 @@ case MENU_S_LIST:
       gCssScanMode != CSS_SCAN_MODE_OFF) {
     UI_PrintString("SCAN", 50, 127, 4, 8, true);
   }
+#ifdef ENABLE_DTMF_CALLING
 
   if (gMenuCursor == MENU_UPCODE) {
     if (strlen(gEeprom.DTMF_UP_CODE) > 8) {
@@ -507,10 +520,14 @@ case MENU_S_LIST:
     sprintf(String, "ID:%s", Contact + 8);
     UI_PrintString(String, 50, 127, 4, 8, true);
   }
-
+#endif
   if (gMenuCursor == MENU_R_CTCS || gMenuCursor == MENU_T_CTCS ||
-      gMenuCursor == MENU_R_DCS || gMenuCursor == MENU_T_DCS ||
-      gMenuCursor == MENU_D_LIST) {
+      gMenuCursor == MENU_R_DCS || gMenuCursor == MENU_T_DCS
+#ifdef ENABLE_DTMF_CALLING
+	  || gMenuCursor == MENU_D_LIST) {
+#else
+) {
+#endif	
 		  /*
     uint8_t Offset;
 
@@ -550,11 +567,14 @@ case MENU_S_LIST:
   ST7565_BlitFullScreen();
 }
 */
+#ifdef ENABLE_DTMF_CALLING
+
  uint8_t Offset;
 
     NUMBER_ToDigits((uint8_t)gSubMenuSelection, String);
     Offset = (gMenuCursor == MENU_D_LIST) ? 2 : 3;
     UI_DisplaySmallDigits(Offset, String + (9 - Offset), 105, 0);
+#endif	
   }
 
   if (gMenuCursor == MENU_SLIST1 || gMenuCursor == MENU_SLIST2) {

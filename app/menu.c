@@ -117,8 +117,10 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
   case MENU_S_ADD1:
   case MENU_S_ADD2:
   case MENU_STE:
+#ifdef ENABLE_DTMF_CALLING
   case MENU_D_ST:
   case MENU_D_DCD:
+#endif  
   case MENU_RESET:
   case MENU_350TX:
   case MENU_200TX:
@@ -165,11 +167,14 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     *pMin = 0;
     *pMax = 2;
     break;
+#ifdef ENABLE_DTMF_CALLING
   case MENU_D_RSP:
+#endif
   case MENU_PTT_ID:
     *pMin = 0;
     *pMax = 3;
     break;
+#ifdef ENABLE_DTMF_CALLING
   case MENU_D_HOLD:
     *pMin = 5;
     *pMax = 60;
@@ -182,6 +187,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     *pMin = 1;
     *pMax = 16;
     break;
+#endif
   default:
     return -1;
   }
