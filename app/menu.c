@@ -19,7 +19,9 @@
 #if !defined(ENABLE_OVERLAY)
 #include "ARMCM0.h"
 #endif
+#ifdef ENABLE_DTMF_CALLING
 #include "app/dtmf.h"
+#endif
 #include "app/generic.h"
 #include "app/menu.h"
 #include "app/scanner.h"
@@ -400,7 +402,7 @@ void MENU_AcceptSetting(void) {
   //  gEeprom.SCAN_LIST_DEFAULT = gSubMenuSelection - 1;
     gEeprom.SCAN_LIST_DEFAULT = gSubMenuSelection;
     break;
-
+#ifdef ENABLE_DTMF_CALLING
   case MENU_D_ST:
     gEeprom.DTMF_SIDE_TONE = gSubMenuSelection;
     break;
@@ -437,7 +439,7 @@ void MENU_AcceptSetting(void) {
       gRequestDisplayScreen = DISPLAY_INVALID;
     }
     return;
-
+#endif
   case MENU_PONMSG:
     gEeprom.POWER_ON_DISPLAY_MODE = gSubMenuSelection;
     break;
@@ -734,7 +736,7 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_SLIST2:
     gSubMenuSelection = RADIO_FindNextChannel(0, 1, true, 1);
     break;
-
+#ifdef ENABLE_DTMF_CALLING
   case MENU_D_ST:
     gSubMenuSelection = gEeprom.DTMF_SIDE_TONE;
     break;
@@ -762,7 +764,7 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_D_LIST:
     gSubMenuSelection = gDTMFChosenContact + 1;
     break;
-
+#endif
   case MENU_PONMSG:
     gSubMenuSelection = gEeprom.POWER_ON_DISPLAY_MODE;
     break;

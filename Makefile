@@ -19,28 +19,32 @@ ENABLE_TX1750 := 0
 ENABLE_MIC_PLUS_GAIN_BAR_TX := 1
 
 #UART
-ENABLE_UART := 1
-ENABLE_UART_CAT := 0
+ENABLE_UART                 := 1
+ENABLE_UART_CAT             := 0
 
-ENABLE_NOSCANTIMEOUT := 1
-ENABLE_KEEPNAMEONSAVE := 1
-ENABLE_FASTER_CHANNEL_SCAN := 1
+#Trying to remove all about DTMF (Incomplete.. we can gain more space ;) ) 
+ENABLE_DTMF_CALLING         := 0
+
+
+ENABLE_NOSCANTIMEOUT        := 1
+ENABLE_KEEPNAMEONSAVE       := 1
+ENABLE_FASTER_CHANNEL_SCAN  := 1
 
 #Roger
-ENABLE_MDC := 0
+ENABLE_MDC                  := 0
 
 #Spectrum
 ENABLE_SPECTRUM := 1
-SPECTRUM_AUTOMATIC_SQUELCH := 1
-SPECTRUM_EXTRA_VALUES := 1
-ENABLE_ALL_REGISTERS := 0
-ENABLE_MATOZ_KEYS := 1
+SPECTRUM_AUTOMATIC_SQUELCH  := 1
+SPECTRUM_EXTRA_VALUES       := 1
+ENABLE_ALL_REGISTERS        := 0
+ENABLE_MATOZ_KEYS           := 1
 
 #Messenger ( Thanks to joaquimorg https://github.com/joaquimorg )
-ENABLE_MESSENGER := 1
+ENABLE_MESSENGER            := 1
 
 #Try to implement CW Modulation like IJV
-ENABLE_CW := 0
+ENABLE_CW                   := 0
 
 BSP_DEFINITIONS := $(wildcard hardware/*/*.def)
 BSP_HEADERS := $(patsubst hardware/%,bsp/%,$(BSP_DEFINITIONS))
@@ -179,6 +183,9 @@ CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
 ifeq ($(ENABLE_AIRCOPY),1)
 CFLAGS += -DENABLE_AIRCOPY
+endif
+ifeq ($(ENABLE_DTMF_CALLING),1)
+CFLAGS += -DENABLE_DTMF_CALLING
 endif
 ifeq ($(ENABLE_MIC_PLUS_GAIN_BAR_TX),1)
 CFLAGS += -DENABLE_MIC_PLUS_GAIN_BAR_TX

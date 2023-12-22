@@ -35,7 +35,9 @@
 #endif
 
 #include "audio.h"
+#ifdef ENABLE_DTMF_CALLING
 #include "dtmf.h"
+#endif
 #include "frequencies.h"
 #include "misc.h"
 #include "radio.h"
@@ -331,9 +333,11 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld) {
       return;
     }
     if (gScanState == SCAN_OFF && IS_NOT_NOAA_CHANNEL(gTxVfo->CHANNEL_SAVE)) {
+#ifdef ENABLE_DTMF_CALLING 		
       gDTMF_InputMode = true;
       memcpy(gDTMF_InputBox, gDTMF_String, 15);
       gDTMF_InputIndex = 0;
+#endif	  
       gRequestDisplayScreen = DISPLAY_MAIN;
       return;
     }
@@ -419,6 +423,7 @@ void MAIN_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     return;
   }
 #endif
+#ifdef ENABLE_DTMF_CALLING 
   if (gDTMF_InputMode && !bKeyHeld && bKeyPressed) {
     char Character = DTMF_GetCharacter(Key);
     if (Character != 0xFF) {
@@ -429,7 +434,7 @@ void MAIN_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
       return;
     }
   }
-
+#endif
   // TODO: ???
   if (KEY_PTT < Key) {
     Key = KEY_SIDE2;
