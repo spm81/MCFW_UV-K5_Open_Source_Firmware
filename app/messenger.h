@@ -22,6 +22,7 @@ extern uint16_t gErrorsDuringMSG;
 extern char cMessage[TX_MSG_LENGTH];
 extern char rxMessage[4][TX_MSG_LENGTH + 3];
 extern bool hasNewMessage;
+extern uint8_t keyTickCounter;
 
 void MSG_EnableRX(const bool enable);
 void MSG_StorePacket(const uint16_t interrupt_bits);

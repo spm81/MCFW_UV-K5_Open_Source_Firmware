@@ -25,6 +25,8 @@ typedef enum MsgStatus {
 
 #define MAX_MSG_LENGTH TX_MSG_LENGTH - 1
 
+#define NEXT_CHAR_DELAY 100 // 10ms tick
+
 char T9TableLow[9][4] = { {',', '.', '?', '!'}, {'a', 'b', 'c', '\0'}, {'d', 'e', 'f', '\0'}, {'g', 'h', 'i', '\0'}, {'j', 'k', 'l', '\0'}, {'m', 'n', 'o', '\0'}, {'p', 'q', 'r', 's'}, {'t', 'u', 'v', '\0'}, {'w', 'x', 'y', 'z'} };
 char T9TableUp[9][4] = { {',', '.', '?', '!'}, {'A', 'B', 'C', '\0'}, {'D', 'E', 'F', '\0'}, {'G', 'H', 'I', '\0'}, {'J', 'K', 'L', '\0'}, {'M', 'N', 'O', '\0'}, {'P', 'Q', 'R', 'S'}, {'T', 'U', 'V', '\0'}, {'W', 'X', 'Y', 'Z'} };
 unsigned char numberOfLettersAssignedToKey[9] = { 4, 3, 3, 3, 3, 3, 4, 3, 4 };
@@ -46,6 +48,8 @@ uint8_t  msgFSKBuffer[2 + TX_MSG_LENGTH];
 uint16_t gErrorsDuringMSG;
 
 bool hasNewMessage = false;
+
+uint8_t keyTickCounter = 0;
 
 // -----------------------------------------------------
 
@@ -552,7 +556,7 @@ static void sendMessage() {
 
 		BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, false);
 
-		MSG_EnableRX(true);		
+		MSG_EnableRX(true);
 
 		msgStatus = READY;
 
@@ -593,7 +597,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 			SYSTEM_DelayMs(5);
 		}
 
-		//UART_printf("\nMSG R : %i | %s", gFSKWriteIndex, msgFSKBuffer); 
+		//UART_printf("\nMSG R : %i | %s", gFSKWriteIndex, msgFSKBuffer);
 
 		if (gFSKWriteIndex >= sizeof(msgFSKBuffer)) {
 
@@ -604,14 +608,14 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 			if ((Status & 0x0010U) != 0 || msgFSKBuffer[0] != 'M' || msgFSKBuffer[1] != 'S') {
 				gErrorsDuringMSG = 9099;
 				msgStatus = READY;
-				//UART_printf("\nMSG E : %s", msgFSKBuffer); 
+				//UART_printf("\nMSG E : %s", msgFSKBuffer);
 				return;
 			}
 
 			moveUP(rxMessage);
-			sprintf(rxMessage[3], "< %s", &msgFSKBuffer[2]);
+			snprintf(rxMessage[3], TX_MSG_LENGTH + 2, "< %s", &msgFSKBuffer[2]);
 
-			//UART_printf("\nMSG : %s", rxMessage[3]); 
+			//UART_printf("\nMSG : %s", rxMessage[3]);
 			if ( gAppToDisplay != APP_MESSENGER ) {
 				hasNewMessage = true;
 				gUpdateStatus = true;
@@ -644,31 +648,41 @@ void MSG_Init() {
 void insertCharInMessage(uint8_t key) {
 	if ( key == KEY_0 ) {
 		if ( keyboardType == NUMERIC ) {
-			cMessage[cIndex++] = '0';
+			cMessage[cIndex] = '0';
 		} else {
-			cMessage[cIndex++] = ' ';
+			cMessage[cIndex] = ' ';
 		}
-	} else if (prevKey == key && key != KEY_STAR)
-	{
+		if ( cIndex < MAX_MSG_LENGTH ) {
+			cIndex++;
+		}
+	} else if (prevKey == key) {
 		cIndex = (cIndex > 0) ? cIndex - 1 : 0;
 		if ( keyboardType == NUMERIC ) {
-			cMessage[cIndex++] = T9TableNum[key - 1][(++prevLetter) % numberOfNumsAssignedToKey[key - 1]];
+			cMessage[cIndex] = T9TableNum[key - 1][(++prevLetter) % numberOfNumsAssignedToKey[key - 1]];
 		} else if ( keyboardType == LOWERCASE ) {
-			cMessage[cIndex++] = T9TableLow[key - 1][(++prevLetter) % numberOfLettersAssignedToKey[key - 1]];
+			cMessage[cIndex] = T9TableLow[key - 1][(++prevLetter) % numberOfLettersAssignedToKey[key - 1]];
 		} else {
-			cMessage[cIndex++] = T9TableUp[key - 1][(++prevLetter) % numberOfLettersAssignedToKey[key - 1]];
+			cMessage[cIndex] = T9TableUp[key - 1][(++prevLetter) % numberOfLettersAssignedToKey[key - 1]];
 		}
-	}
-	else
-	{
+		if ( cIndex < MAX_MSG_LENGTH ) {
+			cIndex++;
+		}
+	} else {
 		prevLetter = 0;
-		if ( keyboardType == NUMERIC ) {
-			cMessage[cIndex++] = T9TableNum[key - 1][prevLetter];
-		} else if ( keyboardType == LOWERCASE ) {
-			cMessage[cIndex++] = T9TableLow[key - 1][prevLetter];
-		} else {
-			cMessage[cIndex++] = T9TableUp[key - 1][prevLetter];
+		if ( cIndex >= MAX_MSG_LENGTH ) {
+			cIndex = (cIndex > 0) ? cIndex - 1 : 0;
 		}
+		if ( keyboardType == NUMERIC ) {
+			cMessage[cIndex] = T9TableNum[key - 1][prevLetter];
+		} else if ( keyboardType == LOWERCASE ) {
+			cMessage[cIndex] = T9TableLow[key - 1][prevLetter];
+		} else {
+			cMessage[cIndex] = T9TableUp[key - 1][prevLetter];
+		}
+		if ( cIndex < MAX_MSG_LENGTH ) {
+			cIndex++;
+		}
+
 	}
 	cMessage[cIndex] = '\0';
 	if ( keyboardType == NUMERIC ) {
@@ -677,11 +691,6 @@ void insertCharInMessage(uint8_t key) {
 	} else {
 		prevKey = key;
 	}
-}
-
-void processStarKey() {
-	prevKey = KEY_STAR;
-	prevLetter = 0;
 }
 
 void processBackspace() {
@@ -700,9 +709,6 @@ void  MSG_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
 			case KEY_F:
 				// clear all
 				MSG_Init();
-				break;
-			case KEY_STAR:
-				keyboardType = (KeyboardType)((keyboardType + 1) % END_TYPE_KBRD);
 				break;
 			default:
 				gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
@@ -723,12 +729,15 @@ void  MSG_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
 			case KEY_7:
 			case KEY_8:
 			case KEY_9:
-				if ( cIndex < MAX_MSG_LENGTH ) {
-					insertCharInMessage(Key);
+				if ( keyTickCounter > NEXT_CHAR_DELAY) {
+					prevKey = 0;
+    				prevLetter = 0;
 				}
+				insertCharInMessage(Key);
+				keyTickCounter = 0;
 				break;
 			case KEY_STAR:
-				processStarKey();
+				keyboardType = (KeyboardType)((keyboardType + 1) % END_TYPE_KBRD);
 				break;
 			case KEY_F:
 				processBackspace();

@@ -921,6 +921,9 @@ void APP_TimeSlice10ms(void) {
   }
 #endif
 
+#ifdef ENABLE_MESSENGER
+  keyTickCounter++;
+#endif
 /*
  switch (gAppToDisplay) {
   case APP_OOK:
