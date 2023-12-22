@@ -610,6 +610,7 @@ void BOARD_EEPROM_Init(void)
 	gEeprom.REPEATER_TAIL_TONE_ELIMINATION = (Data[2] < 11) ? Data[2] : 0;
 	gEeprom.TX_CHANNEL                     = (Data[3] <  2) ? Data[3] : 0;
 
+#ifdef ENABLE_DTMF_CALLING
 	// 0ED0..0ED7
 	EEPROM_ReadBuffer(0x0ED0, Data, 8);
 	gEeprom.DTMF_SIDE_TONE               = (Data[0] <   2) ? Data[0] : true;
@@ -662,7 +663,7 @@ void BOARD_EEPROM_Init(void)
 	} else {
 		memcpy(gEeprom.DTMF_DOWN_CODE, "54321\0\0\0\0\0\0\0\0\0\0", 16);
 	}
-
+#endif
 /*
 	// 0F18..0F1F
 	EEPROM_ReadBuffer(0x0F18, Data, 8);

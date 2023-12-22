@@ -135,6 +135,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 					return;
 				}
 				gFlagPrepareTX = true;
+#ifdef ENABLE_DTMF_CALLI				
 				if (gDTMF_InputMode) {
 					if (gDTMF_InputIndex || gDTMF_PreviousIndex) {
 						if (gDTMF_InputIndex == 0) {
@@ -156,6 +157,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 					gDTMF_InputIndex = 0;
 					return;
 				}
+#endif				
 				gRequestDisplayScreen = DISPLAY_MAIN;
 				gFlagPrepareTX = true;
 				gInputBoxIndex = 0;

@@ -79,9 +79,10 @@ void Main(void) {
   // Not implementing authentic device checks
 
   memset(&gEeprom, 0, sizeof(gEeprom));
+#ifdef ENABLE_DTMF_CALLING
   memset(gDTMF_String, '-', sizeof(gDTMF_String));
   gDTMF_String[14] = 0;
-
+#endif
   BK4819_Init();
   BOARD_ADC_GetBatteryInfo(&gBatteryCurrentVoltage, &gBatteryCurrent);
   BOARD_EEPROM_Init();

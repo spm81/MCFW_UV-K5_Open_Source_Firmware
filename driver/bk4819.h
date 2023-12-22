@@ -105,8 +105,8 @@ void BK4819_ExitSubAu(void);
 
 void BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable(void);
 
+#ifdef ENABLE_DTMF_CALLING
 void BK4819_EnterDTMF_TX(bool bLocalLoopback);
-void BK4819_ExitDTMF_TX(bool bKeep);
 void BK4819_EnableTXLink(void);
 
 void BK4819_PlayDTMF(char Code);
@@ -114,7 +114,8 @@ void BK4819_PlayDTMFString(const char *pString, bool bDelayFirst,
                            uint16_t FirstCodePersistTime,
                            uint16_t HashCodePersistTime,
                            uint16_t CodePersistTime, uint16_t CodeInternalTime);
-
+#endif
+void BK4819_ExitDTMF_TX(bool bKeep);
 void BK4819_TransmitTone(bool bLocalLoopback, uint32_t Frequency);
 
 void BK4819_GenTail(uint8_t Tail);

@@ -13,8 +13,9 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-
+#ifdef ENABLE_DTMF_CALLING
 #include "app/dtmf.h"
+#endif
 #include "helper/measurements.h"
 #include <string.h>
 #if defined(ENABLE_FMRADIO)
@@ -722,11 +723,15 @@ void RADIO_PrepareTX(void) {
     gAlarmState = ALARM_STATE_OFF;
 #endif
     AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
+#ifdef ENABLE_DTMF_CALLING
     gDTMF_ReplyState = DTMF_REPLY_NONE;
+#endif
     return;
   }
 
 Skip:
+#ifdef ENABLE_DTMF_CALLING
+
   if (gDTMF_ReplyState == DTMF_REPLY_ANI) {
     if (gDTMF_CallMode == DTMF_CALL_MODE_DTMF) {
       gDTMF_IsTx = true;
@@ -737,7 +742,7 @@ Skip:
       gDTMF_IsTx = false;
     }
   }
-  
+ #endif 
   FUNCTION_Select(FUNCTION_TRANSMIT);
 #if defined(ENABLE_TX1750)
   if (gAlarmState == ALARM_STATE_OFF) {
@@ -751,7 +756,9 @@ Skip:
   gTxTimeoutReached = false;
   gFlagEndTransmission = false;
   gRTTECountdown = 0;
+#ifdef ENABLE_DTMF_CALLING
   gDTMF_ReplyState = DTMF_REPLY_NONE;
+#endif
 }
 
 
@@ -849,6 +856,7 @@ void RADIO_SendEndOfTransmission(void) {
   }*/	
   }
 #endif  
+#ifdef ENABLE_DTMF_CALLING
 
   if (gDTMF_CallState == DTMF_CALL_STATE_NONE &&
       (gCurrentVfo->DTMF_PTT_ID_TX_MODE == PTT_ID_EOT ||
@@ -867,4 +875,5 @@ void RADIO_SendEndOfTransmission(void) {
     gEnableSpeaker = false;
   }
   BK4819_ExitDTMF_TX(true);
+#endif  
 }

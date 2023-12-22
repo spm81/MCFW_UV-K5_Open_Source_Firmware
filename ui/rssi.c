@@ -75,7 +75,7 @@ void UI_DisplayMICBar() {
     }
 
   sprintf(String, "%d dB", afDB);
-  UI_PrintStringSmallest(String, 110, 25, false, true);
+  UI_PrintStringSmallest(String, 109, 25, false, true);
  /* if (afDB < 10) {
     sprintf(String, "a%u", afDB);
   } else {

@@ -62,6 +62,8 @@ void UI_DisplayMain(void) {
     }
 
     if (Channel != i) {
+#ifdef ENABLE_DTMF_CALLING
+		
       if (gDTMF_CallState != DTMF_CALL_STATE_NONE || gDTMF_IsTx ||
           gDTMF_InputMode) {
         char Contact[16];
@@ -113,11 +115,19 @@ void UI_DisplayMain(void) {
         }
         UI_PrintString(String, 2, 127, 2 + (i * 3), 8, false);
         continue;
-      } else if (bIsSameVfo) {
+      }
+	  else if (bIsSameVfo) {
         // Default
         filled = true;
         memset(pLine0, 127, 19);
       }
+#else
+	if (bIsSameVfo) {
+        // Default
+        filled = true;
+        memset(pLine0, 127, 19);
+      }
+#endif	  
     } else {
       if (bIsSameVfo) {
         // Default

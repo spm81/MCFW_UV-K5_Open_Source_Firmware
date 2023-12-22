@@ -639,6 +639,8 @@ void BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable(void) {
   }
 }
 
+#ifdef ENABLE_DTMF_CALLING
+
 void BK4819_EnterDTMF_TX(bool bLocalLoopback) {
   BK4819_EnableDTMF();
   BK4819_EnterTxMute();
@@ -666,7 +668,7 @@ void BK4819_ExitDTMF_TX(bool bKeep) {
     BK4819_ExitTxMute();
   }
 }
-
+#endif
 void BK4819_EnableTXLink(void) {
   BK4819_WriteRegister(
       BK4819_REG_30,
@@ -676,6 +678,7 @@ void BK4819_EnableTXLink(void) {
           BK4819_REG_30_ENABLE_PA_GAIN | BK4819_REG_30_DISABLE_MIC_ADC |
           BK4819_REG_30_ENABLE_TX_DSP | BK4819_REG_30_DISABLE_RX_DSP);
 }
+#ifdef ENABLE_DTMF_CALLING
 
 void BK4819_PlayDTMF(char Code) {
   switch (Code) {
@@ -769,7 +772,7 @@ void BK4819_PlayDTMFString(const char *pString, bool bDelayFirst,
     SYSTEM_DelayMs(CodeInternalTime);
   }
 }
-
+#endif
 void BK4819_TransmitTone(bool bLocalLoopback, uint32_t Frequency) {
   BK4819_EnterTxMute();
   BK4819_WriteRegister(BK4819_REG_70,
@@ -1049,6 +1052,7 @@ void BK4819_SetScrambleFrequencyControlWord(uint32_t Frequency) {
   BK4819_WriteRegister(BK4819_REG_71,
                        (uint16_t)((Frequency * 1032444) / 100000));
 }
+#ifdef ENABLE_DTMF_CALLING
 
 void BK4819_PlayDTMFEx(bool bLocalLoopback, char Code) {
   BK4819_EnableDTMF();
@@ -1064,7 +1068,7 @@ void BK4819_PlayDTMFEx(bool bLocalLoopback, char Code) {
   BK4819_PlayDTMF(Code);
   BK4819_ExitTxMute();
 }
-
+#endif
 void BK4819_ToggleAFBit(bool on) {
   uint16_t reg = BK4819_ReadRegister(BK4819_REG_47);
   reg &= ~(1 << 8);

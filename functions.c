@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-
+ 
 #include "app/dtmf.h"
 #include <string.h>
 #if defined(ENABLE_FMRADIO)
@@ -53,9 +53,12 @@ void FUNCTION_Init(void) {
   } else {
     gCurrentCodeType = CODE_TYPE_CONTINUOUS_TONE;
   }
+#ifdef ENABLE_DTMF_CALLING
+  
   gDTMF_RequestPending = false;
   gDTMF_WriteIndex = 0;
   memset(gDTMF_Received, 0, sizeof(gDTMF_Received));
+#endif  
   g_CxCSS_TAIL_Found = false;
   g_CDCSS_Lost = false;
   g_CTCSS_Lost = false;
@@ -89,9 +92,12 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
 
   switch (Function) {
   case FUNCTION_FOREGROUND:
+#ifdef ENABLE_DTMF_CALLING
+
     if (gDTMF_ReplyState != DTMF_REPLY_NONE) {
       RADIO_PrepareCssTX();
     }
+#endif	
     if (PreviousFunction == FUNCTION_TRANSMIT) {
       gVFO_RSSI_Level[0] = 0;
       gVFO_RSSI_Level[1] = 0;
@@ -103,10 +109,13 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
       gFM_RestoreCountdown = 500;
     }
 #endif
+#ifdef ENABLE_DTMF_CALLING
+
     if (gDTMF_CallState == DTMF_CALL_STATE_CALL_OUT ||
         gDTMF_CallState == DTMF_CALL_STATE_RECEIVED) {
       gDTMF_AUTO_RESET_TIME = 1 + (gEeprom.DTMF_AUTO_RESET_TIME * 2);
     }
+#endif	
     return;
 
   case FUNCTION_MONITOR:
@@ -139,9 +148,9 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
     GUI_DisplayScreen();
     RADIO_SetTxParameters();
     BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
-
+#ifdef ENABLE_DTMF_CALLING
     DTMF_Reply();
-
+#endif
 #if defined(ENABLE_TX1750)
     if (gAlarmState != ALARM_STATE_OFF) {
       if (gAlarmState == ALARM_STATE_TX1750) {

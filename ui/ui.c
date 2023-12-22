@@ -110,8 +110,10 @@ void GUI_SelectNextDisplay(GUI_DisplayType_t Display)
 			gFM_ScanState = FM_SCAN_OFF;
 #endif
 			gAskForConfirmation = 0;
+#ifdef ENABLE_DTMF_CALLING
 			gDTMF_InputMode = false;
 			gDTMF_InputIndex = 0;
+#endif			
 			gF_LOCK = false;
 			gAskToSave = false;
 			gAskToDelete = false;
