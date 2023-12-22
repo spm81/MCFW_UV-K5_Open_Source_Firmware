@@ -310,13 +310,14 @@ void BK4819_EnableVox(uint16_t VoxEnableThreshold,
 const uint16_t listenBWRegValues[4] = {
     0x3028, // 25
     0x4048, // 12.5
-    0x205C, // 6.25
     0x0349,	// 8.33
+    0x205C, // 6.25
 //	0x01F4  // 5
 };
 
 void BK4819_SetFilterBandwidth(BK4819_FilterBandwidth_t Bandwidth) {
   BK4819_WriteRegister(BK4819_REG_43, listenBWRegValues[Bandwidth]);
+  //UART_printf("\n Bandwidth : %i | %04x", Bandwidth, listenBWRegValues[Bandwidth]);
 }
 
 void BK4819_SetupPowerAmplifier(uint16_t Bias, uint32_t Frequency) {

@@ -478,10 +478,23 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0) {
   BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28_GREEN, false);
 
   Bandwidth = gRxVfo->CHANNEL_BANDWIDTH;
-  if (Bandwidth != BK4819_FILTER_BW_WIDE) {
+  /*if (Bandwidth != BK4819_FILTER_BW_WIDE) {
     Bandwidth = BK4819_FILTER_BW_NARROWER;
   }
-  BK4819_SetFilterBandwidth(Bandwidth);
+  BK4819_SetFilterBandwidth(Bandwidth);*/
+
+  switch (Bandwidth)
+	{
+		default:
+			Bandwidth = BK4819_FILTER_BW_WIDE;
+			[[fallthrough]];
+		case BK4819_FILTER_BW_WIDE:
+		case BK4819_FILTER_BW_NARROW:
+    case BK4819_FILTER_BW_NARROWAVIATION:
+		case BK4819_FILTER_BW_NARROWER:
+			BK4819_SetFilterBandwidth(Bandwidth);
+			break;
+	}
 
   BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, false);
   BK4819_SetupPowerAmplifier(0, 0);
@@ -579,8 +592,8 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0) {
 	InterruptMask |= BK4819_REG_3F_FSK_RX_SYNC | BK4819_REG_3F_FSK_RX_FINISHED | BK4819_REG_3F_FSK_FIFO_ALMOST_FULL | BK4819_REG_3F_FSK_TX_FINISHED;
 #endif	
   BK4819_WriteRegister(BK4819_REG_3F, InterruptMask);
-  BK4819_WriteRegister(0x40, (BK4819_ReadRegister(0x40) & ~(0b11111111111)) |
-                                 0b10110101010);
+  /*BK4819_WriteRegister(0x40, (BK4819_ReadRegister(0x40) & ~(0b11111111111)) |
+                                 0b10110101010);*/
 
   FUNCTION_Init();
 
@@ -597,11 +610,26 @@ void RADIO_SetTxParameters(void) {
   gEnableSpeaker = false;
 
   BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, false);
+  
   Bandwidth = gCurrentVfo->CHANNEL_BANDWIDTH;
-  if (Bandwidth != BK4819_FILTER_BW_WIDE) {
+  /*if (Bandwidth != BK4819_FILTER_BW_WIDE) {
     Bandwidth = BK4819_FILTER_BW_NARROWER;
   }
-  BK4819_SetFilterBandwidth(Bandwidth);
+  BK4819_SetFilterBandwidth(Bandwidth);*/
+
+  switch (Bandwidth)
+	{
+		default:
+			Bandwidth = BK4819_FILTER_BW_WIDE;
+			[[fallthrough]];
+		case BK4819_FILTER_BW_WIDE:
+		case BK4819_FILTER_BW_NARROW:
+    case BK4819_FILTER_BW_NARROWAVIATION:
+		case BK4819_FILTER_BW_NARROWER:
+			BK4819_SetFilterBandwidth(Bandwidth);
+			break;
+	}
+
   BK4819_SetFrequency(gCurrentVfo->pTX->Frequency);
   BK4819_PrepareTransmit();
   SYSTEM_DelayMs(10);
