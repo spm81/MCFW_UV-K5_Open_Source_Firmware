@@ -6,6 +6,7 @@ app/main.o: app/main.c \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/radio.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/dcs.h app/finput.h \
  app/../driver/keyboard.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/fm.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/generic.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/main.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/scanner.h \
@@ -47,7 +48,7 @@ app/main.o: app/main.c \
  c:\github\compile\mcfw_uv-k5_open_source_firmware\external\cmsis_5\device\arm\armcm0\include\system_ARMCM0.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/messenger.h \
  app/../ui/messenger.h \
- C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/audio.h app/dtmf.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/audio.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/frequencies.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/misc.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/settings.h \

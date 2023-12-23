@@ -5,7 +5,6 @@ app/menu.o: app/menu.c app/finput.h app/../driver/keyboard.h \
  c:\github\compile\mcfw_uv-k5_open_source_firmware\external\cmsis_5\cmsis\core\include\cmsis_compiler.h \
  c:\github\compile\mcfw_uv-k5_open_source_firmware\external\cmsis_5\cmsis\core\include\cmsis_gcc.h \
  c:\github\compile\mcfw_uv-k5_open_source_firmware\external\cmsis_5\device\arm\armcm0\include\system_ARMCM0.h \
- C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/dtmf.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/generic.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/menu.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/keyboard.h \

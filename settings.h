@@ -83,6 +83,8 @@ enum ALARM_Mode_t {
 
 typedef enum ALARM_Mode_t ALARM_Mode_t;
 
+#ifdef ENABLE_ROGERBEEP
+
 enum ROGER_Mode_t {
 	ROGER_MODE_OFF,
 	ROGER_MODE_DEFAULT,
@@ -94,9 +96,9 @@ enum ROGER_Mode_t {
 	ROGER_MODE_ROGERMARIO,*/
 #ifdef ENABLE_MDC 
 	ROGER_MODE_MDC,
-#endif	
+#endif
 };
-
+#endif
 typedef enum ROGER_Mode_t ROGER_Mode_t;
 
 enum CHANNEL_DisplayMode_t {
@@ -153,7 +155,9 @@ typedef struct {
 	bool AUTO_KEYPAD_LOCK;
 	ALARM_Mode_t ALARM_MODE;
 	POWER_OnDisplayMode_t POWER_ON_DISPLAY_MODE;
+#ifdef ENABLE_ROGERBEEP
 	ROGER_Mode_t ROGER;
+#endif
 	uint8_t REPEATER_TAIL_TONE_ELIMINATION;
 	uint8_t KEY_1_SHORT_PRESS_ACTION;
 	uint8_t KEY_1_LONG_PRESS_ACTION;

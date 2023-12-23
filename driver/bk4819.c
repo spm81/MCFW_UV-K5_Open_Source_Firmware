@@ -977,6 +977,7 @@ void BK4819_PlayBeep(const uint16_t freq, const int delay)
   BK4819_EnterTxMute();
 }
 
+#ifdef ENABLE_ROGERBEEP
 void BK4819_PlayRoger(int t)
 {
   BK4819_EnterTxMute();
@@ -1030,7 +1031,7 @@ void BK4819_PlayRoger(int t)
 	BK4819_WriteRegister(BK4819_REG_70, 0x0000);
 	BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);   // 1 1 0000 0 1 1111 1 1 1 0
 }
-
+#endif
 
 #ifdef ENABLE_MDC
 

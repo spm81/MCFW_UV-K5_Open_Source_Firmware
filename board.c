@@ -602,11 +602,14 @@ void BOARD_EEPROM_Init(void)
 
 	// 0EA8..0EAF
 	EEPROM_ReadBuffer(0x0EA8, Data, 8);
+#ifdef ENABLE_ROGERBEEP
+	
 #ifdef ENABLE_MDC
 	gEeprom.ROGER                          = (Data[1] <  8) ? Data[1] : ROGER_MODE_OFF;
 #else
 	gEeprom.ROGER                          = (Data[1] <  7) ? Data[1] : ROGER_MODE_OFF;
 #endif	
+#endif
 	gEeprom.REPEATER_TAIL_TONE_ELIMINATION = (Data[2] < 11) ? Data[2] : 0;
 	gEeprom.TX_CHANNEL                     = (Data[3] <  2) ? Data[3] : 0;
 	gEeprom.BATTERY_TYPE = (Data[4] < BATTERY_TYPE_UNKNOWN) ? Data[4] : BATTERY_TYPE_1600_MAH;

@@ -819,7 +819,9 @@ void RADIO_PrepareCssTX(void) {
   RADIO_SetupRegisters(true);
 }
 
+
 void RADIO_SendEndOfTransmission(void) {
+#ifdef ENABLE_ROGERBEEP
 
   if (gEeprom.ROGER == ROGER_MODE_DEFAULT) {
   BK4819_PlayRoger(0);
@@ -832,7 +834,9 @@ void RADIO_SendEndOfTransmission(void) {
   } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOTLKRT80) { 
 	BK4819_PlayRoger(4); 	
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
-	BK4819_PlayRoger(5);  /*
+	BK4819_PlayRoger(5);
+	/*
+	
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERMARIO) {
 	BK4819_PlayRogerMario();
   }*/
@@ -840,8 +844,10 @@ void RADIO_SendEndOfTransmission(void) {
  } else if (gEeprom.ROGER == ROGER_MODE_MDC) {
     BK4819_PlayRogerMDC();
  #endif  
+ 
   }
-
+#endif  
+  
 #ifdef ENABLE_DTMF_CALLING
 
   if (gDTMF_CallState == DTMF_CALL_STATE_NONE &&

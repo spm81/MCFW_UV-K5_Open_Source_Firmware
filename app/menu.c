@@ -88,6 +88,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     *pMin = 0;
     *pMax = 2;
     break;
+#ifdef ENABLE_ROGERBEEP
   case MENU_ROGER:
     *pMin = 0;
 #ifdef ENABLE_MDC	
@@ -95,7 +96,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
 #else
 	*pMax = 6;
 #endif
-
+#endif
     break;
   case MENU_UPCONVERTER:
     *pMin = 0;
@@ -452,10 +453,11 @@ void MENU_AcceptSetting(void) {
     gEeprom.POWER_ON_DISPLAY_MODE = gSubMenuSelection;
     break;
 
+#ifdef ENABLE_ROGERBEEP
   case MENU_ROGER:
     gEeprom.ROGER = gSubMenuSelection;
     break;
-
+#endif
   case MENU_AM:
     gTxVfo->AM_CHANNEL_MODE = gSubMenuSelection;
     gRequestSaveChannel = 1;
@@ -778,11 +780,11 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_PONMSG:
     gSubMenuSelection = gEeprom.POWER_ON_DISPLAY_MODE;
     break;
-
+#ifdef ENABLE_ROGERBEEP
   case MENU_ROGER:
     gSubMenuSelection = gEeprom.ROGER;
     break;
-
+#endif
   case MENU_AM:
     gSubMenuSelection = gTxVfo->AM_CHANNEL_MODE;
     break;

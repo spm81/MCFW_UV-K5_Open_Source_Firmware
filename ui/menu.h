@@ -68,7 +68,9 @@ enum {
 	MENU_D_LIST,
 #endif	
 	MENU_PONMSG,
+#ifdef ENABLE_ROGERBEEP
 	MENU_ROGER,
+#endif
 	MENU_VOL,
 	MENU_BATTYP,
 	MENU_AM,

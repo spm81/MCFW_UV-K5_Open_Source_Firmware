@@ -14,5 +14,6 @@ app/fm.o: app/fm.c \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/settings.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/radio.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/dcs.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/helper/battery.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/ui/inputbox.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/ui/ui.h

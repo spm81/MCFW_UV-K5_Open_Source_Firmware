@@ -166,6 +166,8 @@ static const char gSubMenu_PONMSG[3][5] = {
     "MSG",
     "VOL",
 };
+
+#ifdef ENABLE_ROGERBEEP
 #ifdef ENABLE_MDC
 static const char gSubMenu_ROGER[8][11] = {
 #else
@@ -184,7 +186,7 @@ static const char gSubMenu_ROGER[7][11] = {
     "MDC",
     #endif	
 };
-
+#endif
 static const char gSubMenu_RESET[2][4] = {
     "VFO",
     "ALL",
@@ -456,11 +458,12 @@ case MENU_S_LIST:
   case MENU_PONMSG:
     strcpy(String, gSubMenu_PONMSG[gSubMenuSelection]);
     break;
+#ifdef ENABLE_ROGERBEEP
 
   case MENU_ROGER:
     strcpy(String, gSubMenu_ROGER[gSubMenuSelection]);
     break;
-
+#endif
   case MENU_VOL:
     sprintf(String, "%d.%02dV", gBatteryVoltageAverage / 100,
             gBatteryVoltageAverage % 100);

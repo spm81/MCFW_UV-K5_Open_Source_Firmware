@@ -129,7 +129,9 @@ void SETTINGS_SaveSettings(void)
 	EEPROM_WriteBuffer(0x0EA0, State);
 
 	State[0] = 0xFF;
+#ifdef ENABLE_ROGERBEEP
 	State[1] = gEeprom.ROGER;
+#endif
 	State[2] = gEeprom.REPEATER_TAIL_TONE_ELIMINATION;
 	State[3] = gEeprom.TX_CHANNEL;
 	State[4] = gEeprom.BATTERY_TYPE;

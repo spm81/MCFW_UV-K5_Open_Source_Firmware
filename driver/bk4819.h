@@ -150,8 +150,9 @@ void BK4819_PlayBeep(const uint16_t freq, const int delay);
 #ifdef ENABLE_MDC
 void BK4819_PlayRogerMDC(void);
 #endif
+#ifdef ENABLE_ROGERBEEP
 void BK4819_PlayRoger(int);
-
+#endif
 void BK4819_EnterExitTxMuteSequence(void);
 void BK4819_EnterExitTxMuteSequence2(void);
 void BK4819_Enable_AfDac_DiscMode_TxDsp(void);

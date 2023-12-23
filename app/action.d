@@ -6,6 +6,7 @@ app/action.o: app/action.c \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/radio.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/dcs.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/dtmf.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/fm.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/scanner.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/dcs.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/audio.h \

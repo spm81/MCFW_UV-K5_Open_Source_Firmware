@@ -3,9 +3,10 @@ app/generic.o: app/generic.c \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/functions.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/radio.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/dcs.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/fm.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/keyboard.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/generic.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/menu.h \
- C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/keyboard.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/app/scanner.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/dcs.h \
  C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/audio.h app/dtmf.h \
