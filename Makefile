@@ -14,6 +14,9 @@ ENABLE_SWD := 0
 
 ENABLE_TX1750 := 0
 
+#Battery Percentage in Status Bar
+ENABLE_STATUS_BATTERY_PERC := 1
+
 #Sound Bar(s) 255 bytes // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
 ENABLE_MIC_PLUS_GAIN_BAR_TX := 1
 

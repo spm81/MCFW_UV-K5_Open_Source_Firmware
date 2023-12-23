@@ -89,6 +89,7 @@ static const char MenuList[][8] = {
     "PonMsg",
     "Roger",
     "Voltage",
+    "BatTyp", // battery type 1600/2200mAh
     "Modulat",
 // 0x30
     "ChDele",
@@ -101,6 +102,12 @@ static const char MenuList[][8] = {
     "Tx All",
     // 0x38
     "ScramEn",
+};
+
+const char gSubMenu_BATTYP[][9] =
+{
+	"1600mAh",
+	"2200mAh"
 };
 
 static const char gSubMenu_TXP[3][5] = {
@@ -462,7 +469,9 @@ case MENU_S_LIST:
   case MENU_RESET:
     strcpy(String, gSubMenu_RESET[gSubMenuSelection]);
     break;
-
+  case MENU_BATTYP:
+		strcpy(String, gSubMenu_BATTYP[gSubMenuSelection]);
+		break;	
   case MENU_UPCONVERTER:
     strcpy(String, upconverterFreqNames[gSubMenuSelection]);
     break;
