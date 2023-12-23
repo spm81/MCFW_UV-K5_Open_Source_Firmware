@@ -762,6 +762,8 @@ static void DrawF(uint32_t f) {
 }
 */
 
+
+
 static void DrawF(uint32_t f) {
 	#ifdef ENABLE_ALL_REGISTERS
   if (currentState == SPECTRUM) {
@@ -772,7 +774,7 @@ static void DrawF(uint32_t f) {
   }
 #endif
   sprintf(String, "%u.%05u", f / 100000, f % 100000);
-  UI_PrintStringSmallBold(String, 8, 127, 0);
+  UI_PrintStringSmall(String, 8, 127, 0);
 
   sprintf(String, "%3s", modulationTypeOptions[settings.modulationType]);
   UI_PrintStringSmallest(String, 116, 1, false, true);
