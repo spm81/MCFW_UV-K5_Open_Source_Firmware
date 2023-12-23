@@ -989,6 +989,7 @@ void BK4819_PlayRoger(int t)
     case 0: // DEFAULT
       BK4819_PlayBeep(500, 80);
       BK4819_PlayBeep(700, 80);
+      break;
     case 1: // MOTOTRBO
       BK4819_PlayBeep(1540, 80);
       BK4819_PlayBeep(1310, 80);
