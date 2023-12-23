@@ -986,11 +986,13 @@ void APP_TimeSlice10ms(void) {
     return;
   }
 #endif
+#ifdef ENABLE_FLASHLIGHT_SOS
   static const uint32_t sos = __extension__ 0b10101000111011101110001010100000;
-
+#endif
   if (gFlashLightState == FLASHLIGHT_BLINK &&
       (gFlashLightBlinkCounter & 15U) == 0) {
     GPIO_FlipBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);}
+#ifdef ENABLE_FLASHLIGHT_SOS
   else if(gFlashLightState == FLASHLIGHT_SOS) {
 	/*	const uint16_t u = 15;
 		static uint8_t c;
@@ -1038,7 +1040,7 @@ void APP_TimeSlice10ms(void) {
 					}
 				}
 			}
-
+#endif
   if (gVoxResumeCountdown) {
     gVoxResumeCountdown--;
   }

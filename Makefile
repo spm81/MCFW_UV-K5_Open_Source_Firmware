@@ -5,9 +5,9 @@ TARGET = firmware
 ENABLE_AIRCOPY := 0
 
 #AM Modulation 544 bytes
-ENABLE_AM_FIX := 0
+ENABLE_AM_FIX := 1
 #FM Radio
-ENABLE_FMRADIO := 0
+ENABLE_FMRADIO := 1
 
 ENABLE_OVERLAY := 0
 ENABLE_SWD := 0
@@ -17,6 +17,10 @@ ENABLE_TX1750 := 0
 
 #Sound Bar(s) 255 bytes // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
 ENABLE_MIC_PLUS_GAIN_BAR_TX := 1
+
+#SOS Flashlight 84 bytes
+ENABLE_FLASHLIGHT_SOS       := 1
+
 
 #UART
 ENABLE_UART                 := 1
@@ -34,11 +38,11 @@ ENABLE_FASTER_CHANNEL_SCAN  := 1
 ENABLE_MDC                  := 0
 
 #Spectrum
-ENABLE_SPECTRUM             := 1
+ENABLE_SPECTRUM             := 0
 SPECTRUM_AUTOMATIC_SQUELCH  := 1
 SPECTRUM_EXTRA_VALUES       := 1
 ENABLE_ALL_REGISTERS        := 0
-ENABLE_MATOZ_KEYS           := 0
+ENABLE_MATOZ_KEYS           := 1
 
 #Messenger ( Thanks to joaquimorg https://github.com/joaquimorg )
 ENABLE_MESSENGER            := 1
@@ -189,6 +193,9 @@ CFLAGS += -DENABLE_DTMF_CALLING
 endif
 ifeq ($(ENABLE_MIC_PLUS_GAIN_BAR_TX),1)
 CFLAGS += -DENABLE_MIC_PLUS_GAIN_BAR_TX
+endif
+ifeq ($(ENABLE_FLASHLIGHT_SOS),1)
+	CFLAGS  += -DENABLE_FLASHLIGHT_SOS
 endif
 ifeq ($(ENABLE_AM_FIX),1)
 	CFLAGS  += -DENABLE_AM_FIX

@@ -40,7 +40,9 @@ static void ACTION_FlashLight(void)
 		GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);
 		break;
 	case 1:
+#ifdef ENABLE_FLASHLIGHT_SOS
         case 2:
+#endif		
 			gFlashLightState++;
 		break;
 	default:
