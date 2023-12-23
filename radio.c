@@ -826,13 +826,13 @@ void RADIO_SendEndOfTransmission(void) {
   } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBO) { 
     BK4819_PlayRoger(1);
   } else if (gEeprom.ROGER == ROGER_MODE_TPT) { 
-    BK4819_PlayRoger(2); /*
+    BK4819_PlayRoger(2); 
   } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOT40) { 
-	BK4819_PlayRogerMotoT40(); 	
+	BK4819_PlayRoger(3); 	
   } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOTLKRT80) { 
-	BK4819_PlayRogerMotoTLKRT80(); 	
+	BK4819_PlayRoger(4); 	
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
-	BK4819_PlayRogerCobraAM845();  
+	BK4819_PlayRoger(5);  /*
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERMARIO) {
 	BK4819_PlayRogerMario();
   }*/

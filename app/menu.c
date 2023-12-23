@@ -91,9 +91,9 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
   case MENU_ROGER:
     *pMin = 0;
 #ifdef ENABLE_MDC	
-    *pMax = 4;
+    *pMax = 7;
 #else
-	*pMax = 3;
+	*pMax = 6;
 #endif
 
     break;

@@ -985,10 +985,12 @@ void BK4819_PlayRoger(int t)
 	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (28u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
 	BK4819_EnableTXLink();
 	SYSTEM_DelayMs(50);
+	// NEED TO HAD IFDEF ON ROGER'S BEEP
   switch (t) {
     case 0: // DEFAULT
       BK4819_PlayBeep(500, 80);
       BK4819_PlayBeep(700, 80);
+	break;  
     case 1: // MOTOTRBO
       BK4819_PlayBeep(1540, 80);
       BK4819_PlayBeep(1310, 80);
@@ -1000,11 +1002,35 @@ void BK4819_PlayRoger(int t)
       BK4819_PlayBeep(0, 25);
       BK4819_PlayBeep(910, 50);
     break;
+    case 3: // MOTOROLA T40
+      BK4819_PlayBeep(2000, 80);
+      BK4819_PlayBeep(2200, 80);
+      BK4819_PlayBeep(2000, 80);
+      BK4819_PlayBeep(2200, 80);
+      BK4819_PlayBeep(2000, 80);
+      BK4819_PlayBeep(2200, 80);	  
+    break;	
+    case 4: // MOTOROLA TLKRT80
+      BK4819_PlayBeep(1190, 80);
+      BK4819_PlayBeep(992, 80);
+      BK4819_PlayBeep(807, 80);
+      BK4819_PlayBeep(1190, 80);
+      BK4819_PlayBeep(992, 80);
+      BK4819_PlayBeep(807, 80);
+      BK4819_PlayBeep(1190, 80);
+      BK4819_PlayBeep(992, 80);
+      BK4819_PlayBeep(807, 80);	  
+	break; 
+    case 5: // MOTOROLA CobraAM845
+      BK4819_PlayBeep(435, 80);
+      BK4819_PlayBeep(872, 80);
+      BK4819_PlayBeep(1742, 80); 	
   }
 
 	BK4819_WriteRegister(BK4819_REG_70, 0x0000);
 	BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);   // 1 1 0000 0 1 1111 1 1 1 0
 }
+
 
 #ifdef ENABLE_MDC
 

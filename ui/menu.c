@@ -167,18 +167,18 @@ static const char gSubMenu_PONMSG[3][5] = {
     "VOL",
 };
 #ifdef ENABLE_MDC
-static const char gSubMenu_ROGER[5][11] = {
+static const char gSubMenu_ROGER[8][11] = {
 #else
-static const char gSubMenu_ROGER[4][11] = {
+static const char gSubMenu_ROGER[7][11] = {
 #endif
 
     "OFF",
     "DEFAULT",
 	"MOTOTRBO",
-  "TPT"
-/*	"MOTO T40",
+    "MOTO TPT",
+	"MOTO T40",
 	"MOTO T80",
-	"C.AM845",
+	"C.AM845",/*
 	"MARIO",*/
   #ifdef ENABLE_MDC
     "MDC",
