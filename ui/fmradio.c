@@ -74,9 +74,9 @@ void UI_DisplayFM(void)
 	} else if (!gAskToDelete) {
 		if (gInputBoxIndex == 0) {
 			NUMBER_ToDigits(gEeprom.FM_FrequencyPlaying * 10000, String);
-			UI_DisplayFrequency(String, 23, 4, false, true);
+			UI_DisplayFrequency(String, 15, 4, false, true);
 		} else {
-			UI_DisplayFrequency(gInputBox, 23, 4, true, false);
+			UI_DisplayFrequency(gInputBox, 15, 4, true, false);
 		}
 		ST7565_BlitFullScreen();
 		return;

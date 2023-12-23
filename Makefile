@@ -7,7 +7,7 @@ ENABLE_AIRCOPY := 0
 #AM Modulation 544 bytes
 ENABLE_AM_FIX := 1
 #FM Radio
-ENABLE_FMRADIO := 1
+ENABLE_FMRADIO := 0
 
 ENABLE_OVERLAY := 0
 ENABLE_SWD := 0
@@ -21,7 +21,7 @@ ENABLE_STATUS_BATTERY_PERC := 1
 ENABLE_MIC_PLUS_GAIN_BAR_TX := 1
 
 #SOS Flashlight 84 bytes
-ENABLE_FLASHLIGHT_SOS       := 0
+ENABLE_FLASHLIGHT_SOS       := 1
 
 
 #UART
@@ -29,7 +29,7 @@ ENABLE_UART                 := 0
 ENABLE_UART_CAT             := 0
 
 #Trying to remove all about DTMF (Incomplete.. don't put 0 ;) ) 
-ENABLE_DTMF_CALLING         := 0
+ENABLE_DTMF_CALLING         := 1
 
 
 ENABLE_NOSCANTIMEOUT        := 1
@@ -37,7 +37,7 @@ ENABLE_KEEPNAMEONSAVE       := 1
 ENABLE_FASTER_CHANNEL_SCAN  := 1
 
 #Roger - To Enable MDC, ROGERBEEP HAS TO BE ENABLED
-ENABLE_ROGERBEEP            := 0
+ENABLE_ROGERBEEP            := 1
 ENABLE_MDC                  := 0	
 
 #Spectrum
