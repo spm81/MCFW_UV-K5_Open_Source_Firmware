@@ -821,39 +821,27 @@ void RADIO_PrepareCssTX(void) {
 
 void RADIO_SendEndOfTransmission(void) {
 
-#ifdef ENABLE_MDC
-  if (gEeprom.ROGER == ROGER_MODE_ROGER) {
-  BK4819_PlayRoger();
-  } else if (gEeprom.ROGER == ROGER_MODE_ROGERMOTO) { 
-  BK4819_PlayRogerMoto(); /*
-  } else if (gEeprom.ROGER == ROGER_MODE_ROGERMOTOT40) { 
+  if (gEeprom.ROGER == ROGER_MODE_DEFAULT) {
+  BK4819_PlayRoger(0);
+  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBO) { 
+    BK4819_PlayRoger(1);
+  } else if (gEeprom.ROGER == ROGER_MODE_TPT) { 
+    BK4819_PlayRoger(2); /*
+  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOT40) { 
 	BK4819_PlayRogerMotoT40(); 	
-  } else if (gEeprom.ROGER == ROGER_MODE_ROGERMOTOTLKRT80) { 
+  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOTLKRT80) { 
 	BK4819_PlayRogerMotoTLKRT80(); 	
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
 	BK4819_PlayRogerCobraAM845();  
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERMARIO) {
 	BK4819_PlayRogerMario();
   }*/
-  } else if (gEeprom.ROGER == ROGER_MODE_MDC) {
+ #ifdef ENABLE_MDC
+ } else if (gEeprom.ROGER == ROGER_MODE_MDC) {
     BK4819_PlayRogerMDC();
+ #endif  
   }
-#else
-	  if (gEeprom.ROGER == ROGER_MODE_ROGER) {
-  BK4819_PlayRoger();
-  } else if (gEeprom.ROGER == ROGER_MODE_ROGERMOTO) { 
-  BK4819_PlayRogerMoto(); /*
-  } else if (gEeprom.ROGER == ROGER_MODE_ROGERMOTOT40) { 
-	BK4819_PlayRogerMotoT40(); 	
-  } else if (gEeprom.ROGER == ROGER_MODE_ROGERMOTOTLKRT80) { 
-	BK4819_PlayRogerMotoTLKRT80(); 	
-  } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
-	BK4819_PlayRogerCobraAM845();  
-  } else if (gEeprom.ROGER == ROGER_MODE_ROGERMARIO) {
-	BK4819_PlayRogerMario();
-  }*/	
-  }
-#endif  
+
 #ifdef ENABLE_DTMF_CALLING
 
   if (gDTMF_CallState == DTMF_CALL_STATE_NONE &&

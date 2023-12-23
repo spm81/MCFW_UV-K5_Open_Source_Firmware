@@ -145,14 +145,13 @@ void BK4819_SendFSKData(uint16_t *pData);
 void BK4819_PrepareFSKReceive(void);
 
 
+void BK4819_PlayBeep(const uint16_t freq, const int delay);
+
 #ifdef ENABLE_MDC
-void BK4819_PlayRoger(void);
-void BK4819_PlayRogerMoto(void);
 void BK4819_PlayRogerMDC(void);
-#else
-void BK4819_PlayRoger(void);
-void BK4819_PlayRogerMoto(void);
 #endif
+void BK4819_PlayRoger(int);
+
 void BK4819_EnterExitTxMuteSequence(void);
 void BK4819_EnterExitTxMuteSequence2(void);
 void BK4819_Enable_AfDac_DiscMode_TxDsp(void);

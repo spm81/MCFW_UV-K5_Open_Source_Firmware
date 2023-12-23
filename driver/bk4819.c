@@ -968,36 +968,43 @@ void BK4819_EnterExitTxMuteSequence3(void) {
   BK4819_WriteRegister(BK4819_REG_70, 0x0000);
   BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);
 }
-  
-void BK4819_PlayRoger(void) {
-  BK4819_EnterExitTxMuteSequence();
-  BK4819_WriteRegister(BK4819_REG_70, 0xE000);
-  BK4819_EnableTXLink();
-  SYSTEM_DelayMs(50);
-  BK4819_WriteRegister(BK4819_REG_71, 0x142A);
-  BK4819_EnterExitTxMuteSequence2();
-  BK4819_WriteRegister(BK4819_REG_71, 0x1C3B);
-  BK4819_EnterExitTxMuteSequence3();
 
+void BK4819_PlayBeep(const uint16_t freq, const int delay)
+{
+	BK4819_WriteRegister(BK4819_REG_71, scale_freq(freq));
+	BK4819_ExitTxMute();
+	SYSTEM_DelayMs(delay);
+  BK4819_EnterTxMute();
 }
 
-void BK4819_PlayRogerMoto(void) {
-  const uint32_t tone1_Hz = 1540;
-  const uint32_t tone2_Hz = 1310;
+void BK4819_PlayRoger(int t)
+{
+  BK4819_EnterTxMute();
+	BK4819_SetAF(BK4819_AF_MUTE);
+  //	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (96u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
+	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (28u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
+	BK4819_EnableTXLink();
+	SYSTEM_DelayMs(50);
+  switch (t) {
+    case 0: // DEFAULT
+      BK4819_PlayBeep(500, 80);
+      BK4819_PlayBeep(700, 80);
+    case 1: // MOTOTRBO
+      BK4819_PlayBeep(1540, 80);
+      BK4819_PlayBeep(1310, 80);
+    break;
+    case 2: // MOTOROLA APX6000 TPT
+      BK4819_PlayBeep(910, 25);
+      BK4819_PlayBeep(0, 25);
+      BK4819_PlayBeep(910, 25);
+      BK4819_PlayBeep(0, 25);
+      BK4819_PlayBeep(910, 50);
+    break;
+  }
 
-  BK4819_EnterExitTxMuteSequence();
-  BK4819_WriteRegister(BK4819_REG_70, 0xE000);
-  BK4819_EnableTXLink();
-  SYSTEM_DelayMs(50);
-  BK4819_WriteRegister(BK4819_REG_71, scale_freq(tone1_Hz));
-  BK4819_EnterExitTxMuteSequence2();
-  BK4819_WriteRegister(BK4819_REG_71, scale_freq(tone2_Hz));
-  BK4819_EnterExitTxMuteSequence3();
-  
-
+	BK4819_WriteRegister(BK4819_REG_70, 0x0000);
+	BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);   // 1 1 0000 0 1 1111 1 1 1 0
 }
-
-
 
 #ifdef ENABLE_MDC
 

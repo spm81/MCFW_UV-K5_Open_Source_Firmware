@@ -160,29 +160,22 @@ static const char gSubMenu_PONMSG[3][5] = {
     "VOL",
 };
 #ifdef ENABLE_MDC
-static const char gSubMenu_ROGER[4][9] = {
+static const char gSubMenu_ROGER[5][11] = {
 #else
-static const char gSubMenu_ROGER[3][9] = {
+static const char gSubMenu_ROGER[4][11] = {
 #endif
 
-#ifdef ENABLE_MDC
     "OFF",
-    "ROGER",
-	"MOTOROLA",
+    "DEFAULT",
+	"MOTOTRBO",
+  "TPT"
 /*	"MOTO T40",
 	"MOTO T80",
 	"C.AM845",
 	"MARIO",*/
+  #ifdef ENABLE_MDC
     "MDC",
-#else	
-    "OFF",
-    "ROGER",
-	"MOTOROLA",
-/*	"MOTO T40",
-	"MOTO T80",
-	"C.AM845",
-	"MARIO",*/	
-#endif	
+    #endif	
 };
 
 static const char gSubMenu_RESET[2][4] = {
