@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-#ifdef ENABLE_DTMF_CALLING
+//#ifdef ENABLE_DTMF_CALLING
 
 #include <string.h>
 #if defined(ENABLE_FMRADIO)
@@ -316,4 +316,4 @@ void DTMF_Reply(void)
 	BK4819_ExitDTMF_TX(false);
 }
 
-#endif
+//#endif

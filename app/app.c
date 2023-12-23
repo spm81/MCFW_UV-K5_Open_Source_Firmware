@@ -23,9 +23,7 @@
 #include "am_fix.h"
 #endif
 #include "app/app.h"
-#ifdef ENABLE_DTMF_CALLING 
 #include "dtmf.h"
-#endif
 #if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
 #endif
@@ -139,12 +137,12 @@ static void APP_HandleIncoming(void) {
   DTMF_HandleRequest();
 #endif
 
-#ifdef ENABLE_DTMF_CALLING 
+//#ifdef ENABLE_DTMF_CALLING 
   if (gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF &&
       gRxVfo->DTMF_DECODING_ENABLE && gDTMF_CallState == DTMF_CALL_STATE_NONE) {
-#else
-  if (gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF ) {
-#endif		  
+//#else
+//  if (gScanState == SCAN_OFF && gCssScanMode == CSS_SCAN_MODE_OFF ) {
+//#endif		  
     if (gRxReceptionMode == RX_MODE_DETECTED) {
       gDualWatchCountdown = 500;
       gScheduleDualWatch = false;
@@ -539,7 +537,7 @@ void APP_CheckRadioInterrupts(void) {
 
     BK4819_WriteRegister(BK4819_REG_02, 0);
     Mask = BK4819_ReadRegister(BK4819_REG_02);
-#ifdef ENABLE_DTMF_CALLING 
+//#ifdef ENABLE_DTMF_CALLING 
     if (Mask & BK4819_REG_02_DTMF_5TONE_FOUND) {
       gDTMF_RequestPending = true;
       gDTMF_RecvTimeout = 5;
@@ -556,7 +554,7 @@ void APP_CheckRadioInterrupts(void) {
         DTMF_HandleRequest();
       }
     }
-#endif	
+//#endif	
     if (Mask & BK4819_REG_02_CxCSS_TAIL) {
       g_CxCSS_TAIL_Found = true;
     }
@@ -682,10 +680,10 @@ static void APP_HandleVox(void) {
         FUNCTION_Select(FUNCTION_FOREGROUND);
       }
       if (gCurrentFunction != FUNCTION_TRANSMIT) {
-#ifdef ENABLE_DTMF_CALLING 
+//#ifdef ENABLE_DTMF_CALLING 
 
         gDTMF_ReplyState = DTMF_REPLY_NONE;
-#endif		
+//#endif		
         RADIO_PrepareTX();
         gUpdateDisplay = true;
       }
@@ -749,11 +747,11 @@ void APP_Update(void) {
 #if defined(ENABLE_FMRADIO)
             && !gFmRadioMode
 #endif
-#ifdef ENABLE_DTMF_CALLING 
+//#ifdef ENABLE_DTMF_CALLING 
             && gDTMF_CallState == DTMF_CALL_STATE_NONE &&
-#else
-&&
-#endif
+//#else
+//&&
+//#endif
 		  gCurrentFunction != FUNCTION_POWER_SAVE) {
           DUALWATCH_Alternate();
           if (gRxVfoIsActive && gScreenToDisplay == DISPLAY_MAIN) {
@@ -789,11 +787,11 @@ void APP_Update(void) {
         || gFmRadioMode
 #endif
         || gPttIsPressed || gScreenToDisplay != DISPLAY_MAIN || gKeyBeingHeld
-#ifdef ENABLE_DTMF_CALLING		
+//#ifdef ENABLE_DTMF_CALLING		
         || gDTMF_CallState != DTMF_CALL_STATE_NONE) 
-#else
-		)
-#endif
+//#else
+//		)
+//#endif
 		{
       gBatterySaveCountdown = 1000;
     } else {
@@ -1239,11 +1237,11 @@ void APP_TimeSlice500ms(void) {
           && (gScreenToDisplay != DISPLAY_SCANNER ||
               (gScanCssState >= SCAN_CSS_STATE_FOUND))) {
         if (gEeprom.AUTO_KEYPAD_LOCK && gKeyLockCountdown 
-#ifdef ENABLE_DTMF_CALLING
+//#ifdef ENABLE_DTMF_CALLING
 		&& !gDTMF_InputMode) {
-#else
-		) {
-#endif			
+//#else
+//		) {
+//#endif			
           gKeyLockCountdown--;
           if (gKeyLockCountdown == 0) {
             gEeprom.KEY_LOCK = true;
@@ -1344,7 +1342,7 @@ void APP_TimeSlice500ms(void) {
 #endif
     gUpdateDisplay = true;
   }
-#ifdef ENABLE_DTMF_CALLING
+//#ifdef ENABLE_DTMF_CALLING
   if (gDTMF_CallState != DTMF_CALL_STATE_NONE &&
       gCurrentFunction != FUNCTION_TRANSMIT &&
       gCurrentFunction != FUNCTION_RECEIVE) {
@@ -1381,7 +1379,7 @@ void APP_TimeSlice500ms(void) {
       memset(gDTMF_Received, 0, sizeof(gDTMF_Received));
     }
   }
-#endif
+//#endif
 }
 
 #if defined(ENABLE_TX1750)
@@ -1461,7 +1459,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
       gVoltageMenuCountdown = 0x10;
     }
     BACKLIGHT_TurnOn();
-#ifdef ENABLE_DTMF_CALLING
+//#ifdef ENABLE_DTMF_CALLING
 	
     if (gDTMF_DecodeRing) {
       gDTMF_DecodeRing = false;
@@ -1471,7 +1469,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
         return;
       }
     }
-#endif
+//#endif
   }
 
   if (gEeprom.KEY_LOCK && gCurrentFunction != FUNCTION_TRANSMIT &&

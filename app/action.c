@@ -166,16 +166,16 @@ void ACTION_FM(void) {
 void ACTION_Handle(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
   uint8_t Short;
   uint8_t Long;
-
-#ifdef ENABLE_DTMF_CALLING
+//MONITOR & FLASHLIGHT
+//#ifdef ENABLE_DTMF_CALLING
   if (gScreenToDisplay == DISPLAY_MAIN && gDTMF_InputMode) {
-#else
-  if (gScreenToDisplay == DISPLAY_MAIN ) {
-#endif	  
+//#else
+//  if (gScreenToDisplay == DISPLAY_MAIN ) {
+//#endif	  
 
     if (Key == KEY_SIDE1 && !bKeyHeld && bKeyPressed) {
       gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
-#ifdef ENABLE_DTMF_CALLING
+//#ifdef ENABLE_DTMF_CALLING
 	  
       if (gDTMF_InputIndex) {
         gDTMF_InputIndex--;
@@ -186,11 +186,11 @@ void ACTION_Handle(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
           return;
         }
       }
-#endif	  
+//#endif	  
       gRequestDisplayScreen = DISPLAY_MAIN;
-#ifdef ENABLE_DTMF_CALLING
+//#ifdef ENABLE_DTMF_CALLING
       gDTMF_InputMode = false;
-#endif	  
+//#endif	  
     }
     gPttWasReleased = true;
     return;

@@ -135,7 +135,7 @@ void GENERIC_Key_PTT(bool bKeyPressed)
 					return;
 				}
 				gFlagPrepareTX = true;
-#ifdef ENABLE_DTMF_CALLI				
+#ifdef ENABLE_DTMF_CALLING
 				if (gDTMF_InputMode) {
 					if (gDTMF_InputIndex || gDTMF_PreviousIndex) {
 						if (gDTMF_InputIndex == 0) {

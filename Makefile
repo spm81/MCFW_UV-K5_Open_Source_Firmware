@@ -7,12 +7,11 @@ ENABLE_AIRCOPY := 0
 #AM Modulation 544 bytes
 ENABLE_AM_FIX := 1
 #FM Radio
-ENABLE_FMRADIO := 1
+ENABLE_FMRADIO := 0
 
 ENABLE_OVERLAY := 0
 ENABLE_SWD := 0
 
-#It's not 100% OFF ( Have two tones ... have to split...)
 ENABLE_TX1750 := 0
 
 #Sound Bar(s) 255 bytes // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
@@ -26,7 +25,7 @@ ENABLE_FLASHLIGHT_SOS       := 1
 ENABLE_UART                 := 1
 ENABLE_UART_CAT             := 0
 
-#Trying to remove all about DTMF (Incomplete.. we can gain more space ;) ) 
+#Trying to remove all about DTMF (Incomplete.. don't put 0 ;) ) 
 ENABLE_DTMF_CALLING         := 1
 
 
@@ -38,7 +37,7 @@ ENABLE_FASTER_CHANNEL_SCAN  := 1
 ENABLE_MDC                  := 0
 
 #Spectrum
-ENABLE_SPECTRUM             := 0
+ENABLE_SPECTRUM             := 1
 SPECTRUM_AUTOMATIC_SQUELCH  := 1
 SPECTRUM_EXTRA_VALUES       := 1
 ENABLE_ALL_REGISTERS        := 0

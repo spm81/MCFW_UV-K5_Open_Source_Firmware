@@ -13,9 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-#ifdef ENABLE_DTMF_CALLING
 #include "app/dtmf.h"
-#endif
 #include "helper/measurements.h"
 #include <string.h>
 #if defined(ENABLE_FMRADIO)
@@ -723,9 +721,9 @@ void RADIO_PrepareTX(void) {
     gAlarmState = ALARM_STATE_OFF;
 #endif
     AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL);
-#ifdef ENABLE_DTMF_CALLING
+//#ifdef ENABLE_DTMF_CALLING
     gDTMF_ReplyState = DTMF_REPLY_NONE;
-#endif
+//#endif
     return;
   }
 
@@ -742,7 +740,7 @@ Skip:
       gDTMF_IsTx = false;
     }
   }
- #endif 
+#endif 
   FUNCTION_Select(FUNCTION_TRANSMIT);
 #if defined(ENABLE_TX1750)
   if (gAlarmState == ALARM_STATE_OFF) {
