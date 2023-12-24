@@ -28,7 +28,7 @@ ENABLE_FLASHLIGHT_SOS       := 1
 ENABLE_UART                 := 1
 ENABLE_UART_CAT             := 0
 
-#Trying to remove all about DTMF (Incomplete.. don't put 0 ;) ) 
+#Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
 ENABLE_DTMF_CALLING         := 1
 
 

@@ -87,7 +87,9 @@ static const char MenuList[][8] = {
     "D List",
 #endif
     "PonMsg",
+#ifdef ENABLE_ROGERBEEP	
     "Roger",
+#endif	
     "Voltage",
 #ifdef ENABLE_STATUS_BATTERY_PERC	
     "BatTyp", // battery type 1600/2200mAh
