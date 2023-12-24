@@ -612,8 +612,9 @@ void BOARD_EEPROM_Init(void)
 #endif
 	gEeprom.REPEATER_TAIL_TONE_ELIMINATION = (Data[2] < 11) ? Data[2] : 0;
 	gEeprom.TX_CHANNEL                     = (Data[3] <  2) ? Data[3] : 0;
+#ifdef ENABLE_STATUS_BATTERY_PERC	
 	gEeprom.BATTERY_TYPE = (Data[4] < BATTERY_TYPE_UNKNOWN) ? Data[4] : BATTERY_TYPE_1600_MAH;
-	
+#endif	
 #ifdef ENABLE_DTMF_CALLING
 	// 0ED0..0ED7
 	EEPROM_ReadBuffer(0x0ED0, Data, 8);

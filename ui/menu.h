@@ -72,7 +72,9 @@ enum {
 	MENU_ROGER,
 #endif
 	MENU_VOL,
+#ifdef ENABLE_STATUS_BATTERY_PERC	
 	MENU_BATTYP,
+#endif
 	MENU_AM,
 	MENU_DEL_CH,
 	MENU_RESET,

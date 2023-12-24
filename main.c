@@ -127,6 +127,16 @@ void Main(void) {
 #else
     gMenuListCount = 39;
 #endif
+#if defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC)		
+//#ifdef ENABLE_DTMF_CALLING
+		gMenuListCount = 49;
+#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC)		
+		gMenuListCount = 50;
+#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC)
+		gMenuListCount = 40;
+#else
+		gMenuListCount = 39;
+#endif	
     BootMode = BOOT_GetMode();
     if (gEeprom.POWER_ON_PASSWORD < 1000000) {
       bIsInLockScreen = true;

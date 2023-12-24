@@ -62,8 +62,14 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 		gMenuCursor = MENU_350TX;
 		gSubMenuSelection = gSetting_350TX;
 		GUI_SelectNextDisplay(DISPLAY_MENU);
-#ifdef ENABLE_DTMF_CALLING
+		
+#if defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC)		
+//#ifdef ENABLE_DTMF_CALLING
 		gMenuListCount = 55;
+#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC)		
+		gMenuListCount = 56;
+#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC)
+		gMenuListCount = 46;
 #else
 		gMenuListCount = 45;
 #endif	

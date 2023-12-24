@@ -82,8 +82,12 @@ void UI_DisplayStatus(void) {
           isVox ? "VOX" : "   ",   //
           isWx ? "WX" : "  ",      //
           isDw ? "DW" : "  ",      //
+#ifdef ENABLE_STATUS_BATTERY_PERC
           isFm ? "FM" : "  ",       //
           BATTERY_VoltsToPercent(gBatteryVoltageAverage)
+#else
+          isFm ? "FM" : "  "       //
+#endif		  
   );
   UI_PrintStringSmallest(String, 0, 0, true, true);
 

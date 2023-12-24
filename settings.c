@@ -134,8 +134,9 @@ void SETTINGS_SaveSettings(void)
 #endif
 	State[2] = gEeprom.REPEATER_TAIL_TONE_ELIMINATION;
 	State[3] = gEeprom.TX_CHANNEL;
+#ifdef ENABLE_STATUS_BATTERY_PERC	
 	State[4] = gEeprom.BATTERY_TYPE;
-	
+#endif	
 	EEPROM_WriteBuffer(0x0EA8, State);
 
 #ifdef ENABLE_DTMF_CALLING

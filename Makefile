@@ -2,20 +2,20 @@
 # Matoz @spm81 | Joaquim @joaquimorg | Need your name here ;)
 TARGET = firmware
 
-ENABLE_AIRCOPY := 0
+ENABLE_AIRCOPY 				:= 0
 
-#AM Modulation 544 bytes
-ENABLE_AM_FIX := 1
+#AM Modulation 544 	bytes
+ENABLE_AM_FIX 				:= 1
 #FM Radio
-ENABLE_FMRADIO := 0
+ENABLE_FMRADIO 				:= 0
 
-ENABLE_OVERLAY := 0
-ENABLE_SWD := 0
+ENABLE_OVERLAY 				:= 0
+ENABLE_SWD 					:= 0
 
-ENABLE_TX1750 := 0
+ENABLE_TX1750 				:= 0
 
-#Battery Percentage in Status Bar
-ENABLE_STATUS_BATTERY_PERC := 1
+#Battery Percentage in Status Bar	296 bytes
+ENABLE_STATUS_BATTERY_PERC  := 1
 
 #Sound Bar(s) 255 bytes // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
 ENABLE_MIC_PLUS_GAIN_BAR_TX := 1
@@ -25,7 +25,7 @@ ENABLE_FLASHLIGHT_SOS       := 1
 
 
 #UART
-ENABLE_UART                 := 0
+ENABLE_UART                 := 1
 ENABLE_UART_CAT             := 0
 
 #Trying to remove all about DTMF (Incomplete.. don't put 0 ;) ) 
@@ -223,6 +223,9 @@ CFLAGS += -DENABLE_SWD
 endif
 ifeq ($(ENABLE_TX1750),1)
 CFLAGS += -DENABLE_TX1750
+endif
+ifeq ($(ENABLE_STATUS_BATTERY_PERC),1)
+CFLAGS += -DENABLE_STATUS_BATTERY_PERC
 endif
 ifeq ($(ENABLE_UART),1)
 CFLAGS += -DENABLE_UART

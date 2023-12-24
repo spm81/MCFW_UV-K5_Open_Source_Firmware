@@ -55,6 +55,7 @@ const uint16_t 	  lowBatteryPeriod = 30;
 
 volatile uint16_t gPowerSave_10ms;
 
+#ifdef ENABLE_STATUS_BATTERY_PERC
 
 const uint16_t Voltage2PercentageTable[][7][2] = {
 	[BATTERY_TYPE_1600_MAH] = {
@@ -97,6 +98,7 @@ unsigned int BATTERY_VoltsToPercent(const unsigned int voltage_10mV)
 
 	return 0;
 }
+#endif
 
 void BATTERY_GetReadings(bool bDisplayBatteryLevel) {
   uint8_t PreviousBatteryLevel = gBatteryDisplayLevel;

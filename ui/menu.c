@@ -89,7 +89,9 @@ static const char MenuList[][8] = {
     "PonMsg",
     "Roger",
     "Voltage",
+#ifdef ENABLE_STATUS_BATTERY_PERC	
     "BatTyp", // battery type 1600/2200mAh
+#endif
     "Modulat",
 // 0x30
     "ChDele",
@@ -104,12 +106,13 @@ static const char MenuList[][8] = {
     "ScramEn",
 };
 
+#ifdef ENABLE_STATUS_BATTERY_PERC	
 const char gSubMenu_BATTYP[][9] =
 {
 	"1600mAh",
 	"2200mAh"
 };
-
+#endif
 static const char gSubMenu_TXP[3][5] = {
     "LOW",
     "MID",
@@ -472,9 +475,11 @@ case MENU_S_LIST:
   case MENU_RESET:
     strcpy(String, gSubMenu_RESET[gSubMenuSelection]);
     break;
+#ifdef ENABLE_STATUS_BATTERY_PERC	
   case MENU_BATTYP:
 		strcpy(String, gSubMenu_BATTYP[gSubMenuSelection]);
 		break;	
+#endif
   case MENU_UPCONVERTER:
     strcpy(String, upconverterFreqNames[gSubMenuSelection]);
     break;
