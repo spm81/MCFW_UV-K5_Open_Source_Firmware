@@ -38,6 +38,10 @@ enum {
 	MENU_SAVE,
 	MENU_VOX,
 	MENU_ABR,
+	//invert here
+	#ifdef ENABLE_LCD_CONTRAST_OPTION
+	MENU_CONTRAST,
+	#endif
 	MENU_TDR,
 	MENU_WX,
 	MENU_BEEP,

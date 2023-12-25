@@ -100,7 +100,11 @@ void SETTINGS_SaveSettings(void)
 	State[3] = gEeprom.BATTERY_SAVE;
 	State[4] = gEeprom.DUAL_WATCH;
 	State[5] = gEeprom.BACKLIGHT;
+	#ifdef ENABLE_LCD_CONTRAST_OPTION
+	State[6] = (gEeprom.LCD_CONTRAST & 0x7F) | (gEeprom.TAIL_NOTE_ELIMINATION << 7);
+	#else
 	State[6] = gEeprom.TAIL_NOTE_ELIMINATION;
+	#endif
 	State[7] = gEeprom.VFO_OPEN;
 
 	EEPROM_WriteBuffer(0x0E78, State);

@@ -26,6 +26,10 @@
 uint8_t gStatusLine[128];
 uint8_t gFrameBuffer[7][128];
 
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+	uint8_t contrast = 31;  // 0 ~ 63
+#endif
+
 void ST7565_DrawLine(uint8_t Column, uint8_t Line, uint16_t Size,
                      const uint8_t *pBitmap, bool bIsClearMode) {
   uint16_t i;
@@ -122,11 +126,15 @@ void ST7565_Init(void) {
   ST7565_WriteByte(0xA2);
   ST7565_WriteByte(0xC0);
   ST7565_WriteByte(0xA1);
-  ST7565_WriteByte(0xA6);
+  ST7565_WriteByte(0xA6); // 0xA6: Normal; 0xA7: Invert Contrast;
   ST7565_WriteByte(0xA4);
   ST7565_WriteByte(0x24);
   ST7565_WriteByte(0x81);
-  ST7565_WriteByte(0x1F); // contrast
+  #ifdef ENABLE_LCD_CONTRAST_OPTION
+		ST7565_WriteByte(contrast);  // brightness 0 ~ 63
+	#else
+		ST7565_WriteByte(31);        // brightness 0 ~ 63
+	#endif
   ST7565_WriteByte(0x2B);
   SYSTEM_DelayMs(1);
   ST7565_WriteByte(0x2E);
@@ -172,3 +180,15 @@ void ST7565_WriteByte(uint8_t Value) {
   }
   SPI0->WDR = Value;
 }
+
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+	void ST7565_SetContrast(const uint8_t value)
+	{
+		contrast = (value > 45) ? 45 : (value < 26) ? 26 : value;
+	}
+
+	uint8_t ST7565_GetContrast(void)
+	{
+		return contrast;
+	}
+#endif

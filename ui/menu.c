@@ -26,6 +26,9 @@
 #include "../helper/battery.h"
 #include "../helper/measurements.h"
 #include "../misc.h"
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+#include "driver/st7565.h"
+#endif
 #include "../settings.h"
 #include "helper.h"
 #include "inputbox.h"
@@ -53,6 +56,12 @@ static const char MenuList[][8] = {
     "BatSave",
     "VOX",
     "Backlit",
+    #ifdef ENABLE_LCD_INVERT_OPTION
+    "Invert",
+    #endif
+    #ifdef ENABLE_LCD_CONTRAST_OPTION
+    "Contras",
+    #endif
     // 0x10
     "DualRx",
     "XBand",
@@ -337,7 +346,13 @@ void UI_DisplayMenu(void) {
   case MENU_ABR:
     strcpy(String, gSubMenuBacklight[gSubMenuSelection]);
     break;
-
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+  case MENU_CONTRAST:				
+		sprintf(String, "%d", gSubMenuSelection);				
+		ST7565_SetContrast(gSubMenuSelection);
+	  break;
+#endif
+  
   case MENU_ALL_TX:
     strcpy(String, defaultEnableDisable[gSubMenuSelection]);
     break;

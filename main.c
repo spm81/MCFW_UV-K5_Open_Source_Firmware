@@ -29,6 +29,9 @@
 #include "bsp/dp32g030/syscon.h"
 #include "driver/backlight.h"
 #include "driver/bk4819.h"
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+#include "driver/st7565.h"
+#endif
 #include "driver/gpio.h"
 #include "driver/system.h"
 #include "driver/systick.h"
@@ -85,8 +88,15 @@ void Main(void) {
 #endif
   BK4819_Init();
   BOARD_ADC_GetBatteryInfo(&gBatteryCurrentVoltage, &gBatteryCurrent);
+
+
+
   BOARD_EEPROM_Init();
   BOARD_EEPROM_LoadCalibration();
+
+  #ifdef ENABLE_LCD_CONTRAST_OPTION
+    ST7565_SetContrast(gEeprom.LCD_CONTRAST);
+	#endif
 
   RADIO_ConfigureChannel(0, 2);
   RADIO_ConfigureChannel(1, 2);
@@ -121,7 +131,7 @@ void Main(void) {
 	
     UI_DisplayWelcome();
     BACKLIGHT_TurnOn();
-    SYSTEM_DelayMs(4000);
+    SYSTEM_DelayMs(2500);
 #if defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP)		
 		gMenuListCount = 49;
 #elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP)		
@@ -137,6 +147,10 @@ void Main(void) {
 #else
 		gMenuListCount = 38;
 #endif	
+#if defined(ENABLE_LCD_CONTRAST_OPTION)
+  gMenuListCount += 1;
+#endif
+
     BootMode = BOOT_GetMode();
     if (gEeprom.POWER_ON_PASSWORD < 1000000) {
       bIsInLockScreen = true;

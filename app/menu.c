@@ -29,6 +29,9 @@
 #include "board.h"
 #include "bsp/dp32g030/gpio.h"
 #include "driver/backlight.h"
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+#include "driver/st7565.h"
+#endif
 #include "driver/gpio.h"
 #include "driver/keyboard.h"
 #include "frequencies.h"
@@ -73,6 +76,13 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     *pMin = 0;
     *pMax = 4;
     break;
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+  case MENU_CONTRAST:
+		*pMin = 1;
+		*pMax = 63;
+		break;	
+#endif
+
   case MENU_MDF:
     *pMin = 0;
     *pMax = 3;
@@ -460,6 +470,13 @@ void MENU_AcceptSetting(void) {
     gEeprom.ROGER = gSubMenuSelection;
     break;
 #endif
+
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+  case MENU_CONTRAST:
+			gEeprom.LCD_CONTRAST = gSubMenuSelection;
+			ST7565_SetContrast(gEeprom.LCD_CONTRAST);
+			break;  
+#endif
   case MENU_AM:
     gTxVfo->AM_CHANNEL_MODE = gSubMenuSelection;
     gRequestSaveChannel = 1;
@@ -788,6 +805,11 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_ROGER:
     gSubMenuSelection = gEeprom.ROGER;
     break;
+#endif
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+  case MENU_CONTRAST:
+			gSubMenuSelection = gEeprom.LCD_CONTRAST;
+			break;	
 #endif
   case MENU_AM:
     gSubMenuSelection = gTxVfo->AM_CHANNEL_MODE;
