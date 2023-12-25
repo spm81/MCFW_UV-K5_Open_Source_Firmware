@@ -126,11 +126,11 @@ void ST7565_Init(void) {
   ST7565_WriteByte(0xA2);
   ST7565_WriteByte(0xC0);
   ST7565_WriteByte(0xA1);
-#ifdef ENABLE_LCD_INVERT_OPTION  
-  ST7565_WriteByte(0xA7); // 0xA6: Normal; 0xA7: Invert Contrast;
-#else
-  ST7565_WriteByte(0xA6); // 0xA6: Normal; 0xA7: Invert Contrast;
-#endif
+  #ifdef ENABLE_LCD_INVERT_OPTION  
+	ST7565_WriteByte(0xA7); // 0xA6: Normal; 0xA7: Invert Contrast;
+  #else
+	ST7565_WriteByte(0xA6); // 0xA6: Normal; 0xA7: Invert Contrast;
+  #endif
   ST7565_WriteByte(0xA4);
   ST7565_WriteByte(0x24);
   ST7565_WriteByte(0x81);

@@ -18,8 +18,9 @@ ENABLE_TX1750 				:= 0
 ENABLE_STATUS_BATTERY_PERC  := 1
 
 #More LCD Settings
-ENABLE_LCD_CONTRAST_OPTION 	:= 1
-ENABLE_LCD_INVERT_OPTION	:= 0 
+ENABLE_LCD_INVERT_OPTION	:= 1
+ENABLE_LCD_CONTRAST_OPTION 	:= 0 # Not working ...... yet, don't use it. Keep it at 0
+
 
 #Sound Bar(s) 255 bytes // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
 ENABLE_MIC_PLUS_GAIN_BAR_TX := 1
@@ -192,6 +193,10 @@ endif
 CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-builtin -fshort-enums -fno-delete-null-pointer-checks -std=c11 -MMD
 CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
+
+ifeq ($(ENABLE_LCD_INVERT_OPTION),1)
+CFLAGS += -DENABLE_LCD_INVERT_OPTION
+endif
 ifeq ($(ENABLE_AIRCOPY),1)
 CFLAGS += -DENABLE_AIRCOPY
 endif
@@ -233,9 +238,6 @@ CFLAGS += -DENABLE_STATUS_BATTERY_PERC
 endif
 ifeq ($(ENABLE_LCD_CONTRAST_OPTION),1)
 	CFLAGS  += -DENABLE_LCD_CONTRAST_OPTION
-endif
-ifeq ($(ENABLE_LCD_INVERT_OPTION),1)
-	CFLAGS  += -DENABLE_LCD_INVERT_OPTION
 endif
 ifeq ($(ENABLE_UART),1)
 CFLAGS += -DENABLE_UART
