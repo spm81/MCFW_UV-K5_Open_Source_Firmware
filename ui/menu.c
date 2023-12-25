@@ -56,9 +56,10 @@ static const char MenuList[][8] = {
     "BatSave",
     "VOX",
     "Backlit",
+/*	
     #ifdef ENABLE_LCD_INVERT_OPTION
     "Invert",
-    #endif
+    #endif*/
     #ifdef ENABLE_LCD_CONTRAST_OPTION
     "Contras",
     #endif
