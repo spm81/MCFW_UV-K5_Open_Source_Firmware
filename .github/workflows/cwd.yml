@@ -19,3 +19,12 @@ jobs:
       run: make clean
     - name: compile with docker
       run: ./compile-with-docker.sh
+    - name: pr-comment-file-size
+      uses: fatton139/pr-comment-file-size@v3.1.1
+      with:
+    # Path to file or directory for file sizes analysis.
+        path: ./firmware.packed.bin
+    # your GITHUB_TOKEN env var.
+        token: ${{ secrets.GITHUB_TOKEN }}
+          
+          
