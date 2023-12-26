@@ -22,12 +22,12 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
           name: Packed firmware
-          path: ./firmware.packed.bin
+          path: ./compiled-firmware/firmware.packed.bin
     - name: pr-comment-file-size
       uses: fatton139/pr-comment-file-size@v3.1.1
       with:
     # Path to file or directory for file sizes analysis.
-        path: ./firmware.packed.bin
+        path: ./compiled-firmware/firmware.packed.bin
     # your GITHUB_TOKEN env var.
         token: ${{ secrets.GITHUB_TOKEN }}
           
