@@ -19,7 +19,7 @@
 #include <string.h>
 #define F_MIN FrequencyBandTable[0].lower
 #define F_MAX FrequencyBandTable[ARRAY_SIZE(FrequencyBandTable) - 1].upper
-#ifdef ENABLE_AM_FIX
+#ifdef ENABLE_AM_FIX_ON_SPECTRUM
 	#include "../am_fix.h"
 #endif	
 #include "../driver/eeprom.h"
@@ -620,7 +620,7 @@ static void ToggleModulation() {
     settings.modulationType++;
   }
   BK4819_SetModulation(settings.modulationType);
-#ifdef ENABLE_AM_FIX
+#ifdef ENABLE_AM_FIX_ON_SPECTRUM
   if(settings.modulationType != MOD_AM) {
     //BK4819_InitAGC(false);
 	AM_fix_init();
@@ -1509,6 +1509,14 @@ static void UpdateListening() {
 static void UpdateTransmitting() {}
 
 static void Tick() {
+#ifdef ENABLE_AM_FIX_ON_SPECTRUM
+  /*if(settings.modulationType == MOD_AM) {
+      AM_fix_10ms(vfo, !lockAGC); //allow AM_Fix to apply its AGC action
+  }
+  */
+ if (gRxVfo->ModulationType == MOD_AM)
+    AM_fix_10ms(gEeprom.RX_CHANNEL);
+#endif  
 #if defined(ENABLE_UART)
   if (UART_IsCommandAvailable()) {
     __disable_irq();

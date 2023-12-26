@@ -4,8 +4,12 @@ TARGET = firmware
 
 ENABLE_AIRCOPY 				:= 0
 
-#AM Modulation 544 	bytes
+#AM Modulation
+#ENABLE_AM_FIX - 544 bytes
 ENABLE_AM_FIX 				:= 1
+#ENABLE_AM_FIX_ON_SPECTRUM - 40 bytes
+ENABLE_AM_FIX_ON_SPECTRUM	:= 0
+
 #FM Radio
 ENABLE_FMRADIO 				:= 0
 
@@ -211,6 +215,9 @@ ifeq ($(ENABLE_FLASHLIGHT_SOS),1)
 endif
 ifeq ($(ENABLE_AM_FIX),1)
 	CFLAGS  += -DENABLE_AM_FIX
+endif
+ifeq ($(ENABLE_AM_FIX_ON_SPECTRUM),1)
+	CFLAGS  += -DENABLE_AM_FIX_ON_SPECTRUM
 endif
 ifeq ($(ENABLE_FMRADIO),1)
 CFLAGS += -DENABLE_FMRADIO
