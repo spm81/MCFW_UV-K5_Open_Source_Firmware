@@ -19,7 +19,9 @@
 #include <string.h>
 #define F_MIN FrequencyBandTable[0].lower
 #define F_MAX FrequencyBandTable[ARRAY_SIZE(FrequencyBandTable) - 1].upper
-
+#ifdef ENABLE_AM_FIX
+	#include "../am_fix.h"
+#endif	
 #include "../driver/eeprom.h"
 
 const uint16_t RSSI_MAX_VALUE = 65535;
@@ -618,6 +620,15 @@ static void ToggleModulation() {
     settings.modulationType++;
   }
   BK4819_SetModulation(settings.modulationType);
+#ifdef ENABLE_AM_FIX
+  if(settings.modulationType != MOD_AM) {
+    //BK4819_InitAGC(false);
+	AM_fix_init();
+    BK4819_SetAGC(1);
+  }
+#endif
+
+  RelaunchScan();
   redrawScreen = true;
 }
 
