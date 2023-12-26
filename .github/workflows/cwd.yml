@@ -1,0 +1,21 @@
+name: Compile with Docker CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: make compile executable
+      run: chmod +x ./compile-with-docker.sh
+    - name: clean
+      run: make clean
+    - name: compile with docker
+      run: ./compile-with-docker.sh
