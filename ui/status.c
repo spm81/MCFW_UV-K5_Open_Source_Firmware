@@ -48,8 +48,11 @@ void UI_DisplayStatus(void) {
   }
 
 #ifdef ENABLE_MESSENGER
-  const uint8_t MSG_ICO_POS = 105;
-
+	#ifdef ENABLE_STATUS_BATTERY_PERC
+		const uint8_t MSG_ICO_POS = 85;
+	#else
+		const uint8_t MSG_ICO_POS = 105;
+	#endif
 	if (hasNewMessage) { // New Message indicator	
     gStatusLine[MSG_ICO_POS + 0] |= 0b00000000;
     gStatusLine[MSG_ICO_POS + 1] |= 0b00111111;
