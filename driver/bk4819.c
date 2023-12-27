@@ -977,8 +977,7 @@ void BK4819_PlayBeep(const uint16_t freq, const int delay)
   BK4819_EnterTxMute();
 }
 
-#ifdef ENABLE_ROGERBEEP
-#ifdef ENABLE_MESSENGER
+#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER)
 void BK4819_PlayRoger(int t)
 {
   BK4819_EnterTxMute();
@@ -990,7 +989,7 @@ void BK4819_PlayRoger(int t)
 	// NEED TO HAD IFDEF ON ROGER'S BEEP
   switch (t) {
 #endif	
- 
+#if defined(ENABLE_ROGERBEEP) 
     case 0: // DEFAULT
       BK4819_PlayBeep(500, 80);
       BK4819_PlayBeep(700, 80);
@@ -1031,6 +1030,7 @@ void BK4819_PlayRoger(int t)
       BK4819_PlayBeep(872, 80);
       BK4819_PlayBeep(1742, 80); 	
 	break;
+#endif	
 #ifdef ENABLE_MESSENGER
 
 	case 99: // NOKIA SMS Tone2
@@ -1038,14 +1038,13 @@ void BK4819_PlayRoger(int t)
     BK4819_PlayBeep(600, 200);
     BK4819_PlayBeep(1000, 200);
 #endif	
-#ifdef ENABLE_MESSENGER
+#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER)
 	
   }
 
 	BK4819_WriteRegister(BK4819_REG_70, 0x0000);
 	BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);   // 1 1 0000 0 1 1111 1 1 1 0
 }
-#endif
 #endif
 #ifdef ENABLE_MDC
 
