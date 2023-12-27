@@ -445,7 +445,19 @@ void BK4819_SetModulation(ModulationType type) {
   if (type == MOD_CW && KEY_PTT) {
     // Play CW tone continuously while PTT is pressed
     while (KEY_PTT) {
-      BK4819_TransmitTone(true, 1750);
+		 BK4819_EnterTxMute();
+	BK4819_SetAF(BK4819_AF_MUTE);
+  //	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (96u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
+	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (28u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
+	BK4819_EnableTXLink();
+	SYSTEM_DelayMs(50);
+	   BK4819_PlayBeep(1000, 200);
+
+	BK4819_WriteRegister(BK4819_REG_70, 0x0000);
+	BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);   // 1 1 0000 0 1 1111 1 1 1 0
+     // BK4819_TransmitTone(true, 1750);
+  //    GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+   //   gEnableSpeaker = true;
 	 // SYSTEM_DelayMs(2);
      // GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
      // gEnableSpeaker = true;
@@ -977,7 +989,7 @@ void BK4819_PlayBeep(const uint16_t freq, const int delay)
   BK4819_EnterTxMute();
 }
 
-#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER)
+#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER_DELIVERY_NOTIFICATION)
 void BK4819_PlayRoger(int t)
 {
   BK4819_EnterTxMute();
@@ -1031,14 +1043,14 @@ void BK4819_PlayRoger(int t)
       BK4819_PlayBeep(1742, 80); 	
 	break;
 #endif	
-#ifdef ENABLE_MESSENGER
+#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
 
 	case 99: // NOKIA SMS Tone2
 	BK4819_PlayBeep(800, 200);  // Frequency and duration can be adjusted
     BK4819_PlayBeep(600, 200);
     BK4819_PlayBeep(1000, 200);
 #endif	
-#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER)
+#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER_DELIVERY_NOTIFICATION)
 	
   }
 

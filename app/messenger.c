@@ -616,11 +616,13 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 			snprintf(rxMessage[3], TX_MSG_LENGTH + 2, "< %s", &msgFSKBuffer[2]);
 
 			UART_printf("\nMSG : %s", rxMessage[3]);
+			#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
 			BK4819_DisableDTMF();
 			RADIO_SetTxParameters();
 			SYSTEM_DelayMs(500);
 			BK4819_ExitTxMute();
 			BK4819_PlayRoger(99);
+			#endif
 			if ( gAppToDisplay != APP_MESSENGER ) {
 				hasNewMessage = true;
 				gUpdateStatus = true;

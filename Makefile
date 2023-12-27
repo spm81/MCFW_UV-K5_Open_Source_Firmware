@@ -2,69 +2,72 @@
 # Matoz @spm81 | Joaquim @joaquimorg | Need your name here ;)
 TARGET = firmware
 
-ENABLE_AIRCOPY 				:= 0
+ENABLE_AIRCOPY 							:= 0
 
 #AM Modulation
 #ENABLE_AM_FIX - 544 bytes
-ENABLE_AM_FIX 				:= 1
+ENABLE_AM_FIX 							:= 1
 #ENABLE_AM_FIX_ON_SPECTRUM - 40 bytes
-ENABLE_AM_FIX_ON_SPECTRUM	:= 0
+ENABLE_AM_FIX_ON_SPECTRUM				:= 1
 
-#FM Radio 3856 bytes
-ENABLE_FMRADIO 				:= 0
-ENABLE_FMRADIO_FAST_RESTORE := 0
+#FM Radio
+#ENABLE_FMRADIO - 3856 bytes
+ENABLE_FMRADIO							:= 0
+#ENABLE_FMRADIO_FAST_RESTORE - 0 bytes
 # Restore FM Radio in 1 second after RX
+ENABLE_FMRADIO_FAST_RESTORE 			:= 0
 
 
-ENABLE_OVERLAY 				:= 0
-ENABLE_SWD 					:= 0
+ENABLE_OVERLAY 							:= 0
+ENABLE_SWD 								:= 0
 
-ENABLE_TX1750 				:= 0
+ENABLE_TX1750 							:= 0
 
 #Battery Percentage in Status Bar	296 bytes
-ENABLE_STATUS_BATTERY_PERC  := 1
+ENABLE_STATUS_BATTERY_PERC  			:= 0
 
 #More LCD Settings
-ENABLE_LCD_INVERT_OPTION	:= 0
-ENABLE_LCD_CONTRAST_OPTION 	:= 0 
-# Not working ...... yet, don't use it. Keep it at 0
+ENABLE_LCD_INVERT_OPTION				:= 0
+# ENABLE_LCD_CONTRAST_OPTION Not working ...... yet, don't use it. Keep it at 0
+#ENABLE_LCD_CONTRAST_OPTION 				:= 0 
 
 
 #Sound Bar(s) 255 bytes // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
-ENABLE_MIC_PLUS_GAIN_BAR_TX := 1
+ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1
 
 #SOS Flashlight 84 bytes
-ENABLE_FLASHLIGHT_SOS       := 1
+ENABLE_FLASHLIGHT_SOS       			:= 1
 
 
 #UART
-ENABLE_UART                 := 1
-ENABLE_UART_CAT             := 0
+ENABLE_UART                 			:= 1
+ENABLE_UART_CAT             			:= 0
 
 #Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
-ENABLE_DTMF_CALLING         := 1
+ENABLE_DTMF_CALLING         			:= 1
 
-
-ENABLE_NOSCANTIMEOUT        := 1
-ENABLE_KEEPNAMEONSAVE       := 1
-ENABLE_FASTER_CHANNEL_SCAN  := 1
+#Options
+ENABLE_NOSCANTIMEOUT        			:= 1
+ENABLE_KEEPNAMEONSAVE       			:= 1
+ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 
 #Roger - To Enable MDC, ROGERBEEP HAS TO BE ENABLED
-ENABLE_ROGERBEEP            := 1
-ENABLE_MDC                  := 0	
+ENABLE_ROGERBEEP            			:= 0
+ENABLE_MDC                  			:= 0	
 
 #Spectrum
-ENABLE_SPECTRUM             := 1
-SPECTRUM_AUTOMATIC_SQUELCH  := 1
-SPECTRUM_EXTRA_VALUES       := 1
-ENABLE_ALL_REGISTERS        := 0
-ENABLE_MATOZ_KEYS           := 1
+ENABLE_SPECTRUM             			:= 1
+SPECTRUM_AUTOMATIC_SQUELCH  			:= 1
+SPECTRUM_EXTRA_VALUES       			:= 1
+ENABLE_ALL_REGISTERS        			:= 0
+ENABLE_MATOZ_KEYS           			:= 1
 
 #Messenger ( Thanks to joaquimorg https://github.com/joaquimorg )
-ENABLE_MESSENGER            := 1
+ENABLE_MESSENGER            			:= 1
+ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
 
 #Try to implement CW Modulation like IJV
-ENABLE_CW                   := 0
+ENABLE_CW                   			:= 0
 
 BSP_DEFINITIONS := $(wildcard hardware/*/*.def)
 BSP_HEADERS := $(patsubst hardware/%,bsp/%,$(BSP_DEFINITIONS))
@@ -283,6 +286,9 @@ ifeq ($(ENABLE_MATOZ_KEYS),1)
 endif
 ifeq ($(ENABLE_MESSENGER),1)
 	CFLAGS += -DENABLE_MESSENGER
+endif
+ifeq ($(ENABLE_MESSENGER_DELIVERY_NOTIFICATION),1)
+	CFLAGS += -DENABLE_MESSENGER_DELIVERY_NOTIFICATION
 endif
 ifeq ($(ENABLE_CW),1)
 	CFLAGS += -DENABLE_CW
