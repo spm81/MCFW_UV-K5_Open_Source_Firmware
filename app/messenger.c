@@ -616,6 +616,8 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 			snprintf(rxMessage[3], TX_MSG_LENGTH + 2, "< %s", &msgFSKBuffer[2]);
 
 			//UART_printf("\nMSG : %s", rxMessage[3]);
+					SYSTEM_DelayMs(500);
+
 			if ( gAppToDisplay != APP_MESSENGER ) {
 				hasNewMessage = true;
 				gUpdateStatus = true;
