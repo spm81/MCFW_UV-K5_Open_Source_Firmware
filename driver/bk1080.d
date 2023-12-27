@@ -1,8 +1,8 @@
 driver/bk1080.o: driver/bk1080.c \
- c:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/bsp/dp32g030/gpio.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/bsp/dp32g030/gpio.h \
  driver/bk1080.h \
- c:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/bk1080-regs.h \
- c:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/gpio.h \
- c:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/i2c.h \
- c:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/system.h \
- c:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/misc.h
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/bk1080-regs.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/gpio.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/i2c.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/driver/system.h \
+ C:/GITHUB/compile/MCFW_UV-K5_Open_Source_Firmware/misc.h

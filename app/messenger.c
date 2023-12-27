@@ -619,6 +619,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 			if ( gAppToDisplay != APP_MESSENGER ) {
 				hasNewMessage = true;
 				gUpdateStatus = true;
+				gUpdateDisplay = true;
 				UI_DisplayStatus();
 			}
 			else {

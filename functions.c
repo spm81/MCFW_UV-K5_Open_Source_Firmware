@@ -106,7 +106,11 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
     }
 #if defined(ENABLE_FMRADIO)
     if (gFmRadioMode) {
-      gFM_RestoreCountdown = 500;
+		#if defined(ENABLE_FMRADIO_FAST_RESTORE)
+			gFM_RestoreCountdown = 100;
+		#else
+			gFM_RestoreCountdown = 500;
+		#endif
     }
 #endif
 #ifdef ENABLE_DTMF_CALLING
