@@ -82,7 +82,7 @@ void UI_DisplayStatus(void) {
   sprintf(String, "%s %s %s %s %s %s %s      %u%%",
 #else
   sprintf(String, "%s %s %s %s %s %s %s",
-#end
+#endif
           isPowerSave ? "S" : " ", //
           isKeyLock ? "L" : " ",   //
           isFPressed ? "F" : " ",  //
