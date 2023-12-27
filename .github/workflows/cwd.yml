@@ -21,8 +21,12 @@ jobs:
       run: ./compile-with-docker.sh
     - uses: actions/upload-artifact@v4
       with:
-          name: Packed firmware
+          name: Packed Firmware
           path: ./compiled-firmware/firmware.packed.bin
+    - uses: actions/upload-artifact@v4
+      with:
+          name: Raw Firmware
+          path: ./compiled-firmware/firmware.bin
     - name: pr-comment-file-size
       uses: fatton139/pr-comment-file-size@v3.1.1
       with:
