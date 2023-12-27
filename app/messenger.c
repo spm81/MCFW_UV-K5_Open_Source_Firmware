@@ -576,7 +576,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 	const bool rx_fifo_almost_full = (interrupt_bits & BK4819_REG_02_FSK_FIFO_ALMOST_FULL) ? true : false;
 	const bool rx_finished         = (interrupt_bits & BK4819_REG_02_FSK_RX_FINISHED) ? true : false;
 
-	//UART_printf("\nMSG : S%i, F%i, E%i | %i", rx_sync, rx_fifo_almost_full, rx_finished, interrupt_bits);
+	UART_printf("\nMSG : S%i, F%i, E%i | %i", rx_sync, rx_fifo_almost_full, rx_finished, interrupt_bits);
 
 	if (rx_sync) {
 		gFSKWriteIndex = 0;
@@ -615,9 +615,12 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 			moveUP(rxMessage);
 			snprintf(rxMessage[3], TX_MSG_LENGTH + 2, "< %s", &msgFSKBuffer[2]);
 
-			//UART_printf("\nMSG : %s", rxMessage[3]);
-					SYSTEM_DelayMs(500);
-
+			UART_printf("\nMSG : %s", rxMessage[3]);
+			BK4819_DisableDTMF();
+			RADIO_SetTxParameters();
+			SYSTEM_DelayMs(500);
+			BK4819_ExitTxMute();
+			BK4819_PlayRoger(99);
 			if ( gAppToDisplay != APP_MESSENGER ) {
 				hasNewMessage = true;
 				gUpdateStatus = true;
@@ -633,6 +636,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 	if (rx_finished) {
 		gFSKWriteIndex = 0;
 		msgStatus = READY;
+		
 	}
 }
 
