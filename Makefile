@@ -22,7 +22,7 @@ ENABLE_TX1750 				:= 0
 ENABLE_STATUS_BATTERY_PERC  := 1
 
 #More LCD Settings
-ENABLE_LCD_INVERT_OPTION	:= 1
+ENABLE_LCD_INVERT_OPTION	:= 0
 ENABLE_LCD_CONTRAST_OPTION 	:= 0 # Not working ...... yet, don't use it. Keep it at 0
 
 

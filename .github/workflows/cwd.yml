@@ -1,0 +1,34 @@
+name: Compile with Docker CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: make compile executable
+      run: chmod +x ./compile-with-docker.sh
+    - name: clean
+      run: make clean
+    - name: compile with docker
+      run: ./compile-with-docker.sh
+    - uses: actions/upload-artifact@v4
+      with:
+          name: Packed firmware
+          path: ./compiled-firmware/firmware.packed.bin
+    - name: pr-comment-file-size
+      uses: fatton139/pr-comment-file-size@v3.1.1
+      with:
+    # Path to file or directory for file sizes analysis.
+        path: ./compiled-firmware/firmware.packed.bin
+    # your GITHUB_TOKEN env var.
+        token: ${{ secrets.GITHUB_TOKEN }}
+          
+          
