@@ -21,6 +21,10 @@
 #if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
 #endif
+#ifdef ENABLE_MESSENGER
+	#include "app/messenger.h"
+  #include "external/printf/printf.h"
+#endif
 #include "app/uart.h"
 #include "board.h"
 #include "bsp/dp32g030/dma.h"
@@ -460,6 +464,14 @@ uint64_t xtou64(const char *str) {
   return res;
 }
 
+#ifdef ENABLE_MESSENGER
+void remove(char cstring[], char letter) {
+    for(int i = 0; cstring[i] != '\0'; i++) {
+        if(cstring[i] == letter) cstring[i] = '\0';
+    } 
+}
+#endif
+
 bool UART_IsCommandAvailable(void) {
   uint16_t DmaLength;
   uint16_t CommandLength;
@@ -470,10 +482,32 @@ bool UART_IsCommandAvailable(void) {
   uint16_t i;
 
   DmaLength = DMA_CH0->ST & 0xFFFU;
-  while (1) {
+  while (1) {    
+
     if (gUART_WriteIndex == DmaLength) {
       return false;
     }
+
+#ifdef ENABLE_MESSENGER
+
+    if ( UART_DMA_Buffer[gUART_WriteIndex] == 'S' && UART_DMA_Buffer[gUART_WriteIndex + 1] == 'M' && UART_DMA_Buffer[ gUART_WriteIndex + 2] == 'S' && UART_DMA_Buffer[gUART_WriteIndex + 3] == ':') {
+      
+      char txMessage[TX_MSG_LENGTH + 4];
+      memset(txMessage, 0, sizeof(txMessage));
+      snprintf(txMessage, (TX_MSG_LENGTH + 4), "%s", &UART_DMA_Buffer[gUART_WriteIndex + 4]);
+
+      remove(txMessage, '\n');
+      remove(txMessage, '\r');      
+
+      if (strlen(txMessage) > 0) {        
+        MSG_Send(txMessage);
+        UART_printf("SMS>%s\r\n", txMessage);
+        gUpdateDisplay = true;
+      }      
+      
+    }
+  
+#endif  
 
     while (gUART_WriteIndex != DmaLength &&
            UART_DMA_Buffer[gUART_WriteIndex] != 0xABU) {
@@ -498,6 +532,7 @@ bool UART_IsCommandAvailable(void) {
     gUART_WriteIndex = DMA_INDEX(gUART_WriteIndex, 1);
   }
 
+
   Index = DMA_INDEX(gUART_WriteIndex, 2);
   Size = (UART_DMA_Buffer[DMA_INDEX(Index, 1)] << 8) | UART_DMA_Buffer[Index];
   if (Size + 8 > sizeof(UART_DMA_Buffer)) {
@@ -507,6 +542,7 @@ bool UART_IsCommandAvailable(void) {
   if (CommandLength < Size + 8) {
     return false;
   }
+
   Index = DMA_INDEX(Index, 2);
   TailIndex = DMA_INDEX(Index, Size + 2);
   if (UART_DMA_Buffer[TailIndex] != 0xDC ||
@@ -555,7 +591,8 @@ bool UART_IsCommandAvailable(void) {
   return true;
 }
 
-void UART_HandleCommand(void) {
+void UART_HandleCommand(void) {  
+
   switch (UART_Command.Header.ID) {
   case 0x0514:
     CMD_0514(UART_Command.Buffer);

@@ -537,6 +537,13 @@ void APP_CheckRadioInterrupts(void) {
 
     BK4819_WriteRegister(BK4819_REG_02, 0);
     Mask = BK4819_ReadRegister(BK4819_REG_02);
+
+#ifdef ENABLE_MESSENGER
+		MSG_StorePacket(Mask);
+    if ( msgStatus == READY ) {
+#endif
+
+
 //#ifdef ENABLE_DTMF_CALLING 
     if (Mask & BK4819_REG_02_DTMF_5TONE_FOUND) {
       gDTMF_RequestPending = true;
@@ -612,8 +619,9 @@ void APP_CheckRadioInterrupts(void) {
 #endif
 
 #ifdef ENABLE_MESSENGER
-		MSG_StorePacket(Mask);
+    }
 #endif
+
   }
 }
 
@@ -834,6 +842,7 @@ void APP_Update(void) {
     }
     gBatterySaveCountdownExpired = false;
   }
+
 }
 
 void APP_CheckKeys(void) {
@@ -1175,6 +1184,7 @@ void APP_TimeSlice10ms(void) {
 }
 
 void APP_TimeSlice500ms(void) {
+
   // Skipped authentic device check
 
   if (gKeypadLocked) {
@@ -1641,45 +1651,44 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
         switch (gAppToDisplay) {
         case APP_SCANLIST:
           SCANLIST_key(Key, bKeyPressed, bKeyHeld);
-          return;
+          break;
   #ifdef ENABLE_MESSENGER
         case APP_MESSENGER:
           MSG_ProcessKeys(Key, bKeyPressed, bKeyHeld);
-          return;
+          break;
   #endif
           default:
             break;
         }
+      } else {
+        switch (gScreenToDisplay) {
+        case DISPLAY_MAIN:
+          MAIN_ProcessKeys(Key, bKeyPressed, bKeyHeld);
+          break;
+  #if defined(ENABLE_FMRADIO)
+        case DISPLAY_FM:
+          FM_ProcessKeys(Key, bKeyPressed, bKeyHeld);
+          break;
+  #endif
+
+        case DISPLAY_MENU:
+          MENU_ProcessKeys(Key, bKeyPressed, bKeyHeld);
+          break;
+        case DISPLAY_APP_MENU:
+          APPMENU_ProcessKeys(Key, bKeyPressed, bKeyHeld);
+          break;
+        case DISPLAY_SCANNER:
+          SCANNER_ProcessKeys(Key, bKeyPressed, bKeyHeld);
+          break;
+  #if defined(ENABLE_AIRCOPY)
+        case DISPLAY_AIRCOPY:
+          AIRCOPY_ProcessKeys(Key, bKeyPressed, bKeyHeld);
+          break;
+  #endif
+        default:
+          break;
       }
-
-      switch (gScreenToDisplay) {
-      case DISPLAY_MAIN:
-        MAIN_ProcessKeys(Key, bKeyPressed, bKeyHeld);
-        break;
-#if defined(ENABLE_FMRADIO)
-      case DISPLAY_FM:
-        FM_ProcessKeys(Key, bKeyPressed, bKeyHeld);
-        break;
-#endif
-
-      case DISPLAY_MENU:
-        MENU_ProcessKeys(Key, bKeyPressed, bKeyHeld);
-        break;
-      case DISPLAY_APP_MENU:
-        APPMENU_ProcessKeys(Key, bKeyPressed, bKeyHeld);
-        break;
-      case DISPLAY_SCANNER:
-        SCANNER_ProcessKeys(Key, bKeyPressed, bKeyHeld);
-        break;
-#if defined(ENABLE_AIRCOPY)
-      case DISPLAY_AIRCOPY:
-        AIRCOPY_ProcessKeys(Key, bKeyPressed, bKeyHeld);
-        break;
-#endif
-      default:
-        break;
     }
-  
 	}	else if (gScreenToDisplay != DISPLAY_SCANNER
 #if defined(ENABLE_AIRCOPY)
                && gScreenToDisplay != DISPLAY_AIRCOPY
