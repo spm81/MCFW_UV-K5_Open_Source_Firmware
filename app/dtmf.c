@@ -55,6 +55,7 @@ bool gDTMF_IsTx;
 uint8_t gDTMF_TxStopCountdown;
 bool gDTMF_IsGroupCall;
 
+#ifdef ENABLE_DTMF_CALLING
 bool DTMF_ValidateCodes(char *pCode, uint8_t Size)
 {
 	uint8_t i;
@@ -254,7 +255,7 @@ void DTMF_HandleRequest(void)
 	}
 }
 
-#ifdef ENABLE_DTMF_CALLING
+//#ifdef ENABLE_DTMF_CALLING
 void DTMF_Reply(void)
 {
 	char String[20];

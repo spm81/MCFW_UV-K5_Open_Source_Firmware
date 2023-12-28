@@ -12,7 +12,7 @@ ENABLE_AM_FIX_ON_SPECTRUM				:= 1
 
 #FM Radio
 #ENABLE_FMRADIO - 3856 bytes
-ENABLE_FMRADIO							:= 1
+ENABLE_FMRADIO							:= 0
 #ENABLE_FMRADIO_FAST_RESTORE - 0 bytes
 # Restore FM Radio in 1 second after RX
 ENABLE_FMRADIO_FAST_RESTORE 			:= 1
@@ -36,7 +36,7 @@ ENABLE_LCD_INVERT_OPTION				:= 0
 ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1
 
 #SOS Flashlight 84 bytes
-ENABLE_FLASHLIGHT_SOS       			:= 0
+ENABLE_FLASHLIGHT_SOS       			:= 1
 
 
 #UART
@@ -44,7 +44,7 @@ ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 
 #Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
-ENABLE_DTMF_CALLING         			:= 0
+ENABLE_DTMF_CALLING         			:= 1
 #DTMF FN1 1750hz & FN2 1050hz Tones
 ENABLE_DTMF_CALLING_FN1_FN2				:= 1
 
@@ -54,7 +54,7 @@ ENABLE_KEEPNAMEONSAVE       			:= 1
 ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 
 #Roger - To Enable MDC, ROGERBEEP HAS TO BE ENABLED
-ENABLE_ROGERBEEP            			:= 1
+ENABLE_ROGERBEEP            			:= 0
 ENABLE_MDC                  			:= 0
 
 #Spectrum

@@ -544,7 +544,7 @@ void APP_CheckRadioInterrupts(void) {
 #endif
 
 
-//#ifdef ENABLE_DTMF_CALLING 
+#ifdef ENABLE_DTMF_CALLING 
     if (Mask & BK4819_REG_02_DTMF_5TONE_FOUND) {
       gDTMF_RequestPending = true;
       gDTMF_RecvTimeout = 5;
@@ -561,7 +561,7 @@ void APP_CheckRadioInterrupts(void) {
         DTMF_HandleRequest();
       }
     }
-//#endif	
+#endif	
     if (Mask & BK4819_REG_02_CxCSS_TAIL) {
       g_CxCSS_TAIL_Found = true;
     }
@@ -1588,7 +1588,11 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
             Code = 0xFD;
           }
 		  else {
+			#if defined(ENABLE_DTMF_CALLING)  
             Code = DTMF_GetCharacter(Key);
+			#else
+            Code = (Key);
+			#endif
             if (Code == 0xFF) {
               goto Skip;
             }
