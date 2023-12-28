@@ -1598,10 +1598,10 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
             if (!bKeyPressed) {
               GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
               gEnableSpeaker = false;
-//#ifdef ENABLE_DTMF_CALLING
+#if defined(ENABLE_DTMF_CALLING_FN1_FN2) || defined(ENABLE_DTMF_CALLING)
 	  
               BK4819_ExitDTMF_TX(false);
-//#endif			  
+#endif			  
               if (gCurrentVfo->SCRAMBLING_TYPE == 0 ||
                   !gSetting_ScrambleEnable) {
                 BK4819_DisableScramble();
