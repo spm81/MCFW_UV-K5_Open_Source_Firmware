@@ -17,12 +17,6 @@
 #include "ui/status.h"
 #include "driver/uart.h"
 
-typedef enum MsgStatus {
-	READY,
-  	SENDING,
-  	RECEIVING,
-} MsgStatus;
-
 #define MAX_MSG_LENGTH TX_MSG_LENGTH - 1
 
 #define NEXT_CHAR_DELAY 100 // 10ms tick
@@ -36,6 +30,7 @@ unsigned char numberOfNumsAssignedToKey[9] = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
 uint8_t rxMessagePos = 0;
 char cMessage[TX_MSG_LENGTH];
+char lastcMessage[TX_MSG_LENGTH];
 char rxMessage[4][TX_MSG_LENGTH + 3];
 unsigned char cIndex = 0;
 unsigned char prevKey = 0, prevLetter = 0;
@@ -45,7 +40,6 @@ MsgStatus msgStatus = READY;
 
 uint8_t  msgFSKBuffer[2 + TX_MSG_LENGTH];
 
-uint16_t gErrorsDuringMSG;
 
 bool hasNewMessage = false;
 
@@ -53,7 +47,14 @@ uint8_t keyTickCounter = 0;
 
 // -----------------------------------------------------
 
-void msgFSKSendData(){
+uint8_t validate_char( uint8_t rchar ) {
+	if ( rchar >= 32 && rchar <= 127 ) {
+		return rchar;
+	}
+	return 32;
+}
+
+void MSG_FSKSendData(){
 
 	uint16_t fsk_reg59;
 
@@ -67,7 +68,7 @@ void msgFSKSendData(){
 	BK4819_WriteRegister(BK4819_REG_51, 0);
 
 	// set the FM deviation level
-	/*const uint16_t dev_val = BK4819_ReadRegister(BK4819_REG_40);
+	const uint16_t dev_val = BK4819_ReadRegister(BK4819_REG_40);
 	{
 		uint16_t deviation = 850;
 		switch (gEeprom.VfoInfo[gEeprom.TX_CHANNEL].CHANNEL_BANDWIDTH)
@@ -78,7 +79,7 @@ void msgFSKSendData(){
 		}
 		//BK4819_WriteRegister(0x40, (3u << 12) | (deviation & 0xfff));
 		BK4819_WriteRegister(BK4819_REG_40, (dev_val & 0xf000) | (deviation & 0xfff));
-	}*/
+	}
 
 	// REG_2B   0
 	//
@@ -122,10 +123,10 @@ void msgFSKSendData(){
 							//   6 = ???
 							//   7 = FFSK 1200/1800 RX
 							//
-		(3u << 8) |			// 0 FSK RX gain
+		(0u << 8) |			// 0 FSK RX gain
 							//   0 ~ 3
 							//
-		(3u << 6) |			// 0 ???
+		(0u << 6) |			// 0 ???
 							//   0 ~ 3
 							//
 		(0u << 4) |			// 0 FSK preamble type selection
@@ -292,7 +293,7 @@ void msgFSKSendData(){
 	BK4819_WriteRegister(BK4819_REG_59, fsk_reg59);
 
 	// restore FM deviation level
-	//BK4819_WriteRegister(BK4819_REG_40, dev_val);
+	BK4819_WriteRegister(BK4819_REG_40, dev_val);
 
 	// restore TX/RX filtering
 	BK4819_WriteRegister(BK4819_REG_2B, filt_val);
@@ -496,14 +497,15 @@ void MSG_EnableRX(const bool enable) {
 		// BK4819_WriteRegister(BK4819_REG_5C, 0xAA30);   // 10101010 0 0 110000
 
 		// set the almost full threshold
-		BK4819_WriteRegister(BK4819_REG_5E, (64u << 3) | (1u << 0));  // 0 ~ 127, 0 ~ 7
+		BK4819_WriteRegister(BK4819_REG_5E, (2u << 3) | (1u << 0));  // 0 ~ 127, 0 ~ 7
 
 		{	// packet size .. sync + 14 bytes - size of a single packet
 
-			uint16_t size = 2 + TX_MSG_LENGTH;
+			//uint16_t size = 2 + TX_MSG_LENGTH;
 			// size -= (fsk_reg59 & (1u << 3)) ? 4 : 2;
-			size = ((size + 1) / 2) * 2;             // round up to even, else FSK RX doesn't work
-			BK4819_WriteRegister(BK4819_REG_5D, ((size - 1) << 8));
+			//size = (((size + 1) / 2) * 2) + 2;             // round up to even, else FSK RX doesn't work
+			//BK4819_WriteRegister(BK4819_REG_5D, ((size - 1) << 8));
+			BK4819_WriteRegister(BK4819_REG_5D, ((TX_MSG_LENGTH + 2) << 8));
 		}
 
 		// clear FIFO's then enable RX
@@ -527,11 +529,11 @@ void moveUP(char (*rxMessages)[TX_MSG_LENGTH + 3]) {
 	memset(rxMessages[3], 0, sizeof(rxMessages[3]));
 }
 
-static void sendMessage() {
+void MSG_Send(const char txMessage[TX_MSG_LENGTH]) {
 
 	if ( msgStatus != READY ) return;
 
-	if ( cIndex > 0 ) {
+	if ( strlen(txMessage) > 0 ) {
 
 		RADIO_SetVfoState(VFO_STATE_NORMAL);
 		BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
@@ -540,14 +542,14 @@ static void sendMessage() {
 		memset(msgFSKBuffer, 0, sizeof(msgFSKBuffer));
 		msgFSKBuffer[0] = 'M';
 		msgFSKBuffer[1] = 'S';
-		memcpy(msgFSKBuffer + 2, cMessage, TX_MSG_LENGTH);
+		memcpy(msgFSKBuffer + 2, txMessage, TX_MSG_LENGTH);
 
 		BK4819_DisableDTMF();
 		RADIO_SetTxParameters();
 		SYSTEM_DelayMs(500);
 		BK4819_ExitTxMute();
 
-		msgFSKSendData();
+		MSG_FSKSendData();
 
 		//BK4819_SetupPowerAmplifier(0, 0);
 		//BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
@@ -561,61 +563,62 @@ static void sendMessage() {
 		msgStatus = READY;
 
 		moveUP(rxMessage);
-		sprintf(rxMessage[3], "> %s", cMessage);
-		memset(cMessage, 0, sizeof(cMessage));
-		cIndex = 0;
-		prevKey = 0;
-		prevLetter = 0;
-	}
+		sprintf(rxMessage[3], "> %s", txMessage);
+		memset(lastcMessage, 0, sizeof(lastcMessage));
+		memcpy(lastcMessage, txMessage, TX_MSG_LENGTH);
 
+	}
 }
 
 void MSG_StorePacket(const uint16_t interrupt_bits) {
+
+	uint16_t fsk_reg59;
 
 	const bool rx_sync             = (interrupt_bits & BK4819_REG_02_FSK_RX_SYNC) ? true : false;
 	const bool rx_fifo_almost_full = (interrupt_bits & BK4819_REG_02_FSK_FIFO_ALMOST_FULL) ? true : false;
 	const bool rx_finished         = (interrupt_bits & BK4819_REG_02_FSK_RX_FINISHED) ? true : false;
 
-	//UART_printf("\nMSG : S%i, F%i, E%i | %i", rx_sync, rx_fifo_almost_full, rx_finished, interrupt_bits);
-
 	if (rx_sync) {
 		gFSKWriteIndex = 0;
 		memset(msgFSKBuffer, 0, sizeof(msgFSKBuffer));
-		//memset(rxMessage, 0, sizeof(rxMessage));
 		msgStatus = RECEIVING;
 	}
 
-	if (rx_fifo_almost_full) {
-		const unsigned int count = BK4819_ReadRegister(BK4819_REG_5E) & (7u << 0);  // almost full threshold
+	if (rx_fifo_almost_full && msgStatus == RECEIVING) {
 
-		for (unsigned int i = 0; i < count; i++) {
+		const uint16_t count = BK4819_ReadRegister(BK4819_REG_5E) & (7u << 0);  // almost full threshold
+		for (uint16_t i = 0; i < count; i++) {
 			const uint16_t word = BK4819_ReadRegister(BK4819_REG_5F);
 			if (gFSKWriteIndex < sizeof(msgFSKBuffer))
-				msgFSKBuffer[gFSKWriteIndex++] = (word >> 0) & 0xff;
+				msgFSKBuffer[gFSKWriteIndex++] = validate_char((word >> 0) & 0xff);
 			if (gFSKWriteIndex < sizeof(msgFSKBuffer))
-				msgFSKBuffer[gFSKWriteIndex++] = (word >> 8) & 0xff;
-			SYSTEM_DelayMs(5);
+				msgFSKBuffer[gFSKWriteIndex++] = validate_char((word >> 8) & 0xff);
 		}
 
-		//UART_printf("\nMSG R : %i | %s", gFSKWriteIndex, msgFSKBuffer);
+		SYSTEM_DelayMs(10);
 
-		if (gFSKWriteIndex >= sizeof(msgFSKBuffer)) {
+	}
 
-			gFSKWriteIndex = 0;
-			uint16_t Status = BK4819_ReadRegister(BK4819_REG_0B);
-			gErrorsDuringMSG = Status;
+	if (rx_finished) {
+		fsk_reg59 = BK4819_ReadRegister(BK4819_REG_59) & ~((1u << 15) | (1u << 14) | (1u << 12) | (1u << 11));
+		BK4819_WriteRegister(BK4819_REG_59, (1u << 15) | (1u << 14) | fsk_reg59);
+		BK4819_WriteRegister(BK4819_REG_59, (1u << 12) | fsk_reg59);
 
-			if ((Status & 0x0010U) != 0 || msgFSKBuffer[0] != 'M' || msgFSKBuffer[1] != 'S') {
-				gErrorsDuringMSG = 9099;
-				msgStatus = READY;
-				//UART_printf("\nMSG E : %s", msgFSKBuffer);
-				return;
-			}
+		msgStatus = READY;
+
+		if (gFSKWriteIndex > 2) {
 
 			moveUP(rxMessage);
-			snprintf(rxMessage[3], TX_MSG_LENGTH + 2, "< %s", &msgFSKBuffer[2]);
 
-			//UART_printf("\nMSG : %s", rxMessage[3]);
+			if (msgFSKBuffer[0] != 'M' || msgFSKBuffer[1] != 'S') {
+				rxMessage[3][0] = '!';
+			} else {
+				rxMessage[3][0] = '<';
+			}
+
+			snprintf(rxMessage[3] + 1, TX_MSG_LENGTH + 2, " %s", &msgFSKBuffer[2]);
+
+			UART_printf("SMS<%s\r\n", &msgFSKBuffer[2]);
 			if ( gAppToDisplay != APP_MESSENGER ) {
 				hasNewMessage = true;
 				gUpdateStatus = true;
@@ -625,18 +628,17 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 			else {
 				gUpdateDisplay = true;
 			}
-		}
-	}
 
-	if (rx_finished) {
+		}
+
 		gFSKWriteIndex = 0;
-		msgStatus = READY;
 	}
 }
 
 void MSG_Init() {
 	memset(rxMessage, 0, sizeof(rxMessage));
 	memset(cMessage, 0, sizeof(cMessage));
+	memset(lastcMessage, 0, sizeof(lastcMessage));
 	hasNewMessage = false;
 	msgStatus = READY;
 	prevKey = 0;
@@ -744,12 +746,20 @@ void  MSG_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
 				processBackspace();
 				break;
 			case KEY_UP:
+				memset(cMessage, 0, sizeof(cMessage));
+				memcpy(cMessage, lastcMessage, TX_MSG_LENGTH);
+				cIndex = strlen(cMessage);
 				break;
-			case KEY_DOWN:
-				break;
+			/*case KEY_DOWN:
+				break;*/
 			case KEY_MENU:
 				// Send message
-				sendMessage();
+				MSG_Send(cMessage);
+				memset(cMessage, 0, sizeof(cMessage));
+				cIndex = 0;
+				prevKey = 0;
+				prevLetter = 0;
+
 				break;
 			case KEY_EXIT:
 				gAppToDisplay = APP_NONE;
