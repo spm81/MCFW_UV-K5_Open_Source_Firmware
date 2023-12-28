@@ -65,6 +65,8 @@ ENABLE_MATOZ_KEYS           			:= 1
 #Messenger ( Thanks to joaquimorg https://github.com/joaquimorg )
 ENABLE_MESSENGER            			:= 1
 ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
+#ENABLE_MESSENGER_UART - 156 bytes
+ENABLE_MESSENGER_UART					:= 0
 
 #Try to implement CW Modulation like IJV
 ENABLE_CW                   			:= 0
@@ -289,6 +291,9 @@ ifeq ($(ENABLE_MESSENGER),1)
 endif
 ifeq ($(ENABLE_MESSENGER_DELIVERY_NOTIFICATION),1)
 	CFLAGS += -DENABLE_MESSENGER_DELIVERY_NOTIFICATION
+endif
+ifeq ($(ENABLE_MESSENGER_UART),1)
+	CFLAGS += -DENABLE_MESSENGER_UART
 endif
 ifeq ($(ENABLE_CW),1)
 	CFLAGS += -DENABLE_CW

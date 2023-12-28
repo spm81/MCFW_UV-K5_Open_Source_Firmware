@@ -15,8 +15,9 @@
 #include "app/messenger.h"
 #include "ui/ui.h"
 #include "ui/status.h"
-#include "driver/uart.h"
-
+#ifdef ENABLE_MESSENGER_UART
+	#include "driver/uart.h"
+#endif
 #define MAX_MSG_LENGTH TX_MSG_LENGTH - 1
 
 #define NEXT_CHAR_DELAY 100 // 10ms tick
@@ -577,9 +578,9 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 	const bool rx_sync             = (interrupt_bits & BK4819_REG_02_FSK_RX_SYNC) ? true : false;
 	const bool rx_fifo_almost_full = (interrupt_bits & BK4819_REG_02_FSK_FIFO_ALMOST_FULL) ? true : false;
 	const bool rx_finished         = (interrupt_bits & BK4819_REG_02_FSK_RX_FINISHED) ? true : false;
-
+	#ifdef ENABLE_MESSENGER_UART
 	//UART_printf("\nMSG : S%i, F%i, E%i | %i", rx_sync, rx_fifo_almost_full, rx_finished, interrupt_bits);
-
+	#endif
 	if (rx_sync) {
 		gFSKWriteIndex = 0;
 		memset(msgFSKBuffer, 0, sizeof(msgFSKBuffer));
@@ -619,9 +620,9 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 			}
 
 			snprintf(rxMessage[3] + 1, TX_MSG_LENGTH + 2, " %s", &msgFSKBuffer[2]);
-
-			UART_printf("SMS<%s\r\n", &msgFSKBuffer[2]);
-
+			#ifdef ENABLE_MESSENGER_UART
+				UART_printf("SMS<%s\r\n", &msgFSKBuffer[2]);
+			#endif
 			#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
 			BK4819_DisableDTMF();
 			RADIO_SetTxParameters();

@@ -464,7 +464,7 @@ uint64_t xtou64(const char *str) {
   return res;
 }
 
-#ifdef ENABLE_MESSENGER
+#ifdef ENABLE_MESSENGER_UART
 void remove(char cstring[], char letter) {
     for(int i = 0; cstring[i] != '\0'; i++) {
         if(cstring[i] == letter) cstring[i] = '\0';
@@ -488,7 +488,7 @@ bool UART_IsCommandAvailable(void) {
       return false;
     }
 
-#ifdef ENABLE_MESSENGER
+#ifdef ENABLE_MESSENGER_UART
 
     if ( UART_DMA_Buffer[gUART_WriteIndex] == 'S' && UART_DMA_Buffer[gUART_WriteIndex + 1] == 'M' && UART_DMA_Buffer[ gUART_WriteIndex + 2] == 'S' && UART_DMA_Buffer[gUART_WriteIndex + 3] == ':') {
       
