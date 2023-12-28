@@ -43,8 +43,10 @@ ENABLE_FLASHLIGHT_SOS       			:= 0
 ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 
-#Trying to remove all about DTMF (Incomplete.. Have to check it better) )
-ENABLE_DTMF_CALLING         			:= 0
+#Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
+ENABLE_DTMF_CALLING         			:= 1
+#DTMF FN1 1750hz & FN2 1050hz Tones
+ENABLE_DTMF_CALLING_FN1_FN2				:= 0
 
 #Options
 ENABLE_NOSCANTIMEOUT        			:= 1
@@ -215,6 +217,9 @@ ifeq ($(ENABLE_AIRCOPY),1)
 endif
 ifeq ($(ENABLE_DTMF_CALLING),1)
 	CFLAGS += -DENABLE_DTMF_CALLING
+endif
+ifeq ($(ENABLE_DTMF_CALLING_FN1_FN2),1)
+	CFLAGS += -DENABLE_DTMF_CALLING_FN1_FN2
 endif
 ifeq ($(ENABLE_MIC_PLUS_GAIN_BAR_TX),1)
 	CFLAGS += -DENABLE_MIC_PLUS_GAIN_BAR_TX
