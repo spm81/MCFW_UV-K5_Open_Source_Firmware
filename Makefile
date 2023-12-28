@@ -12,10 +12,10 @@ ENABLE_AM_FIX_ON_SPECTRUM				:= 1
 
 #FM Radio
 #ENABLE_FMRADIO - 3856 bytes
-ENABLE_FMRADIO							:= 0
+ENABLE_FMRADIO							:= 1
 #ENABLE_FMRADIO_FAST_RESTORE - 0 bytes
 # Restore FM Radio in 1 second after RX
-ENABLE_FMRADIO_FAST_RESTORE 			:= 0
+ENABLE_FMRADIO_FAST_RESTORE 			:= 1
 
 
 ENABLE_OVERLAY 							:= 0
@@ -24,7 +24,7 @@ ENABLE_SWD 								:= 0
 ENABLE_TX1750 							:= 0
 
 #Battery Percentage in Status Bar	296 bytes
-ENABLE_STATUS_BATTERY_PERC  			:= 0
+ENABLE_STATUS_BATTERY_PERC  			:= 1
 
 #More LCD Settings
 ENABLE_LCD_INVERT_OPTION				:= 0
@@ -44,9 +44,9 @@ ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 
 #Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
-ENABLE_DTMF_CALLING         			:= 1
+ENABLE_DTMF_CALLING         			:= 0
 #DTMF FN1 1750hz & FN2 1050hz Tones
-ENABLE_DTMF_CALLING_FN1_FN2				:= 0
+ENABLE_DTMF_CALLING_FN1_FN2				:= 1
 
 #Options
 ENABLE_NOSCANTIMEOUT        			:= 1
