@@ -1576,7 +1576,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
           GENERIC_Key_PTT(bKeyPressed);
         } 
 		
-#ifdef ENABLE_DTMF_CALLING
+#if defined(ENABLE_DTMF_CALLING_FN1_FN2) || defined(ENABLE_DTMF_CALLING)
 		
 		else {
           char Code;
@@ -1598,10 +1598,10 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
             if (!bKeyPressed) {
               GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
               gEnableSpeaker = false;
-#ifdef ENABLE_DTMF_CALLING
+//#ifdef ENABLE_DTMF_CALLING
 	  
               BK4819_ExitDTMF_TX(false);
-#endif			  
+//#endif			  
               if (gCurrentVfo->SCRAMBLING_TYPE == 0 ||
                   !gSetting_ScrambleEnable) {
                 BK4819_DisableScramble();
@@ -1610,7 +1610,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
               }
             }
           }
-#ifdef ENABLE_DTMF_CALLING
+#if defined(ENABLE_DTMF_CALLING_FN1_FN2) || defined(ENABLE_DTMF_CALLING)
 
 		  else {
             if (gEeprom.DTMF_SIDE_TONE) {
@@ -1623,12 +1623,16 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
 			}
 			else if (Code == 0xFE) {
               BK4819_TransmitTone(gEeprom.DTMF_SIDE_TONE, 1750);
-            } else {
+            }
+#endif
+#if defined(ENABLE_DTMF_CALLING)
+			else {
               BK4819_PlayDTMFEx(gEeprom.DTMF_SIDE_TONE, Code);
             }
+#endif		  
+
           }
         }
-#endif		  
 	
       } else if (!bKeyHeld && bKeyPressed) {
 #if defined(ENABLE_TX1750)
@@ -1700,7 +1704,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
       gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
     }
   }
-#ifdef ENABLE_DTMF_CALLING
+#if defined(ENABLE_DTMF_CALLING_FN1_FN2) || defined(ENABLE_DTMF_CALLING)
 Skip:
 #endif
   if (gBeepToPlay) {

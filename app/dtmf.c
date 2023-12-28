@@ -254,6 +254,7 @@ void DTMF_HandleRequest(void)
 	}
 }
 
+#ifdef ENABLE_DTMF_CALLING
 void DTMF_Reply(void)
 {
 	char String[20];
@@ -266,6 +267,7 @@ void DTMF_Reply(void)
 			pString = gDTMF_String;
 		} else {
 			sprintf(String, "%s%c%s", gDTMF_String, gEeprom.DTMF_SEPARATE_CODE, gEeprom.ANI_DTMF_ID);
+			
 			pString = String;
 		}
 		break;
@@ -301,7 +303,6 @@ void DTMF_Reply(void)
 	SYSTEM_DelayMs(Delay);
 
 	BK4819_EnterDTMF_TX(gEeprom.DTMF_SIDE_TONE);
-
 	BK4819_PlayDTMFString(
 		pString,
 		1,
@@ -309,11 +310,9 @@ void DTMF_Reply(void)
 		gEeprom.DTMF_HASH_CODE_PERSIST_TIME,
 		gEeprom.DTMF_CODE_PERSIST_TIME,
 		gEeprom.DTMF_CODE_INTERVAL_TIME);
-
 	GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-
 	gEnableSpeaker = false;
 	BK4819_ExitDTMF_TX(false);
 }
 
-//#endif
+#endif

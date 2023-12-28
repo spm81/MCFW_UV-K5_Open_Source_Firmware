@@ -690,7 +690,7 @@ void BK4819_EnableTXLink(void) {
           BK4819_REG_30_ENABLE_PA_GAIN | BK4819_REG_30_DISABLE_MIC_ADC |
           BK4819_REG_30_ENABLE_TX_DSP | BK4819_REG_30_DISABLE_RX_DSP);
 }
-//#ifdef ENABLE_DTMF_CALLING
+#ifdef ENABLE_DTMF_CALLING
 
 void BK4819_PlayDTMF(char Code) {
   switch (Code) {
@@ -784,7 +784,7 @@ void BK4819_PlayDTMFString(const char *pString, bool bDelayFirst,
     SYSTEM_DelayMs(CodeInternalTime);
   }
 }
-//#endif
+#endif
 void BK4819_TransmitTone(bool bLocalLoopback, uint32_t Frequency) {
   BK4819_EnterTxMute();
   BK4819_WriteRegister(BK4819_REG_70,
@@ -1124,7 +1124,9 @@ void BK4819_PlayDTMFEx(bool bLocalLoopback, char Code) {
   BK4819_WriteRegister(BK4819_REG_70, 0xD3D3);
   BK4819_EnableTXLink();
   SYSTEM_DelayMs(50);
+#ifdef ENABLE_DTMF_CALLING
   BK4819_PlayDTMF(Code);
+#endif  
   BK4819_ExitTxMute();
 }
 //#endif
