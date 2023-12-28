@@ -78,7 +78,11 @@ void UI_DisplayStatus(void) {
 #endif
 
  char String[32];
+#ifdef ENABLE_STATUS_BATTERY_PERC
   sprintf(String, "%s %s %s %s %s %s %s      %u%%",
+#else
+  sprintf(String, "%s %s %s %s %s %s %s",
+#endif
           isPowerSave ? "S" : " ", //
           isKeyLock ? "L" : " ",   //
           isFPressed ? "F" : " ",  //

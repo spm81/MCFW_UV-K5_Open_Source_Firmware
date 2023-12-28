@@ -578,6 +578,8 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 	const bool rx_fifo_almost_full = (interrupt_bits & BK4819_REG_02_FSK_FIFO_ALMOST_FULL) ? true : false;
 	const bool rx_finished         = (interrupt_bits & BK4819_REG_02_FSK_RX_FINISHED) ? true : false;
 
+	//UART_printf("\nMSG : S%i, F%i, E%i | %i", rx_sync, rx_fifo_almost_full, rx_finished, interrupt_bits);
+
 	if (rx_sync) {
 		gFSKWriteIndex = 0;
 		memset(msgFSKBuffer, 0, sizeof(msgFSKBuffer));
@@ -619,6 +621,15 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 			snprintf(rxMessage[3] + 1, TX_MSG_LENGTH + 2, " %s", &msgFSKBuffer[2]);
 
 			UART_printf("SMS<%s\r\n", &msgFSKBuffer[2]);
+
+			#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
+			BK4819_DisableDTMF();
+			RADIO_SetTxParameters();
+			SYSTEM_DelayMs(500);
+			BK4819_ExitTxMute();
+			BK4819_PlayRoger(99);
+			#endif
+			
 			if ( gAppToDisplay != APP_MESSENGER ) {
 				hasNewMessage = true;
 				gUpdateStatus = true;
