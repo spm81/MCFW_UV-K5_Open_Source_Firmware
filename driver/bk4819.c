@@ -993,14 +993,15 @@ void BK4819_PlayBeep(const uint16_t freq, const int delay)
 void BK4819_PlayRoger(int t)
 {
   BK4819_EnterTxMute();
-	BK4819_SetAF(BK4819_AF_MUTE);
+  BK4819_SetAF(BK4819_AF_MUTE);
+
   //	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (96u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
 	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (28u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
 	BK4819_EnableTXLink();
 	SYSTEM_DelayMs(50);
 	// NEED TO HAD IFDEF ON ROGER'S BEEP
   switch (t) {
-#endif	
+
 #if defined(ENABLE_ROGERBEEP) 
     case 0: // DEFAULT
       BK4819_PlayBeep(500, 80);
@@ -1043,21 +1044,21 @@ void BK4819_PlayRoger(int t)
       BK4819_PlayBeep(1742, 80); 	
 	break;
 #endif	
-#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
 
-	case 99: // NOKIA SMS Tone2
-	BK4819_PlayBeep(800, 200);  // Frequency and duration can be adjusted
-    BK4819_PlayBeep(600, 200);
-    BK4819_PlayBeep(1000, 200);
+#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
+    case 99: // NOKIA SMS Tone2
+      BK4819_PlayBeep(800, 200);  // Frequency and duration can be adjusted
+      BK4819_PlayBeep(600, 200);
+      BK4819_PlayBeep(1000, 200);
 #endif	
-#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER_DELIVERY_NOTIFICATION)
-	
+
   }
 
 	BK4819_WriteRegister(BK4819_REG_70, 0x0000);
 	BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);   // 1 1 0000 0 1 1111 1 1 1 0
 }
 #endif
+
 #ifdef ENABLE_MDC
 
 void BK4819_PlayRogerMDC(void) {
