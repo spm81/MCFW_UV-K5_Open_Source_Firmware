@@ -29,14 +29,14 @@ ENABLE_STATUS_BATTERY_PERC  			:= 1
 #More LCD Settings
 ENABLE_LCD_INVERT_OPTION				:= 0
 # ENABLE_LCD_CONTRAST_OPTION Not working ...... yet, don't use it. Keep it at 0
-#ENABLE_LCD_CONTRAST_OPTION 				:= 0 
+#ENABLE_LCD_CONTRAST_OPTION 				:= 0
 
 
 #Sound Bar(s) 255 bytes // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
 ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1
 
 #SOS Flashlight 84 bytes
-ENABLE_FLASHLIGHT_SOS       			:= 1
+ENABLE_FLASHLIGHT_SOS       			:= 0
 
 
 #UART
@@ -54,8 +54,8 @@ ENABLE_KEEPNAMEONSAVE       			:= 1
 ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 
 #Roger - To Enable MDC, ROGERBEEP HAS TO BE ENABLED
-ENABLE_ROGERBEEP            			:= 0
-ENABLE_MDC                  			:= 0	
+ENABLE_ROGERBEEP            			:= 1
+ENABLE_MDC                  			:= 0
 
 #Spectrum
 ENABLE_SPECTRUM             			:= 1
@@ -68,7 +68,7 @@ ENABLE_MATOZ_KEYS           			:= 1
 ENABLE_MESSENGER            			:= 1
 ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
 #ENABLE_MESSENGER_UART - 156 bytes
-ENABLE_MESSENGER_UART					:= 0
+ENABLE_MESSENGER_UART					:= 1
 
 #Try to implement CW Modulation like IJV
 ENABLE_CW                   			:= 0
@@ -296,6 +296,9 @@ ifeq ($(ENABLE_MESSENGER),1)
 endif
 ifeq ($(ENABLE_MESSENGER_DELIVERY_NOTIFICATION),1)
 	CFLAGS += -DENABLE_MESSENGER_DELIVERY_NOTIFICATION
+endif
+ifeq ($(ENABLE_UART), 0)
+	ENABLE_MESSENGER_UART := 0
 endif
 ifeq ($(ENABLE_MESSENGER_UART),1)
 	CFLAGS += -DENABLE_MESSENGER_UART
