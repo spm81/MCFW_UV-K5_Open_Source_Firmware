@@ -15,6 +15,7 @@
 #include "app/messenger.h"
 #include "ui/ui.h"
 #include "ui/status.h"
+#include "frequencies.h"
 #ifdef ENABLE_MESSENGER_UART
 	#include "driver/uart.h"
 #endif
@@ -31,6 +32,7 @@ unsigned char numberOfNumsAssignedToKey[9] = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
 uint8_t rxMessagePos = 0;
 char cMessage[TX_MSG_LENGTH];
+char msgFreqInfo[30];
 char lastcMessage[TX_MSG_LENGTH];
 char rxMessage[4][TX_MSG_LENGTH + 3];
 unsigned char cIndex = 0;
@@ -536,38 +538,46 @@ void MSG_Send(const char txMessage[TX_MSG_LENGTH]) {
 
 	if ( strlen(txMessage) > 0 ) {
 
-		RADIO_SetVfoState(VFO_STATE_NORMAL);
-		BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
-		msgStatus = SENDING;
+		if ( IsTXAllowed(gEeprom.VfoInfo[gEeprom.TX_CHANNEL].pTX->Frequency) ) {
+			RADIO_SetVfoState(VFO_STATE_NORMAL);
+			BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
+			msgStatus = SENDING;
 
-		memset(msgFSKBuffer, 0, sizeof(msgFSKBuffer));
-		msgFSKBuffer[0] = 'M';
-		msgFSKBuffer[1] = 'S';
-		memcpy(msgFSKBuffer + 2, txMessage, TX_MSG_LENGTH);
+			memset(msgFSKBuffer, 0, sizeof(msgFSKBuffer));
+			msgFSKBuffer[0] = 'M';
+			msgFSKBuffer[1] = 'S';
+			memcpy(msgFSKBuffer + 2, txMessage, TX_MSG_LENGTH);
 
-		BK4819_DisableDTMF();
-		RADIO_SetTxParameters();
-		SYSTEM_DelayMs(500);
-		BK4819_ExitTxMute();
+			BK4819_DisableDTMF();
+			RADIO_SetTxParameters();
+			SYSTEM_DelayMs(500);
+			BK4819_ExitTxMute();
 
-		MSG_FSKSendData();
+			MSG_FSKSendData();
 
-		//BK4819_SetupPowerAmplifier(0, 0);
-		//BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
-		APP_EndTransmission();
-		RADIO_SetVfoState(VFO_STATE_NORMAL);
+			//BK4819_SetupPowerAmplifier(0, 0);
+			//BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
+			APP_EndTransmission();
+			RADIO_SetVfoState(VFO_STATE_NORMAL);
 
-		BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, false);
+			BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, false);
 
-		MSG_EnableRX(true);
+			MSG_EnableRX(true);
 
-		msgStatus = READY;
+			msgStatus = READY;
 
-		moveUP(rxMessage);
-		sprintf(rxMessage[3], "> %s", txMessage);
-		memset(lastcMessage, 0, sizeof(lastcMessage));
-		memcpy(lastcMessage, txMessage, TX_MSG_LENGTH);
+			moveUP(rxMessage);
+			sprintf(rxMessage[3], "> %s", txMessage);
+			memset(lastcMessage, 0, sizeof(lastcMessage));
+			memcpy(lastcMessage, txMessage, TX_MSG_LENGTH);
 
+			memset(cMessage, 0, sizeof(cMessage));
+			cIndex = 0;
+			prevKey = 0;
+			prevLetter = 0;
+		} else {
+			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+		}
 	}
 }
 
@@ -626,9 +636,9 @@ void MSG_StorePacket(const uint16_t interrupt_bits) {
 				BK4819_DisableDTMF();
 				RADIO_SetTxParameters();
 				SYSTEM_DelayMs(500);
-				BK4819_ExitTxMute();			
+				BK4819_ExitTxMute();
 				BK4819_PlayRoger(99);
-			#endif				
+			#endif
 			}
 
 			if ( gAppToDisplay != APP_MESSENGER ) {
@@ -766,10 +776,6 @@ void  MSG_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
 			case KEY_MENU:
 				// Send message
 				MSG_Send(cMessage);
-				memset(cMessage, 0, sizeof(cMessage));
-				cIndex = 0;
-				prevKey = 0;
-				prevLetter = 0;
 
 				break;
 			case KEY_EXIT:

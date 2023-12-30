@@ -2,6 +2,9 @@
 #include "../ui/welcome.h"
 #ifdef ENABLE_MESSENGER
 	#include "../app/messenger.h"
+  #include "frequencies.h"
+  #include "external/printf/printf.h"
+  #include "settings.h"
 #endif
 void APPMENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
   switch (Key) {
@@ -16,23 +19,30 @@ void APPMENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
   case KEY_0:
 	UI_DisplayWelcome();
     //gRequestDisplayScreen = DISPLAY_MAIN;
-	  break;	
-		
+	  break;
+
   case KEY_1:
     gAppToDisplay = APP_SCANLIST;
-    gRequestDisplayScreen = DISPLAY_MAIN;	
+    gRequestDisplayScreen = DISPLAY_MAIN;
     break;
 
 #ifdef ENABLE_MESSENGER
   case KEY_2:
-    hasNewMessage = false;    
+    hasNewMessage = false;
+    uint32_t frequency = gEeprom.VfoInfo[gEeprom.TX_CHANNEL].pTX->Frequency;
+    if ( IsTXAllowed(gEeprom.VfoInfo[gEeprom.TX_CHANNEL].pTX->Frequency) ) {
+      frequency = GetScreenF(frequency);
+      sprintf(msgFreqInfo, "%u.%05u Mhz", frequency / 100000, frequency % 100000);
+    } else {
+      sprintf(msgFreqInfo, "TX DISABLE");
+    }
     gUpdateStatus = true;
     gAppToDisplay = APP_MESSENGER;
-	  gRequestDisplayScreen = DISPLAY_MAIN;    
+	  gRequestDisplayScreen = DISPLAY_MAIN;
     break;
-#endif	
+#endif
 
-/*	
+/*
   case KEY_1:
     gAppToDisplay = APP_SPLIT;
     gRequestDisplayScreen = DISPLAY_MAIN;
@@ -43,6 +53,6 @@ void APPMENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     break;
 */
   default:
-    break;	
+    break;
   }
 }
