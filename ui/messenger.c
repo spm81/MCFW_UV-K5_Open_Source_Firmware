@@ -51,7 +51,7 @@ void UI_DisplayMSG(void) {
 
 	// TX Screen
 	
-	UI_DrawDottedLineBuffer(gFrameBuffer, 14, 40, 126, 40, true, 4);
+	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 40, 126, 40, true, 4);
 	memset(String, 0, sizeof(String));
 	if ( keyboardType == NUMERIC ) {
 		strcpy(String, "2");
@@ -63,6 +63,8 @@ void UI_DisplayMSG(void) {
 
 	UI_DrawRectangleBuffer(gFrameBuffer, 2, 36, 10, 44, true);
 	GUI_DisplaySmallest(String, 5, 38, false, true);
+
+	GUI_DisplaySmallest(msgFreqInfo, 20, 38, false, true);	
 
 	memset(String, 0, sizeof(String));
 	sprintf(String, "%s_", cMessage);

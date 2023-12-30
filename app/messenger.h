@@ -26,6 +26,7 @@ typedef enum MsgStatus {
 extern KeyboardType keyboardType;
 extern char cMessage[TX_MSG_LENGTH];
 extern char rxMessage[4][TX_MSG_LENGTH + 3];
+extern char msgFreqInfo[30];
 extern bool hasNewMessage;
 extern uint8_t keyTickCounter;
 extern MsgStatus msgStatus;
