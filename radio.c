@@ -835,6 +835,8 @@ void RADIO_SendEndOfTransmission(void) {
 	BK4819_PlayRoger(4); 	
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
 	BK4819_PlayRoger(5);
+  } else if (gEeprom.ROGER == ROGER_MODE_POLICE_ITA) { 
+	BK4819_PlayRoger(6);	
 	/*
 	
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERMARIO) {

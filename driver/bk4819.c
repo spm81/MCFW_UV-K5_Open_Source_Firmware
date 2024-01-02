@@ -1043,6 +1043,19 @@ void BK4819_PlayRoger(int t)
       BK4819_PlayBeep(872, 80);
       BK4819_PlayBeep(1742, 80); 	
 	break;
+	
+	case 6: // PlayRoger Police Italy
+      BK4819_PlayBeep(800, 60);
+      BK4819_PlayBeep(2200, 60);
+      BK4819_PlayBeep(885, 60);
+      BK4819_PlayBeep(1540, 60);
+      BK4819_PlayBeep(1300, 60);
+      BK4819_PlayBeep(975, 60);
+      BK4819_PlayBeep(1180, 60);
+      BK4819_PlayBeep(1075, 60);
+	break;
+
+
 #endif	
 
 #ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION

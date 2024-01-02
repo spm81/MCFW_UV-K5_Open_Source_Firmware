@@ -184,9 +184,9 @@ static const char gSubMenu_PONMSG[3][5] = {
 
 #ifdef ENABLE_ROGERBEEP
 #ifdef ENABLE_MDC
-static const char gSubMenu_ROGER[8][11] = {
+static const char gSubMenu_ROGER[9][11] = {
 #else
-static const char gSubMenu_ROGER[7][11] = {
+static const char gSubMenu_ROGER[8][11] = {
 #endif
 
     "OFF",
@@ -195,8 +195,9 @@ static const char gSubMenu_ROGER[7][11] = {
     "MOTO TPT",
 	"MOTO T40",
 	"MOTO T80",
-	"C.AM845",/*
-	"MARIO",*/
+	"C.AM845",
+	"POLIZIA", // Thanks to IU0PUW , Roger Beep Italy Police
+/*	"MARIO",*/
   #ifdef ENABLE_MDC
     "MDC",
     #endif	
