@@ -397,7 +397,11 @@ void BK4819_SetupSquelch(uint8_t SquelchOpenRSSIThresh,
                        (SquelchOpenRSSIThresh << 8) | SquelchCloseRSSIThresh);
   BK4819_SetAF(BK4819_AF_MUTE);
   //	BK4819_WriteRegister(BK4819_REG_78, 0x1212);
-	BK4819_WriteRegister(BK4819_REG_78, 0x3636);
+  
+  #if ENABLE_SQUELCH_MORE_SENSITIVE
+  #else
+	BK4819_WriteRegister(BK4819_REG_78, 0x4848);
+  #endif
   BK4819_RX_TurnOn();
 }
 

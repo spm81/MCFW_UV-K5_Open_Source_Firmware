@@ -287,7 +287,9 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg) {
       gEeprom.VfoInfo[VFO].BUSY_CHANNEL_LOCK = false;
     } else {
       gEeprom.VfoInfo[VFO].FrequencyReverse = !!(Data[4] & 0x01);
-      gEeprom.VfoInfo[VFO].CHANNEL_BANDWIDTH = !!(Data[4] & 0x02);
+	  if(IS_MR_CHANNEL(Channel)){
+				gEeprom.VfoInfo[VFO].CHANNEL_BANDWIDTH = !!(Data[4] & 0x02);
+			}      
       gEeprom.VfoInfo[VFO].OUTPUT_POWER = (Data[4] >> 2) & 0x03;
       gEeprom.VfoInfo[VFO].BUSY_CHANNEL_LOCK = !!(Data[4] & 0x10);
     }
@@ -394,6 +396,48 @@ void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo) {
     EEPROM_ReadBuffer(Base + 0x40, &pInfo->SquelchCloseGlitchThresh, 1);
     EEPROM_ReadBuffer(Base + 0x50, &pInfo->SquelchOpenGlitchThresh, 1);
 
+		#if ENABLE_SQUELCH_MORE_SENSITIVE
+
+		uint16_t rssi_open    = pInfo->SquelchOpenRSSIThresh;
+		uint16_t rssi_close   = pInfo->SquelchCloseRSSIThresh;
+		uint16_t noise_open   = pInfo->SquelchOpenNoiseThresh;
+		uint16_t noise_close  = pInfo->SquelchCloseNoiseThresh;
+		uint16_t glitch_open  = pInfo->SquelchOpenGlitchThresh;
+		uint16_t glitch_close = pInfo->SquelchCloseGlitchThresh;
+
+			// make squelch a little more sensitive
+			//
+			// getting the best setting here is still experimental, bare with me
+			//
+			// note that 'noise' and 'glitch' values are inverted compared to 'rssi' values
+
+			// even more sensitive .. use when RX bandwidths are fixed (no weak signal auto adjust)
+				rssi_open   = (rssi_open   * 1) / 2;
+				noise_open  = (noise_open  * 2) / 1;
+				glitch_open = (glitch_open * 2) / 1;
+			#endif
+
+
+	#if ENABLE_SQUELCH_MORE_SENSITIVE
+		rssi_close   = (rssi_open   *  9) / 10;
+		noise_close  = (noise_open  * 10) / 9;
+		glitch_close = (glitch_open * 10) / 9;
+
+		// ensure the 'close' threshold is lower than the 'open' threshold
+		if (rssi_close   == rssi_open   && rssi_close   >= 2)
+			rssi_close -= 2;
+		if (noise_close  == noise_open  && noise_close  <= 125)
+			noise_close += 2;
+		if (glitch_close == glitch_open && glitch_close <= 253)
+			glitch_close += 2;
+
+		pInfo->SquelchOpenRSSIThresh    = (rssi_open    > 255) ? 255 : rssi_open;
+		pInfo->SquelchCloseRSSIThresh   = (rssi_close   > 255) ? 255 : rssi_close;
+		pInfo->SquelchOpenNoiseThresh   = (noise_open   > 127) ? 127 : noise_open;
+		pInfo->SquelchCloseNoiseThresh  = (noise_close  > 127) ? 127 : noise_close;
+		pInfo->SquelchOpenGlitchThresh  = (glitch_open  > 255) ? 255 : glitch_open;
+		pInfo->SquelchCloseGlitchThresh = (glitch_close > 255) ? 255 : glitch_close;
+	#else
     if (pInfo->SquelchOpenNoiseThresh >= 0x80) {
       pInfo->SquelchOpenNoiseThresh = 0x7F;
     }
@@ -401,7 +445,8 @@ void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo) {
       pInfo->SquelchCloseNoiseThresh = 0x7F;
     }
 	//BK4819_WriteRegister(BK4819_REG_78, 0x1212);
-	BK4819_WriteRegister(BK4819_REG_78, 0x3636);
+	BK4819_WriteRegister(BK4819_REG_78, 0x4848);
+	#endif
   }
 
   Band = FREQUENCY_GetBand(pInfo->pTX->Frequency);

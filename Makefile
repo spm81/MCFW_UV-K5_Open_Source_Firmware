@@ -10,6 +10,9 @@ ENABLE_AM_FIX 							:= 1
 #ENABLE_AM_FIX_ON_SPECTRUM - 40 bytes
 ENABLE_AM_FIX_ON_SPECTRUM				:= 1
 
+#ENABLE_SQUELCH_MORE_SENSITIVE - 
+ENABLE_SQUELCH_MORE_SENSITIVE			:= 1
+
 #FM Radio
 #ENABLE_FMRADIO - 3856 bytes
 ENABLE_FMRADIO							:= 0
@@ -59,6 +62,7 @@ ENABLE_MDC                  			:= 0
 
 #Spectrum
 ENABLE_SPECTRUM             			:= 1
+ENABLE_SPECTRUM_NUNU           			:= 0
 SPECTRUM_AUTOMATIC_SQUELCH  			:= 1
 SPECTRUM_EXTRA_VALUES       			:= 1
 ENABLE_ALL_REGISTERS        			:= 0
@@ -138,6 +142,9 @@ OBJS += app/appmenu.o
 OBJS += app/scanner.o
 ifeq ($(ENABLE_SPECTRUM), 1)
 OBJS += app/spectrum.o
+endif
+ifeq ($(ENABLE_SPECTRUM_NUNU), 1)
+OBJS += app/spectrumnunu.o
 endif
 ifeq ($(ENABLE_UART),1)
 OBJS += app/uart.o
@@ -233,6 +240,9 @@ endif
 ifeq ($(ENABLE_AM_FIX_ON_SPECTRUM),1)
 	CFLAGS  += -DENABLE_AM_FIX_ON_SPECTRUM
 endif
+ifeq ($(ENABLE_SQUELCH_MORE_SENSITIVE),1)
+	CFLAGS  += -DENABLE_SQUELCH_MORE_SENSITIVE
+endif
 ifeq ($(ENABLE_FMRADIO),1)
 	CFLAGS += -DENABLE_FMRADIO
 endif
@@ -250,6 +260,9 @@ ifeq ($(ENABLE_OVERLAY),1)
 endif
 ifeq ($(ENABLE_SPECTRUM),1)
 	CFLAGS += -DENABLE_SPECTRUM
+endif
+ifeq ($(ENABLE_SPECTRUM_NUNU),1)
+	CFLAGS += -DENABLE_SPECTRUM_NUNU
 endif
 ifeq ($(ENABLE_SWD),1)
 	CFLAGS += -DENABLE_SWD
