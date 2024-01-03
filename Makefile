@@ -39,7 +39,7 @@ ENABLE_LCD_INVERT_OPTION				:= 0
 ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1
 
 #SOS Flashlight 84 bytes
-ENABLE_FLASHLIGHT_SOS       			:= 1
+ENABLE_FLASHLIGHT_SOS       			:= 0
 
 
 #UART
@@ -49,7 +49,7 @@ ENABLE_UART_CAT             			:= 0
 #Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
 ENABLE_DTMF_CALLING         			:= 1
 #DTMF FN1 1750hz & FN2 1050hz Tones
-ENABLE_DTMF_CALLING_FN1_FN2				:= 1
+ENABLE_DTMF_CALLING_FN1_FN2				:= 0
 
 #Options
 ENABLE_NOSCANTIMEOUT        			:= 1
@@ -58,7 +58,7 @@ ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 
 #Roger - To Enable MDC, ROGERBEEP HAS TO BE ENABLED
 ENABLE_ROGERBEEP            			:= 0
-ENABLE_MDC                  			:= 1
+ENABLE_MDC                  			:= 0
 
 #Spectrum
 ENABLE_SPECTRUM             			:= 1
