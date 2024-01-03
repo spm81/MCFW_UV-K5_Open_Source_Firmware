@@ -97,7 +97,7 @@ static const char MenuList[][8] = {
     "D List",
 #endif
     "PonMsg",
-#ifdef ENABLE_ROGERBEEP	
+#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
     "Roger",
 #endif	
     "Voltage",
@@ -182,13 +182,21 @@ static const char gSubMenu_PONMSG[3][5] = {
     "VOL",
 };
 
-#ifdef ENABLE_ROGERBEEP
-#ifdef ENABLE_MDC
-static const char gSubMenu_ROGER[9][11] = {
-#else
-static const char gSubMenu_ROGER[8][11] = {
-#endif
+#if defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
+const char gSubMenu_ROGER[][9] = {
+    "OFF",
+    "DEFAULT",
+	"MOTOTRBO",
+    "MOTO TPT",
+	"MOTO T40",
+	"MOTO T80",
+	"C.AM845",
+	"POLIZIA",
+	"MDC",
+};
 
+#elif defined (ENABLE_ROGERBEEP)
+const char gSubMenu_ROGER[][9] = {
     "OFF",
     "DEFAULT",
 	"MOTOTRBO",
@@ -198,11 +206,18 @@ static const char gSubMenu_ROGER[8][11] = {
 	"C.AM845",
 	"POLIZIA", // Thanks to IU0PUW , Roger Beep Italy Police
 /*	"MARIO",*/
-  #ifdef ENABLE_MDC
-    "MDC",
-    #endif	
 };
+
+#elif defined (ENABLE_MDC)
+const char gSubMenu_ROGER[][4] = {
+	"OFF",
+    "MDC",
+};
+
+
+
 #endif
+
 static const char gSubMenu_RESET[2][4] = {
     "VFO",
     "ALL",
@@ -480,8 +495,7 @@ case MENU_S_LIST:
   case MENU_PONMSG:
     strcpy(String, gSubMenu_PONMSG[gSubMenuSelection]);
     break;
-#ifdef ENABLE_ROGERBEEP
-
+#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
   case MENU_ROGER:
     strcpy(String, gSubMenu_ROGER[gSubMenuSelection]);
     break;

@@ -149,11 +149,12 @@ void BK4819_PrepareFSKReceive(void);
 
 void BK4819_PlayBeep(const uint16_t freq, const int delay);
 
-#ifdef ENABLE_MDC
-void BK4819_PlayRogerMDC(void);
-#endif
+
 #if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER)
 void BK4819_PlayRoger(int);
+#endif
+#if defined(ENABLE_MDC)
+void BK4819_PlayRogerMDC(void);
 #endif
 void BK4819_EnterExitTxMuteSequence(void);
 void BK4819_EnterExitTxMuteSequence2(void);

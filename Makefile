@@ -58,7 +58,7 @@ ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 
 #Roger - To Enable MDC, ROGERBEEP HAS TO BE ENABLED
 ENABLE_ROGERBEEP            			:= 0
-ENABLE_MDC                  			:= 0
+ENABLE_MDC                  			:= 1
 
 #Spectrum
 ENABLE_SPECTRUM             			:= 1

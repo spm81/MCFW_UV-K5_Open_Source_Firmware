@@ -607,13 +607,13 @@ void BOARD_EEPROM_Init(void)
 
 	// 0EA8..0EAF
 	EEPROM_ReadBuffer(0x0EA8, Data, 8);
-#ifdef ENABLE_ROGERBEEP
-	
-#ifdef ENABLE_MDC
-	gEeprom.ROGER                          = (Data[1] <  8) ? Data[1] : ROGER_MODE_OFF;
-#else
-	gEeprom.ROGER                          = (Data[1] <  7) ? Data[1] : ROGER_MODE_OFF;
-#endif	
+
+#if defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
+	gEeprom.ROGER                          = (Data[1] <  9) ? Data[1] : ROGER_MODE_OFF;
+#elif !defined(ENABLE_MDC) && defined(ENABLE_ROGERBEEP)
+	gEeprom.ROGER                          = (Data[1] <  8) ? Data[1] : ROGER_MODE_OFF;			
+#elif defined (ENABLE_MDC) && !defined(ENABLE_ROGERBEEP)
+	gEeprom.ROGER                          = (Data[1] <  2) ? Data[1] : ROGER_MODE_OFF;	
 #endif
 	gEeprom.REPEATER_TAIL_TONE_ELIMINATION = (Data[2] < 11) ? Data[2] : 0;
 	gEeprom.TX_CHANNEL                     = (Data[3] <  2) ? Data[3] : 0;
