@@ -36,7 +36,7 @@ ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1
 
 
 #SOS Flashlight 84 bytes
-ENABLE_FLASHLIGHT_SOS       			:= 0
+ENABLE_FLASHLIGHT_SOS       			:= 1
 
 
 #UART
@@ -45,7 +45,7 @@ ENABLE_UART_CAT             			:= 0
 
 
 #Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
-ENABLE_DTMF_CALLING         			:= 0
+ENABLE_DTMF_CALLING         			:= 1
 #DTMF FN1 1750hz & FN2 1050hz Tones
 ENABLE_DTMF_CALLING_FN1_FN2				:= 1
 
@@ -76,14 +76,14 @@ ENABLE_MATOZ_KEYS           			:= 1
 ENABLE_MESSENGER            			:= 1
 ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
 #ENABLE_MESSENGER_SHOW_RX_FREQ - 124 bytes
-ENABLE_MESSENGER_SHOW_RX_FREQ			:= 1
+ENABLE_MESSENGER_SHOW_RX_FREQ			:= 0
 #ENABLE_MESSENGER_SHOW_RX_TX_FREQ - 144 bytes | if ENABLE_MESSENGER_SHOW_RX_FREQ don't count the 124 bytes
 ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 #ENABLE_MESSENGER_UART - 156 bytes
 ENABLE_MESSENGER_UART					:= 1
 
 #Try to implement CW Modulation like IJV
-ENABLE_CW                   			:= 0
+ENABLE_CW                   			:= 1
 
 BSP_DEFINITIONS := $(wildcard hardware/*/*.def)
 BSP_HEADERS := $(patsubst hardware/%,bsp/%,$(BSP_DEFINITIONS))

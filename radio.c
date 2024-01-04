@@ -567,6 +567,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0) {
 	}
 
   BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, false);
+
   BK4819_SetupPowerAmplifier(0, 0);
   BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
 
@@ -678,6 +679,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0) {
   if (bSwitchToFunction0) {
     FUNCTION_Select(FUNCTION_FOREGROUND);
   }
+
 }
 
 void RADIO_SetTxParameters(void) {
