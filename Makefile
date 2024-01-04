@@ -10,8 +10,10 @@ ENABLE_AM_FIX 							:= 1
 #ENABLE_AM_FIX_ON_SPECTRUM - 40 bytes
 ENABLE_AM_FIX_ON_SPECTRUM				:= 1
 
+
 #ENABLE_SQUELCH_MORE_SENSITIVE - 
 ENABLE_SQUELCH_MORE_SENSITIVE			:= 1
+
 
 #FM Radio
 #ENABLE_FMRADIO - 3856 bytes
@@ -20,23 +22,18 @@ ENABLE_FMRADIO							:= 0
 # Restore FM Radio in 1 second after RX
 ENABLE_FMRADIO_FAST_RESTORE 			:= 1
 
-
-ENABLE_OVERLAY 							:= 0
-ENABLE_SWD 								:= 0
-
-ENABLE_TX1750 							:= 0
-
 #Battery Percentage in Status Bar	296 bytes
 ENABLE_STATUS_BATTERY_PERC  			:= 1
+
 
 #More LCD Settings
 ENABLE_LCD_INVERT_OPTION				:= 0
 # ENABLE_LCD_CONTRAST_OPTION Not working ...... yet, don't use it. Keep it at 0
 #ENABLE_LCD_CONTRAST_OPTION 				:= 0
 
-
 #Sound Bar(s) 255 bytes // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
 ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1
+
 
 #SOS Flashlight 84 bytes
 ENABLE_FLASHLIGHT_SOS       			:= 0
@@ -46,12 +43,17 @@ ENABLE_FLASHLIGHT_SOS       			:= 0
 ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 
-#Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
-ENABLE_DTMF_CALLING         			:= 1
-#DTMF FN1 1750hz & FN2 1050hz Tones
-ENABLE_DTMF_CALLING_FN1_FN2				:= 0
 
-#Options
+#Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
+ENABLE_DTMF_CALLING         			:= 0
+#DTMF FN1 1750hz & FN2 1050hz Tones
+ENABLE_DTMF_CALLING_FN1_FN2				:= 1
+
+
+#More Options Mods
+ENABLE_OVERLAY 							:= 0
+ENABLE_SWD 								:= 0
+ENABLE_TX1750 							:= 0
 ENABLE_NOSCANTIMEOUT        			:= 1
 ENABLE_KEEPNAMEONSAVE       			:= 1
 ENABLE_FASTER_CHANNEL_SCAN  			:= 1
@@ -59,6 +61,7 @@ ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 #Roger - To Enable MDC, ROGERBEEP HAS TO BE ENABLED
 ENABLE_ROGERBEEP            			:= 0
 ENABLE_MDC                  			:= 0
+
 
 #Spectrum
 ENABLE_SPECTRUM             			:= 1
@@ -68,9 +71,14 @@ SPECTRUM_EXTRA_VALUES       			:= 1
 ENABLE_ALL_REGISTERS        			:= 0
 ENABLE_MATOZ_KEYS           			:= 1
 
+
 #Messenger ( Thanks to joaquimorg https://github.com/joaquimorg )
 ENABLE_MESSENGER            			:= 1
 ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
+#ENABLE_MESSENGER_SHOW_RX_FREQ - 124 bytes
+ENABLE_MESSENGER_SHOW_RX_FREQ			:= 1
+#ENABLE_MESSENGER_SHOW_RX_TX_FREQ - 144 bytes | if ENABLE_MESSENGER_SHOW_RX_FREQ don't count the 124 bytes
+ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 #ENABLE_MESSENGER_UART - 156 bytes
 ENABLE_MESSENGER_UART					:= 1
 
@@ -309,6 +317,12 @@ ifeq ($(ENABLE_MESSENGER),1)
 endif
 ifeq ($(ENABLE_MESSENGER_DELIVERY_NOTIFICATION),1)
 	CFLAGS += -DENABLE_MESSENGER_DELIVERY_NOTIFICATION
+endif
+ifeq ($(ENABLE_MESSENGER_SHOW_RX_FREQ),1)
+	CFLAGS += -DENABLE_MESSENGER_SHOW_RX_FREQ
+endif
+ifeq ($(ENABLE_MESSENGER_SHOW_RX_TX_FREQ),1)
+	CFLAGS += -DENABLE_MESSENGER_SHOW_RX_TX_FREQ
 endif
 ifeq ($(ENABLE_UART), 0)
 	ENABLE_MESSENGER_UART := 0

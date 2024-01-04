@@ -50,8 +50,13 @@ void UI_DisplayMSG(void) {
     }
 
 	// TX Screen
-	
+#if defined (ENABLE_MESSENGER_SHOW_RX_FREQ) && ! defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
 	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 40, 126, 40, true, 4);
+#elif defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ) && ! defined (ENABLE_MESSENGER_SHOW_RX_FREQ) || defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ) && defined (ENABLE_MESSENGER_SHOW_RX_FREQ)
+//	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 40, 126, 40, true, 4);
+#else
+	UI_DrawDottedLineBuffer(gFrameBuffer, 14, 40, 126, 40, true, 4);
+#endif
 	memset(String, 0, sizeof(String));
 	if ( keyboardType == NUMERIC ) {
 		strcpy(String, "2");
@@ -63,9 +68,9 @@ void UI_DisplayMSG(void) {
 
 	UI_DrawRectangleBuffer(gFrameBuffer, 2, 36, 10, 44, true);
 	GUI_DisplaySmallest(String, 5, 38, false, true);
-
+#if defined (ENABLE_MESSENGER_SHOW_RX_FREQ) || defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
 	GUI_DisplaySmallest(msgFreqInfo, 20, 38, false, true);	
-
+#endif
 	memset(String, 0, sizeof(String));
 	sprintf(String, "%s_", cMessage);
 	//UI_PrintStringSmall(String, 3, 0, 6);

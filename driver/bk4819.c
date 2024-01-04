@@ -400,7 +400,7 @@ void BK4819_SetupSquelch(uint8_t SquelchOpenRSSIThresh,
   
   #if ENABLE_SQUELCH_MORE_SENSITIVE
   #else
-	BK4819_WriteRegister(BK4819_REG_78, 0x4848);
+//	BK4819_WriteRegister(BK4819_REG_78, 0x4848);
   #endif
   BK4819_RX_TurnOn();
 }

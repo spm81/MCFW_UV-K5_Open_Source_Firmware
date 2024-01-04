@@ -103,10 +103,13 @@ unsigned int BATTERY_VoltsToPercent(const unsigned int voltage_10mV)
 void BATTERY_GetReadings(bool bDisplayBatteryLevel) {
   uint8_t PreviousBatteryLevel = gBatteryDisplayLevel;
   uint16_t Voltage = Mid(gBatteryVoltages, ARRAY_SIZE(gBatteryVoltages));
+  //const uint16_t Voltage = (gBatteryVoltages[0] + gBatteryVoltages[1] + gBatteryVoltages[2] + gBatteryVoltages[3]) / 4;
+  
   gBatteryDisplayLevel = 0;
   for (int i = ARRAY_SIZE(gBatteryCalibration) - 1; i >= 0; --i) {
     if (Voltage > gBatteryCalibration[i]) {
-      gBatteryDisplayLevel = i + 1;
+  // old config gBatteryDisplayLevel = i + 1;		
+      gBatteryDisplayLevel = i + 3/5;
       break;
     }
   }
