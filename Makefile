@@ -22,8 +22,12 @@ ENABLE_FMRADIO							:= 0
 # Restore FM Radio in 1 second after RX
 ENABLE_FMRADIO_FAST_RESTORE 			:= 1
 
-#Battery Percentage in Status Bar	296 bytes
+
+#Battery
+#Battery Percentage in Status Bar - 296 bytes
 ENABLE_STATUS_BATTERY_PERC  			:= 1
+#Show Battery Current when Charging by Tunas1337 - 136 bytes
+ENABLE_BATTERY_CHARGING					:= 1
 
 
 #More LCD Settings
@@ -36,7 +40,7 @@ ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1
 
 
 #SOS Flashlight 84 bytes
-ENABLE_FLASHLIGHT_SOS       			:= 1
+ENABLE_FLASHLIGHT_SOS       			:= 0
 
 
 #UART
@@ -57,6 +61,8 @@ ENABLE_TX1750 							:= 0
 ENABLE_NOSCANTIMEOUT        			:= 1
 ENABLE_KEEPNAMEONSAVE       			:= 1
 ENABLE_FASTER_CHANNEL_SCAN  			:= 1
+
+
 
 #Roger - To Enable MDC, ROGERBEEP HAS TO BE ENABLED
 ENABLE_ROGERBEEP            			:= 0
@@ -333,6 +339,10 @@ endif
 ifeq ($(ENABLE_CW),1)
 	CFLAGS += -DENABLE_CW
 endif
+ifeq ($(ENABLE_BATTERY_CHARGING),1)
+	CFLAGS += -DENABLE_BATTERY_CHARGING
+endif
+
 
 
 ifeq ($(DEBUG),1)

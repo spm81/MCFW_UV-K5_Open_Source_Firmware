@@ -501,6 +501,15 @@ case MENU_S_LIST:
     break;
 #endif
   case MENU_VOL:
+#ifdef ENABLE_BATTERY_CHARGING  
+        // Draw the charging indicator over the battery if we're charging
+		// The charging indicator is 13x16, so we need 2 lines of 8 pixels to draw it.
+		//By Tunas1337
+		if (gChargingWithTypeC) {
+			memcpy(gFrameBuffer[2]+113, BITMAP_SettingsBattCharging, 13);
+			memcpy(gFrameBuffer[3]+113, BITMAP_SettingsBattCharging+13, 13);
+		}
+#endif		
     sprintf(String, "%d.%02dV", gBatteryVoltageAverage / 100,
             gBatteryVoltageAverage % 100);
     break;
@@ -617,7 +626,13 @@ case MENU_S_LIST:
     UI_DisplaySmallDigits(Offset, String + (9 - Offset), 105, 0);
 #endif	
   }
-
+#ifdef ENABLE_BATTERY_CHARGING
+	// If we're in the voltage menu option, also print the current
+	if (gMenuCursor == MENU_VOL) {
+		sprintf(String, "%dmA", gBatteryCurrent);
+		UI_PrintString(String, 50, 127, 5, 8, true);
+	}
+#endif	
   if (gMenuCursor == MENU_SLIST1 || gMenuCursor == MENU_SLIST2) {
     i = gMenuCursor - MENU_SLIST1;
 
