@@ -27,6 +27,9 @@
 #if defined(ENABLE_SPECTRUM)
 #include "app/spectrum.h"
 #endif
+#if defined(ENABLE_SPECTRUM_NUNU)
+#include "app/spectrumnunu.h"
+#endif
 #if defined(ENABLE_MESSENGER)
 #include "app/messenger.h"
 #endif
@@ -245,7 +248,13 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     }
     gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
     break;
-
+#if defined(ENABLE_SPECTRUM_NUNU)
+  case KEY_MENU:
+    gCurrentFunction = 0;
+    APP_RunSpectrumNunu();
+    gRequestDisplayScreen = DISPLAY_MAIN;
+    break;
+#endif
   case KEY_F:
     break;
 

@@ -37,7 +37,7 @@ void UI_DisplayBattery(uint8_t Level) {
       gStatusLine[WORK_END - i] |= 0b000010001;
     }
   }
-
+/*
   if (gChargingWithTypeC) {
     gStatusLine[WORK_START + 1] &= 0b11110111;
     gStatusLine[WORK_START + 2] &= 0b11110111;
@@ -54,4 +54,15 @@ void UI_DisplayBattery(uint8_t Level) {
     gStatusLine[WORK_START + 7] &= 0b11111101;
     gStatusLine[WORK_START + 8] &= 0b11111101;
   }
+  */
+  if (gChargingWithTypeC) {
+  gStatusLine[WORK_START + 1] &= 0b11110111;
+  gStatusLine[WORK_START + 2] &= 0b11110111;
+  gStatusLine[WORK_START + 3] &= 0b11110111;
+  gStatusLine[WORK_START + 4] &= 0b11110011;  // Clear bit 2
+  gStatusLine[WORK_START + 5] &= 0b11110111;
+  gStatusLine[WORK_START + 6] &= 0b11111101;  // Clear bit 0
+  gStatusLine[WORK_START + 7] &= 0b11111101;
+  gStatusLine[WORK_START + 8] &= 0b11111101;
+}
 }

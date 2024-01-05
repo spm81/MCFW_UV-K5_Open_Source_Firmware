@@ -133,7 +133,7 @@ void SETTINGS_SaveSettings(void)
 	EEPROM_WriteBuffer(0x0EA0, State);
 
 	State[0] = 0xFF;
-#ifdef ENABLE_ROGERBEEP
+#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
 	State[1] = gEeprom.ROGER;
 #endif
 	State[2] = gEeprom.REPEATER_TAIL_TONE_ELIMINATION;

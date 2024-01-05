@@ -44,6 +44,10 @@
 #include "ui/menu.h"
 #include "ui/ui.h"
 
+/*#ifndef ARRAY_SIZE
+	#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
+#endif
+*/
 void MENU_StartCssScan(int8_t Direction) {
   gCssScanMode = CSS_SCAN_MODE_SCANNING;
   gMenuScrollDirection = Direction;
@@ -98,16 +102,13 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     *pMin = 0;
     *pMax = 2;
     break;
-#ifdef ENABLE_ROGERBEEP
+#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)	
   case MENU_ROGER:
     *pMin = 0;
-#ifdef ENABLE_MDC	
-    *pMax = 7;
-#else
-	*pMax = 6;
-#endif
-#endif
+	*pMax = ARRAY_SIZE(gSubMenu_ROGER) - 1;
     break;
+#endif
+	
   case MENU_UPCONVERTER:
     *pMin = 0;
     *pMax = 6;
@@ -465,7 +466,7 @@ void MENU_AcceptSetting(void) {
     gEeprom.POWER_ON_DISPLAY_MODE = gSubMenuSelection;
     break;
 
-#ifdef ENABLE_ROGERBEEP
+#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
   case MENU_ROGER:
     gEeprom.ROGER = gSubMenuSelection;
     break;
@@ -801,7 +802,7 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_PONMSG:
     gSubMenuSelection = gEeprom.POWER_ON_DISPLAY_MODE;
     break;
-#ifdef ENABLE_ROGERBEEP
+#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
   case MENU_ROGER:
     gSubMenuSelection = gEeprom.ROGER;
     break;

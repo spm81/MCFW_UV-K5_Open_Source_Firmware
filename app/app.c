@@ -856,7 +856,7 @@ void APP_CheckKeys(void) {
 
   if (gPttIsPressed) {
     if (GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT)) {
-      SYSTEM_DelayMs(20);
+     // SYSTEM_DelayMs(20);
       if (GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT)) {
         APP_ProcessKey(KEY_PTT, false, false);
         gPttIsPressed = false;
@@ -868,9 +868,15 @@ void APP_CheckKeys(void) {
   } else {
     if (!GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT)) {
       gPttDebounceCounter = gPttDebounceCounter + 1;
-      if (gPttDebounceCounter > 4) {
+      if (gPttDebounceCounter > 0) {
         gPttIsPressed = true;
         APP_ProcessKey(KEY_PTT, true, false);
+	#ifdef ENABLE_CW	
+	if (gRxVfo->ModulationType == MOD_CW) {
+		gEnableSpeaker = false;
+		BK4819_TransmitTone(gEeprom.DTMF_SIDE_TONE, 641);	
+}
+#endif
       }
     } else {
       gPttDebounceCounter = 0;
@@ -1574,11 +1580,13 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
 
         if (Key == KEY_PTT) {
           GENERIC_Key_PTT(bKeyPressed);
+
         } 
 		
-#if defined(ENABLE_DTMF_CALLING_FN1_FN2) || defined(ENABLE_DTMF_CALLING)
 		
 		else {
+#if defined(ENABLE_DTMF_CALLING_FN1_FN2) || defined(ENABLE_DTMF_CALLING)
+			
           char Code;
 
           if (Key == KEY_SIDE2) {
@@ -1603,7 +1611,6 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
               GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
               gEnableSpeaker = false;
 #if defined(ENABLE_DTMF_CALLING_FN1_FN2) || defined(ENABLE_DTMF_CALLING)
-	  
               BK4819_ExitDTMF_TX(false);
 #endif			  
               if (gCurrentVfo->SCRAMBLING_TYPE == 0 ||
@@ -1615,7 +1622,6 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
             }
           }
 #if defined(ENABLE_DTMF_CALLING_FN1_FN2) || defined(ENABLE_DTMF_CALLING)
-
 		  else {
             if (gEeprom.DTMF_SIDE_TONE) {
               GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
@@ -1628,14 +1634,13 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
 			else if (Code == 0xFE) {
               BK4819_TransmitTone(gEeprom.DTMF_SIDE_TONE, 1750);
             }
-#endif
 #if defined(ENABLE_DTMF_CALLING)
 			else {
               BK4819_PlayDTMFEx(gEeprom.DTMF_SIDE_TONE, Code);
             }
 #endif		  
-
           }
+#endif	  
         }
 	
       } else if (!bKeyHeld && bKeyPressed) {
@@ -1647,7 +1652,7 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
           gRTTECountdown = gEeprom.REPEATER_TAIL_TONE_ELIMINATION * 10;
         }
         if (Key == KEY_PTT) {
-          gPttWasPressed = true;
+          gPttWasPressed = true;		  
         } else {
           gPttWasReleased = true;
         }

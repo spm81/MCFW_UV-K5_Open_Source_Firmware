@@ -32,7 +32,9 @@ unsigned char numberOfNumsAssignedToKey[9] = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
 uint8_t rxMessagePos = 0;
 char cMessage[TX_MSG_LENGTH];
+#if defined (ENABLE_MESSENGER_SHOW_RX_FREQ) || defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
 char msgFreqInfo[30];
+#endif
 char lastcMessage[TX_MSG_LENGTH];
 char rxMessage[4][TX_MSG_LENGTH + 3];
 unsigned char cIndex = 0;

@@ -397,7 +397,11 @@ void BK4819_SetupSquelch(uint8_t SquelchOpenRSSIThresh,
                        (SquelchOpenRSSIThresh << 8) | SquelchCloseRSSIThresh);
   BK4819_SetAF(BK4819_AF_MUTE);
   //	BK4819_WriteRegister(BK4819_REG_78, 0x1212);
-	BK4819_WriteRegister(BK4819_REG_78, 0x3636);
+  
+  #if ENABLE_SQUELCH_MORE_SENSITIVE
+  #else
+//	BK4819_WriteRegister(BK4819_REG_78, 0x4848);
+  #endif
   BK4819_RX_TurnOn();
 }
 
@@ -426,43 +430,12 @@ void BK4819_SetModulation(ModulationType type) {
 
   BK4819_SetAF(modTypeReg47Values[type]);
   BK4819_SetRegValue(afDacGainRegSpec, 0xF);
-
-  // Configure register 0x3D based on modulation type
-  if (type == MOD_USB) {
-    BK4819_WriteRegister(0x3D, 0);
-  } else if (type == MOD_CW) {
-    // Set appropriate value for CW modulation
-    BK4819_WriteRegister(0x3D, 0x2AAB);  // Replace with the actual value for CW
-  } else {
-    BK4819_WriteRegister(0x3D, 0x2AAB);
-  }
+  BK4819_WriteRegister(0x3D, type == MOD_USB ? 0 : 0x2AAB);
+  BK4819_SetRegValue(afcDisableRegSpec, type != MOD_FM);
 
   // Set AFC Disable based on modulation type
   //BK4819_SetRegValue(afcDisableRegSpec, type != MOD_FM);
   BK4819_SetRegValue(afcDisableRegSpec, (type != MOD_FM) && (type != MOD_CW));
-  
-  // Add code to send CW tone when PTT is pressed (assuming you have a function for PTT)
-  if (type == MOD_CW && KEY_PTT) {
-    // Play CW tone continuously while PTT is pressed
-    while (KEY_PTT) {
-		 BK4819_EnterTxMute();
-	BK4819_SetAF(BK4819_AF_MUTE);
-  //	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (96u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
-	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (28u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
-	BK4819_EnableTXLink();
-	SYSTEM_DelayMs(50);
-	   BK4819_PlayBeep(1000, 200);
-
-	BK4819_WriteRegister(BK4819_REG_70, 0x0000);
-	BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);   // 1 1 0000 0 1 1111 1 1 1 0
-     // BK4819_TransmitTone(true, 1750);
-  //    GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-   //   gEnableSpeaker = true;
-	 // SYSTEM_DelayMs(2);
-     // GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
-     // gEnableSpeaker = true;
-    }
-  }
 }
 #else
 void BK4819_SetModulation(ModulationType type) {
@@ -1043,6 +1016,19 @@ void BK4819_PlayRoger(int t)
       BK4819_PlayBeep(872, 80);
       BK4819_PlayBeep(1742, 80); 	
 	break;
+	
+	case 6: // PlayRoger Police Italy
+      BK4819_PlayBeep(800, 60);
+      BK4819_PlayBeep(2200, 60);
+      BK4819_PlayBeep(885, 60);
+      BK4819_PlayBeep(1540, 60);
+      BK4819_PlayBeep(1300, 60);
+      BK4819_PlayBeep(975, 60);
+      BK4819_PlayBeep(1180, 60);
+      BK4819_PlayBeep(1075, 60);
+	break;
+
+
 #endif	
 
 #ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
@@ -1050,6 +1036,7 @@ void BK4819_PlayRoger(int t)
       BK4819_PlayBeep(800, 200);  // Frequency and duration can be adjusted
       BK4819_PlayBeep(600, 200);
       BK4819_PlayBeep(1000, 200);
+	break;  
 #endif	
 
   }

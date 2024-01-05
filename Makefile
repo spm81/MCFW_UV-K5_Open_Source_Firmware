@@ -10,6 +10,11 @@ ENABLE_AM_FIX 							:= 1
 #ENABLE_AM_FIX_ON_SPECTRUM - 40 bytes
 ENABLE_AM_FIX_ON_SPECTRUM				:= 1
 
+
+#ENABLE_SQUELCH_MORE_SENSITIVE - 
+ENABLE_SQUELCH_MORE_SENSITIVE			:= 1
+
+
 #FM Radio
 #ENABLE_FMRADIO - 3856 bytes
 ENABLE_FMRADIO							:= 0
@@ -18,60 +23,73 @@ ENABLE_FMRADIO							:= 0
 ENABLE_FMRADIO_FAST_RESTORE 			:= 1
 
 
-ENABLE_OVERLAY 							:= 0
-ENABLE_SWD 								:= 0
-
-ENABLE_TX1750 							:= 0
-
-#Battery Percentage in Status Bar	296 bytes
+#Battery
+#Battery Percentage in Status Bar - 296 bytes
 ENABLE_STATUS_BATTERY_PERC  			:= 1
+#Show Battery Current when Charging by Tunas1337 - 136 bytes
+ENABLE_BATTERY_CHARGING					:= 1
+
 
 #More LCD Settings
 ENABLE_LCD_INVERT_OPTION				:= 0
 # ENABLE_LCD_CONTRAST_OPTION Not working ...... yet, don't use it. Keep it at 0
 #ENABLE_LCD_CONTRAST_OPTION 				:= 0
 
-
 #Sound Bar(s) 255 bytes // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
 ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1
 
+
 #SOS Flashlight 84 bytes
-ENABLE_FLASHLIGHT_SOS       			:= 1
+ENABLE_FLASHLIGHT_SOS       			:= 0
 
 
 #UART
 ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 
+
 #Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
 ENABLE_DTMF_CALLING         			:= 1
 #DTMF FN1 1750hz & FN2 1050hz Tones
 ENABLE_DTMF_CALLING_FN1_FN2				:= 1
 
-#Options
+
+#More Options Mods
+ENABLE_OVERLAY 							:= 0
+ENABLE_SWD 								:= 0
+ENABLE_TX1750 							:= 0
 ENABLE_NOSCANTIMEOUT        			:= 1
 ENABLE_KEEPNAMEONSAVE       			:= 1
 ENABLE_FASTER_CHANNEL_SCAN  			:= 1
+
+
 
 #Roger - To Enable MDC, ROGERBEEP HAS TO BE ENABLED
 ENABLE_ROGERBEEP            			:= 0
 ENABLE_MDC                  			:= 0
 
+
 #Spectrum
 ENABLE_SPECTRUM             			:= 1
+ENABLE_SPECTRUM_NUNU           			:= 0
 SPECTRUM_AUTOMATIC_SQUELCH  			:= 1
 SPECTRUM_EXTRA_VALUES       			:= 1
 ENABLE_ALL_REGISTERS        			:= 0
 ENABLE_MATOZ_KEYS           			:= 1
 
+
 #Messenger ( Thanks to joaquimorg https://github.com/joaquimorg )
 ENABLE_MESSENGER            			:= 1
 ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
+#ENABLE_MESSENGER_SHOW_RX_FREQ - 124 bytes
+ENABLE_MESSENGER_SHOW_RX_FREQ			:= 0
+#ENABLE_MESSENGER_SHOW_RX_TX_FREQ - 144 bytes | if ENABLE_MESSENGER_SHOW_RX_FREQ don't count the 124 bytes
+ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 #ENABLE_MESSENGER_UART - 156 bytes
 ENABLE_MESSENGER_UART					:= 1
 
 #Try to implement CW Modulation like IJV
-ENABLE_CW                   			:= 0
+ENABLE_CW                   			:= 1
 
 BSP_DEFINITIONS := $(wildcard hardware/*/*.def)
 BSP_HEADERS := $(patsubst hardware/%,bsp/%,$(BSP_DEFINITIONS))
@@ -138,6 +156,9 @@ OBJS += app/appmenu.o
 OBJS += app/scanner.o
 ifeq ($(ENABLE_SPECTRUM), 1)
 OBJS += app/spectrum.o
+endif
+ifeq ($(ENABLE_SPECTRUM_NUNU), 1)
+OBJS += app/spectrumnunu.o
 endif
 ifeq ($(ENABLE_UART),1)
 OBJS += app/uart.o
@@ -256,6 +277,9 @@ endif
 ifeq ($(ENABLE_AM_FIX_ON_SPECTRUM),1)
 	CFLAGS  += -DENABLE_AM_FIX_ON_SPECTRUM
 endif
+ifeq ($(ENABLE_SQUELCH_MORE_SENSITIVE),1)
+	CFLAGS  += -DENABLE_SQUELCH_MORE_SENSITIVE
+endif
 ifeq ($(ENABLE_FMRADIO),1)
 	CFLAGS += -DENABLE_FMRADIO
 endif
@@ -273,6 +297,9 @@ ifeq ($(ENABLE_OVERLAY),1)
 endif
 ifeq ($(ENABLE_SPECTRUM),1)
 	CFLAGS += -DENABLE_SPECTRUM
+endif
+ifeq ($(ENABLE_SPECTRUM_NUNU),1)
+	CFLAGS += -DENABLE_SPECTRUM_NUNU
 endif
 ifeq ($(ENABLE_SWD),1)
 	CFLAGS += -DENABLE_SWD
@@ -320,6 +347,12 @@ endif
 ifeq ($(ENABLE_MESSENGER_DELIVERY_NOTIFICATION),1)
 	CFLAGS += -DENABLE_MESSENGER_DELIVERY_NOTIFICATION
 endif
+ifeq ($(ENABLE_MESSENGER_SHOW_RX_FREQ),1)
+	CFLAGS += -DENABLE_MESSENGER_SHOW_RX_FREQ
+endif
+ifeq ($(ENABLE_MESSENGER_SHOW_RX_TX_FREQ),1)
+	CFLAGS += -DENABLE_MESSENGER_SHOW_RX_TX_FREQ
+endif
 ifeq ($(ENABLE_UART), 0)
 	ENABLE_MESSENGER_UART := 0
 endif
@@ -329,6 +362,10 @@ endif
 ifeq ($(ENABLE_CW),1)
 	CFLAGS += -DENABLE_CW
 endif
+ifeq ($(ENABLE_BATTERY_CHARGING),1)
+	CFLAGS += -DENABLE_BATTERY_CHARGING
+endif
+
 
 
 ifeq ($(DEBUG),1)

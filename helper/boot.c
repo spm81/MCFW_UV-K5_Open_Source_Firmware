@@ -62,36 +62,88 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 		gMenuCursor = MENU_350TX;
 		gSubMenuSelection = gSetting_350TX;
 		GUI_SelectNextDisplay(DISPLAY_MENU);
-		
+
+/*		
 #if defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP) && !defined(ENABLE_LCD_CONTRAST_OPTION)		
 //#ifdef ENABLE_DTMF_CALLING
 		gMenuListCount = 55;
 #elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP) && defined(ENABLE_LCD_CONTRAST_OPTION)		
 //#ifdef ENABLE_DTMF_CALLING
-		gMenuListCount = 56;		
+		gMenuListCount = 56;	
 #elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && !defined(ENABLE_LCD_CONTRAST_OPTION)		
 		gMenuListCount = 54;
+#elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC) && !defined(ENABLE_LCD_CONTRAST_OPTION)		
+		gMenuListCount = 55;
 #elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_LCD_CONTRAST_OPTION)		
-		gMenuListCount = 55;		
+		gMenuListCount = 55;
+#elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC) && defined(ENABLE_LCD_CONTRAST_OPTION)		
+		gMenuListCount = 56;
 #elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP) && !defined(ENABLE_LCD_CONTRAST_OPTION)		
 		gMenuListCount = 56;
 #elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP) && defined(ENABLE_LCD_CONTRAST_OPTION)		
-		gMenuListCount = 57;		
+		gMenuListCount = 57;
 #elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && !defined(ENABLE_LCD_CONTRAST_OPTION)		
 		gMenuListCount = 55;
+#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC) && !defined(ENABLE_LCD_CONTRAST_OPTION)		
+		gMenuListCount = 56;
 #elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_LCD_CONTRAST_OPTION)		
-		gMenuListCount = 56;		
+		gMenuListCount = 56;
+#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC) && defined(ENABLE_LCD_CONTRAST_OPTION)		
+		gMenuListCount = 57;		
 #elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP) && !defined(ENABLE_LCD_CONTRAST_OPTION)
 		gMenuListCount = 46;
 #elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP) && defined(ENABLE_LCD_CONTRAST_OPTION)
-		gMenuListCount = 47;		
+		gMenuListCount = 47;
 #elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && !defined(ENABLE_LCD_CONTRAST_OPTION)
 		gMenuListCount = 45;
-#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_LCD_CONTRAST_OPTION)
+#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC) && !defined(ENABLE_LCD_CONTRAST_OPTION)
 		gMenuListCount = 46;		
+#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_LCD_CONTRAST_OPTION)
+		gMenuListCount = 46;
+#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC) && defined(ENABLE_LCD_CONTRAST_OPTION)
+		gMenuListCount = 47;		
 #else
 		gMenuListCount = 44;
-#endif	
+#endif	*/
+
+
+#if defined(ENABLE_DTMF_CALLING)
+    #if defined(ENABLE_STATUS_BATTERY_PERC)
+        #if defined(ENABLE_ROGERBEEP) && defined(ENABLE_LCD_CONTRAST_OPTION)
+            gMenuListCount = 57;
+        #elif defined(ENABLE_ROGERBEEP)
+            gMenuListCount = 56;
+        #elif defined(ENABLE_LCD_CONTRAST_OPTION)
+            gMenuListCount = 56;
+        #else
+            gMenuListCount = 55;
+        #endif
+    #else
+        #if defined(ENABLE_ROGERBEEP) && defined(ENABLE_LCD_CONTRAST_OPTION)
+            gMenuListCount = 56;
+        #elif defined(ENABLE_ROGERBEEP)
+            gMenuListCount = 55;
+        #elif defined(ENABLE_LCD_CONTRAST_OPTION)
+            gMenuListCount = 56;
+        #else
+            gMenuListCount = 54;
+        #endif
+    #endif
+#elif defined(ENABLE_STATUS_BATTERY_PERC)
+    #if defined(ENABLE_ROGERBEEP) && defined(ENABLE_LCD_CONTRAST_OPTION)
+        gMenuListCount = 47;
+    #elif defined(ENABLE_ROGERBEEP)
+        gMenuListCount = 46;
+    #elif defined(ENABLE_LCD_CONTRAST_OPTION)
+        gMenuListCount = 46;
+    #elif defined(ENABLE_MDC) && defined(ENABLE_LCD_CONTRAST_OPTION)
+        gMenuListCount = 47;
+    #else
+        gMenuListCount = 45;
+    #endif
+#else
+    gMenuListCount = 44;
+#endif
 		//gMenuListCount = MENU_ITEMS_COUNT;
 		gF_LOCK = true;
 #if defined(ENABLE_AIRCOPY)

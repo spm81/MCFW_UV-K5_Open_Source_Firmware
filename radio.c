@@ -287,7 +287,9 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg) {
       gEeprom.VfoInfo[VFO].BUSY_CHANNEL_LOCK = false;
     } else {
       gEeprom.VfoInfo[VFO].FrequencyReverse = !!(Data[4] & 0x01);
-      gEeprom.VfoInfo[VFO].CHANNEL_BANDWIDTH = !!(Data[4] & 0x02);
+	  if(IS_MR_CHANNEL(Channel)){
+				gEeprom.VfoInfo[VFO].CHANNEL_BANDWIDTH = !!(Data[4] & 0x02);
+			}      
       gEeprom.VfoInfo[VFO].OUTPUT_POWER = (Data[4] >> 2) & 0x03;
       gEeprom.VfoInfo[VFO].BUSY_CHANNEL_LOCK = !!(Data[4] & 0x10);
     }
@@ -368,15 +370,19 @@ void RADIO_ConfigureChannel(uint8_t VFO, uint32_t Arg) {
 
 void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo) {
   uint8_t Txp[3];
-  uint16_t Base;
+// OLD CONFIG   uint16_t Base;
   FREQUENCY_Band_t Band;
 
   Band = FREQUENCY_GetBand(pInfo->pRX->Frequency);
+  uint16_t Base = (Band < BAND4_174MHz) ? 0x1E60 : 0x1E00;
+  
+  /* // OLD CONFIG
   if (Band < BAND4_174MHz) {
     Base = 0x1E60;
   } else {
     Base = 0x1E00;
   }
+*/
 
   if (gEeprom.SQUELCH_LEVEL == 0) {
     pInfo->SquelchOpenRSSIThresh = 0x00;
@@ -394,6 +400,69 @@ void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo) {
     EEPROM_ReadBuffer(Base + 0x40, &pInfo->SquelchCloseGlitchThresh, 1);
     EEPROM_ReadBuffer(Base + 0x50, &pInfo->SquelchOpenGlitchThresh, 1);
 
+		#if ENABLE_SQUELCH_MORE_SENSITIVE
+
+		uint16_t rssi_open    = pInfo->SquelchOpenRSSIThresh;
+		uint16_t rssi_close   = pInfo->SquelchCloseRSSIThresh;
+		uint16_t noise_open   = pInfo->SquelchOpenNoiseThresh;
+		uint16_t noise_close  = pInfo->SquelchCloseNoiseThresh;
+		uint16_t glitch_open  = pInfo->SquelchOpenGlitchThresh;
+		uint16_t glitch_close = pInfo->SquelchCloseGlitchThresh;
+
+			// make squelch a little more sensitive
+			//
+			// getting the best setting here is still experimental, bare with me
+			//
+			// note that 'noise' and 'glitch' values are inverted compared to 'rssi' values
+
+			#if 0
+				rssi_open   = (rssi_open   * 8) / 9;
+				noise_open  = (noise_open  * 9) / 8;
+				glitch_open = (glitch_open * 9) / 8;
+			#else
+				// even more sensitive .. use when RX bandwidths are fixed (no weak signal auto adjust)
+				rssi_open   = (rssi_open   * 1) / 2;
+				noise_open  = (noise_open  * 2) / 1;
+				glitch_open = (glitch_open * 2) / 1;
+			#endif
+
+		#else
+			// more sensitive .. use when RX bandwidths are fixed (no weak signal auto adjust)
+			rssi_open   = (rssi_open   * 3) / 4;
+			noise_open  = (noise_open  * 4) / 3;
+			glitch_open = (glitch_open * 4) / 3;
+		#endif
+
+		// make squelch more sensitive for HF bands
+		if(Band <= BAND1_50MHz) {
+			rssi_close   = (rssi_open   * 5) / 6;
+			noise_close  = (noise_open  * 6) / 5;
+			glitch_close = (glitch_open * 6) / 5;
+		}
+		else
+		{
+			rssi_close   = (rssi_open   *  9) / 10;
+			noise_close  = (noise_open  * 10) / 9;
+			glitch_close = (glitch_open * 10) / 9;
+		}
+
+		// ensure the 'close' threshold is lower than the 'open' threshold
+		if (rssi_close   == rssi_open   && rssi_close   >= 2)
+			rssi_close -= 2;
+		if (noise_close  == noise_open  && noise_close  <= 125)
+			noise_close += 2;
+		if (glitch_close == glitch_open && glitch_close <= 253)
+			glitch_close += 2;
+
+		pInfo->SquelchOpenRSSIThresh    = (rssi_open    > 255) ? 255 : rssi_open;
+		pInfo->SquelchCloseRSSIThresh   = (rssi_close   > 255) ? 255 : rssi_close;
+		pInfo->SquelchOpenNoiseThresh   = (noise_open   > 127) ? 127 : noise_open;
+		pInfo->SquelchCloseNoiseThresh  = (noise_close  > 127) ? 127 : noise_close;
+		pInfo->SquelchOpenGlitchThresh  = (glitch_open  > 255) ? 255 : glitch_open;
+		pInfo->SquelchCloseGlitchThresh = (glitch_close > 255) ? 255 : glitch_close;
+	}
+/* // OLD STUFF
+	#else
     if (pInfo->SquelchOpenNoiseThresh >= 0x80) {
       pInfo->SquelchOpenNoiseThresh = 0x7F;
     }
@@ -401,8 +470,10 @@ void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo) {
       pInfo->SquelchCloseNoiseThresh = 0x7F;
     }
 	//BK4819_WriteRegister(BK4819_REG_78, 0x1212);
-	BK4819_WriteRegister(BK4819_REG_78, 0x3636);
+	BK4819_WriteRegister(BK4819_REG_78, 0x4848);
+	#endif
   }
+*/  
 
   Band = FREQUENCY_GetBand(pInfo->pTX->Frequency);
   EEPROM_ReadBuffer(0x1ED0 + (Band * 0x10) + (pInfo->OUTPUT_POWER * 3), Txp, 3);
@@ -496,6 +567,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0) {
 	}
 
   BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, false);
+
   BK4819_SetupPowerAmplifier(0, 0);
   BK4819_ToggleGpioOut(BK4819_GPIO5_PIN1, false);
 
@@ -517,7 +589,15 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0) {
       gRxVfo->SquelchCloseGlitchThresh, gRxVfo->SquelchOpenGlitchThresh);
   BK4819_PickRXFilterPathBasedOnFrequency(Frequency);
   BK4819_ToggleGpioOut(BK4819_GPIO6_PIN2, true);
-  BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);
+//OLDCONFIG  BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);
+// AF RX Gain and DAC
+	//BK4819_WriteRegister(BK4819_REG_48, 0xB3A8);  // 1011 00 111010 1000
+	BK4819_WriteRegister(BK4819_REG_48,
+		(11u << 12)                 |     // ??? .. 0 ~ 15, doesn't seem to make any difference
+		( 0u << 10)                 |     // AF Rx Gain-1
+		(gEeprom.VOLUME_GAIN << 4) |     // AF Rx Gain-2
+		(gEeprom.DAC_GAIN    << 0));     // AF DAC Gain (after Gain-1 and Gain-2)
+
 
   InterruptMask = 0 | BK4819_REG_3F_SQUELCH_FOUND | BK4819_REG_3F_SQUELCH_LOST;
 
@@ -599,6 +679,7 @@ void RADIO_SetupRegisters(bool bSwitchToFunction0) {
   if (bSwitchToFunction0) {
     FUNCTION_Select(FUNCTION_FOREGROUND);
   }
+
 }
 
 void RADIO_SetTxParameters(void) {
@@ -821,8 +902,8 @@ void RADIO_PrepareCssTX(void) {
 
 
 void RADIO_SendEndOfTransmission(void) {
-#ifdef ENABLE_ROGERBEEP
 
+#if defined (ENABLE_ROGERBEEP) && defined (ENABLE_MDC)
   if (gEeprom.ROGER == ROGER_MODE_DEFAULT) {
   BK4819_PlayRoger(0);
   } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBO) { 
@@ -835,18 +916,38 @@ void RADIO_SendEndOfTransmission(void) {
 	BK4819_PlayRoger(4); 	
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
 	BK4819_PlayRoger(5);
+  } else if (gEeprom.ROGER == ROGER_MODE_POLICE_ITA) { 
+	BK4819_PlayRoger(6);	
+  } else if (gEeprom.ROGER == ROGER_MODE_MDC) {
+    BK4819_PlayRogerMDC();
+  }
+#elif defined (ENABLE_ROGERBEEP) && !defined (ENABLE_MDC)
+  if (gEeprom.ROGER == ROGER_MODE_DEFAULT) {
+  BK4819_PlayRoger(0);
+  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBO) { 
+    BK4819_PlayRoger(1);
+  } else if (gEeprom.ROGER == ROGER_MODE_TPT) { 
+    BK4819_PlayRoger(2); 
+  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOT40) { 
+	BK4819_PlayRoger(3); 	
+  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOTLKRT80) { 
+	BK4819_PlayRoger(4); 	
+  } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
+	BK4819_PlayRoger(5);
+  } else if (gEeprom.ROGER == ROGER_MODE_POLICE_ITA) { 
+	BK4819_PlayRoger(6);	
 	/*
 	
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERMARIO) {
 	BK4819_PlayRogerMario();
   }*/
- #ifdef ENABLE_MDC
- } else if (gEeprom.ROGER == ROGER_MODE_MDC) {
-    BK4819_PlayRogerMDC();
- #endif  
- 
-  }
+  }  
+#elif !defined (ENABLE_ROGERBEEP) && defined (ENABLE_MDC)
+  if (gEeprom.ROGER == ROGER_MODE_MDC) {
+  BK4819_PlayRogerMDC();
+	}	
 #endif  
+ 
   
 #ifdef ENABLE_DTMF_CALLING
 

@@ -26,7 +26,7 @@ void APPMENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     gRequestDisplayScreen = DISPLAY_MAIN;
     break;
 
-#ifdef ENABLE_MESSENGER
+#if defined (ENABLE_MESSENGER_SHOW_RX_FREQ) && !defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
   case KEY_2:
     hasNewMessage = false;
     uint32_t frequency = gEeprom.VfoInfo[gEeprom.TX_CHANNEL].pTX->Frequency;
@@ -40,8 +40,32 @@ void APPMENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     gAppToDisplay = APP_MESSENGER;
 	  gRequestDisplayScreen = DISPLAY_MAIN;
     break;
-#endif
+#elif defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ) && !defined (ENABLE_MESSENGER_SHOW_RX_FREQ) || defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ) && defined (ENABLE_MESSENGER_SHOW_RX_FREQ)
+  case KEY_2:
+    hasNewMessage = false;
+    uint32_t txFrequency = gEeprom.VfoInfo[gEeprom.TX_CHANNEL].pTX->Frequency;
+    uint32_t rxFrequency = gEeprom.VfoInfo[gEeprom.RX_CHANNEL].pRX->Frequency;
+    
+    if (IsTXAllowed(txFrequency)) {
+      txFrequency = GetScreenF(txFrequency);
+      rxFrequency = GetScreenF(rxFrequency);
+      sprintf(msgFreqInfo, "R:%u.%05u T:%u.%05u Mhz", rxFrequency / 100000, rxFrequency % 100000, txFrequency / 100000, txFrequency % 100000);
+    } else {
+      sprintf(msgFreqInfo, "TX DISABLE");
+    }
 
+    gUpdateStatus = true;
+    gAppToDisplay = APP_MESSENGER;
+    gRequestDisplayScreen = DISPLAY_MAIN;
+    break;
+#else
+  case KEY_2:
+    hasNewMessage = false;    
+    gUpdateStatus = true;
+    gAppToDisplay = APP_MESSENGER;
+    gRequestDisplayScreen = DISPLAY_MAIN;    
+    break;
+#endif		
 /*
   case KEY_1:
     gAppToDisplay = APP_SPLIT;

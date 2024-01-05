@@ -55,7 +55,8 @@ SpectrumSettings settings = {
     .rssiTriggerLevel = 150,
     .backlightState = true,
     .listenBw = BK4819_FILTER_BW_WIDE,
-    .modulationType = MOD_FM,
+    // .modulationType = MOD_FM,
+    .modulationType = false,
     .delayUS = 2500,
 };
 

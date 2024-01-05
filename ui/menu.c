@@ -97,7 +97,7 @@ static const char MenuList[][8] = {
     "D List",
 #endif
     "PonMsg",
-#ifdef ENABLE_ROGERBEEP	
+#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
     "Roger",
 #endif	
     "Voltage",
@@ -182,26 +182,42 @@ static const char gSubMenu_PONMSG[3][5] = {
     "VOL",
 };
 
-#ifdef ENABLE_ROGERBEEP
-#ifdef ENABLE_MDC
-static const char gSubMenu_ROGER[8][11] = {
-#else
-static const char gSubMenu_ROGER[7][11] = {
-#endif
-
+#if defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
+const char gSubMenu_ROGER[][9] = {
     "OFF",
     "DEFAULT",
 	"MOTOTRBO",
     "MOTO TPT",
 	"MOTO T40",
 	"MOTO T80",
-	"C.AM845",/*
-	"MARIO",*/
-  #ifdef ENABLE_MDC
-    "MDC",
-    #endif	
+	"C.AM845",
+	"POLIZIA",
+	"MDC",
 };
+
+#elif defined (ENABLE_ROGERBEEP)
+const char gSubMenu_ROGER[][9] = {
+    "OFF",
+    "DEFAULT",
+	"MOTOTRBO",
+    "MOTO TPT",
+	"MOTO T40",
+	"MOTO T80",
+	"C.AM845",
+	"POLIZIA", // Thanks to IU0PUW , Roger Beep Italy Police
+/*	"MARIO",*/
+};
+
+#elif defined (ENABLE_MDC)
+const char gSubMenu_ROGER[][4] = {
+	"OFF",
+    "MDC",
+};
+
+
+
 #endif
+
 static const char gSubMenu_RESET[2][4] = {
     "VFO",
     "ALL",
@@ -479,13 +495,21 @@ case MENU_S_LIST:
   case MENU_PONMSG:
     strcpy(String, gSubMenu_PONMSG[gSubMenuSelection]);
     break;
-#ifdef ENABLE_ROGERBEEP
-
+#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
   case MENU_ROGER:
     strcpy(String, gSubMenu_ROGER[gSubMenuSelection]);
     break;
 #endif
   case MENU_VOL:
+#ifdef ENABLE_BATTERY_CHARGING  
+        // Draw the charging indicator over the battery if we're charging
+		// The charging indicator is 13x16, so we need 2 lines of 8 pixels to draw it.
+		//By Tunas1337
+		if (gChargingWithTypeC) {
+			memcpy(gFrameBuffer[2]+113, BITMAP_SettingsBattCharging, 13);
+			memcpy(gFrameBuffer[3]+113, BITMAP_SettingsBattCharging+13, 13);
+		}
+#endif		
     sprintf(String, "%d.%02dV", gBatteryVoltageAverage / 100,
             gBatteryVoltageAverage % 100);
     break;
@@ -602,7 +626,13 @@ case MENU_S_LIST:
     UI_DisplaySmallDigits(Offset, String + (9 - Offset), 105, 0);
 #endif	
   }
-
+#ifdef ENABLE_BATTERY_CHARGING
+	// If we're in the voltage menu option, also print the current
+	if (gMenuCursor == MENU_VOL) {
+		sprintf(String, "%dmA", gBatteryCurrent);
+		UI_PrintString(String, 50, 127, 5, 8, true);
+	}
+#endif	
   if (gMenuCursor == MENU_SLIST1 || gMenuCursor == MENU_SLIST2) {
     i = gMenuCursor - MENU_SLIST1;
 
