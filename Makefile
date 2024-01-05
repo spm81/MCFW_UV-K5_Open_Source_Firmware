@@ -208,11 +208,13 @@ ifeq ($(OS),Windows_NT)
 	RM = del /Q
 	FixPath = $(subst /,\,$1)
 	WHERE = where
+	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com3 -b
 else
 	TOP := $(shell pwd)
 	RM = rm -f
     FixPath = $1
 	WHERE = which
+	K5PROG = utils/k5prog/k5prog -F -YYYYY -p /dev/ttyUSB3 -b
 endif
 
 ifneq (, $(shell $(WHERE) python))
@@ -422,3 +424,5 @@ clean:
 #	rm -f $(TARGET).bin $(TARGET) $(OBJS) $(DEPS)
 	$(RM) $(call FixPath, $(TARGET) $(OBJS) $(DEPS))
 
+prog: all
+	$(K5PROG) firmware.bin
