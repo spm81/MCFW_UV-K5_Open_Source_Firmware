@@ -22,6 +22,19 @@
 #include "../driver/systick.h"
 #include "../driver/uart.h"
 
+#ifdef ENABLE_CW
+#include "../app/scanner.h"
+#include "../audio.h"
+#include "../driver/bk4819.h"
+#include "../frequencies.h"
+#include "../misc.h"
+#include "../radio.h"
+#include "../settings.h"
+#include "../ui/inputbox.h"
+#include "../ui/ui.h"
+#include "../app/generic.h"
+#endif
+
 #ifdef ENABLE_MDC
 static const uint16_t FSK_RogerTable[7] = {
     0xF1A2, 0x7446, 0x61A4, 0x6544, 0x4E8A, 0xE044, 0xEA84,
@@ -1014,12 +1027,12 @@ void BK4819_PlayRoger(int t)
       BK4819_PlayBeep(1180, 60);
       BK4819_PlayBeep(1075, 60);
 	break;
-
+/*
 	case 7: //  // Baofeng UV-5RC
       BK4819_PlayBeep(1120, 135);
       BK4819_PlayBeep(861, 200);
 	break;
-	
+*/	
 #endif	
 
 #ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
@@ -1036,6 +1049,7 @@ void BK4819_PlayRoger(int t)
 	BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);   // 1 1 0000 0 1 1111 1 1 1 0
 }
 #endif
+
 
 #ifdef ENABLE_MDC
 

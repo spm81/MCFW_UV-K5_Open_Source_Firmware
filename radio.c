@@ -917,10 +917,17 @@ void RADIO_SendEndOfTransmission(void) {
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
 	BK4819_PlayRoger(5);
   } else if (gEeprom.ROGER == ROGER_MODE_POLICE_ITA) { 
-	BK4819_PlayRoger(6);	
+	BK4819_PlayRoger(6);
+  } else if (gEeprom.ROGER == ROGER_MODE_UV5RC) { 
+	BK4819_PlayRoger(7);	
   } else if (gEeprom.ROGER == ROGER_MODE_MDC) {
     BK4819_PlayRogerMDC();
   }
+  
+  
+  
+  	ROGER_MODE_UV5RC,
+	
 #elif defined (ENABLE_ROGERBEEP) && !defined (ENABLE_MDC)
   if (gEeprom.ROGER == ROGER_MODE_DEFAULT) {
   BK4819_PlayRoger(0);
@@ -935,7 +942,9 @@ void RADIO_SendEndOfTransmission(void) {
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
 	BK4819_PlayRoger(5);
   } else if (gEeprom.ROGER == ROGER_MODE_POLICE_ITA) { 
-	BK4819_PlayRoger(6);	
+	BK4819_PlayRoger(6);
+  } else if (gEeprom.ROGER == ROGER_MODE_UV5RC) { 
+	BK4819_PlayRoger(7);	
 	/*
 	
   } else if (gEeprom.ROGER == ROGER_MODE_ROGERMARIO) {

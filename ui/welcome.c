@@ -29,7 +29,7 @@ void UI_DisplayWelcome(void) {
   memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
 
   if (gEeprom.POWER_ON_DISPLAY_MODE == POWER_ON_DISPLAY_MODE_FULL_SCREEN) {
-    ST7565_FillScreen(0xFF);
+   // ST7565_FillScreen(0xFF);
   } else {
     char WelcomeString0[16];
     char WelcomeString1[16];

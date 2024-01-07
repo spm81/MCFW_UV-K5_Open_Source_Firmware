@@ -191,7 +191,8 @@ const char gSubMenu_ROGER[][9] = {
 	"MOTO T40",
 	"MOTO T80",
 	"C.AM845",
-	"POLIZIA",
+	"POLIZIA", // Thanks to IU0PUW , Roger Beep Italy Police
+	"B.UV-5RC",
 	"MDC",
 };
 
@@ -205,6 +206,7 @@ const char gSubMenu_ROGER[][9] = {
 	"MOTO T80",
 	"C.AM845",
 	"POLIZIA", // Thanks to IU0PUW , Roger Beep Italy Police
+	"B.UV-5RC",
 /*	"MARIO",*/
 };
 
