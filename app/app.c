@@ -871,12 +871,6 @@ void APP_CheckKeys(void) {
       if (gPttDebounceCounter > 0) {
         gPttIsPressed = true;
         APP_ProcessKey(KEY_PTT, true, false);
-	#ifdef ENABLE_CW	
-	if (gRxVfo->ModulationType == MOD_CW) {
-		gEnableSpeaker = false;
-		BK4819_TransmitTone(gEeprom.DTMF_SIDE_TONE, 641);	
-}
-#endif
       }
     } else {
       gPttDebounceCounter = 0;

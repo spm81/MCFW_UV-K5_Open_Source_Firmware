@@ -208,7 +208,7 @@ ifeq ($(OS),Windows_NT)
 	RM = del /Q
 	FixPath = $(subst /,\,$1)
 	WHERE = where
-	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com3 -b
+	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com9 -b
 else
 	TOP := $(shell pwd)
 	RM = rm -f
@@ -392,7 +392,7 @@ all: $(TARGET)
 	@echo Create $(notdir $<.bin)
 	@$(OBJCOPY) -O binary $< $<.bin
 	@echo Create $(notdir $<.packed.bin)
-	@-$(MY_PYTHON) fw-pack.py $<.bin $(GIT_HASH) $<.packed.bin
+	@-$(MY_PYTHON) utils/fw-pack.py $<.bin MATOZ $(GIT_HASH) $<.packed.bin
 
 debug:
 	/opt/openocd/bin/openocd -c "bindto 0.0.0.0" -f interface/jlink.cfg -f dp32g030.cfg
