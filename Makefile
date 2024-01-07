@@ -11,7 +11,7 @@ ENABLE_AM_FIX 							:= 1
 ENABLE_AM_FIX_ON_SPECTRUM				:= 1
 
 
-#ENABLE_SQUELCH_MORE_SENSITIVE - 
+#ENABLE_SQUELCH_MORE_SENSITIVE -
 ENABLE_SQUELCH_MORE_SENSITIVE			:= 1
 
 
@@ -48,7 +48,7 @@ ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 
 
-#Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
+#Trying to remove all about DTMF (Incomplete.. Have to check it better) )
 ENABLE_DTMF_CALLING         			:= 1
 #DTMF FN1 1750hz & FN2 1050hz Tones
 ENABLE_DTMF_CALLING_FN1_FN2				:= 1
@@ -212,10 +212,11 @@ ifeq ($(OS),Windows_NT)
 else
 	TOP := $(shell pwd)
 	RM = rm -f
-    FixPath = $1
+	FixPath = $1
 	WHERE = which
 	K5PROG = utils/k5prog/k5prog -F -YYYYY -p /dev/ttyUSB3 -b
 endif
+
 
 ifneq (, $(shell $(WHERE) python))
 	MY_PYTHON := python
@@ -228,14 +229,14 @@ ifdef MY_PYTHON
 endif
 
 ifndef MY_PYTHON
-	$(info )
-	$(info !!!!!!!! PYTHON NOT FOUND, *.PACKED.BIN WON'T BE BUILT)
-	$(info )
+$(info )
+$(info !!!!!!!! PYTHON NOT FOUND, *.PACKED.BIN WON'T BE BUILT)
+$(info )
 else ifneq (,$(HAS_CRCMOD))
-	$(info )
-	$(info !!!!!!!! CRCMOD NOT INSTALLED, *.PACKED.BIN WON'T BE BUILT)
-	$(info !!!!!!!! run: pip install crcmod)
-	$(info )
+$(info )
+$(info !!!!!!!! CRCMOD NOT INSTALLED, *.PACKED.BIN WON'T BE BUILT)
+$(info !!!!!!!! run: pip install crcmod)
+$(info )
 endif
 
 AS = arm-none-eabi-gcc
@@ -421,7 +422,6 @@ bsp/dp32g030/%.h: hardware/dp32g030/%.def
 -include $(DEPS)
 
 clean:
-#	rm -f $(TARGET).bin $(TARGET) $(OBJS) $(DEPS)
 	$(RM) $(call FixPath, $(TARGET) $(OBJS) $(DEPS))
 
 prog: all
