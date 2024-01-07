@@ -1,95 +1,54 @@
-# People who help making this Code
-# Matoz @spm81 | Joaquim @joaquimorg | Need your name here ;)
+#=================================================================#
+# Matoz @spm81 | Joaquim @joaquimorg | Andrej @Tunas1337 & QSH-OSFW Team
+#=================================================================#
+# FIRMWARE BUILD OPTIONS #  1: Enable  # 0: Disable               #
+#=================================================================#
+
 TARGET = firmware
 
+# ---- STOCK QUANSHENG FERATURES ----
 ENABLE_AIRCOPY 							:= 0
-
-#AM Modulation
-#ENABLE_AM_FIX - 544 bytes
-ENABLE_AM_FIX 							:= 1
-#ENABLE_AM_FIX_ON_SPECTRUM - 40 bytes
-ENABLE_AM_FIX_ON_SPECTRUM				:= 1
-
-
-#ENABLE_SQUELCH_MORE_SENSITIVE - 
-ENABLE_SQUELCH_MORE_SENSITIVE			:= 1
-
-
-#FM Radio
-#ENABLE_FMRADIO - 3856 bytes
-ENABLE_FMRADIO							:= 0
-#ENABLE_FMRADIO_FAST_RESTORE - 0 bytes
-# Restore FM Radio in 1 second after RX
-ENABLE_FMRADIO_FAST_RESTORE 			:= 1
-
-
-#Battery
-#Battery Percentage in Status Bar - 296 bytes
-ENABLE_STATUS_BATTERY_PERC  			:= 1
-#Show Battery Current when Charging by Tunas1337 - 136 bytes
-ENABLE_BATTERY_CHARGING					:= 1
-
-
-#More LCD Settings
-ENABLE_LCD_INVERT_OPTION				:= 0
-# ENABLE_LCD_CONTRAST_OPTION Not working ...... yet, don't use it. Keep it at 0
-#ENABLE_LCD_CONTRAST_OPTION 				:= 0
-
-#Sound Bar(s) 255 bytes // MIC_PLUS_GAIN_BAR_TX by LolloDev5123
-ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1
-
-
-#SOS Flashlight 84 bytes
-ENABLE_FLASHLIGHT_SOS       			:= 0
-
-
-#UART
+ENABLE_FMRADIO							:= 0 # 3856 bytes
+ENABLE_FLASHLIGHT_SOS       			:= 0 # 84 bytes
 ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
-
-
-#Trying to remove all about DTMF (Incomplete.. Have to check it better) ) 
-ENABLE_DTMF_CALLING         			:= 1
-#DTMF FN1 1750hz & FN2 1050hz Tones
-ENABLE_DTMF_CALLING_FN1_FN2				:= 1
-
-
-#More Options Mods
-ENABLE_OVERLAY 							:= 0
-ENABLE_SWD 								:= 0
+ENABLE_DTMF_CALLING         			:= 1 # WIP
+ENABLE_DTMF_SIDETONES				    := 1 # 1750Hz & 1050Hz FN1 FN2 Tones
 ENABLE_TX1750 							:= 0
+ENABLE_ROGERBEEP            			:= 0 # Keep this in stock options, and add option in mods for extra rogers
+ENABLE_MDC                  			:= 0
+
+# ---- MODIFICATIONS ----
+ENABLE_AM_FIX 							:= 1 # AM Modulation Fix - 544 bytes
+ENABLE_AM_FIX_ON_SPECTRUM				:= 1 # Apply to Spectrum - 40 bytes
+ENABLE_SQUELCH_MORE_SENSITIVE			:= 1
+ENABLE_FMRADIO_FAST_RESTORE 			:= 1 # Restore FM in 1 second after RX - 0 bytes
+ENABLE_STATUS_BATTERY_PERC  			:= 1 # Battery percentage - 296 bytes
+ENABLE_BATTERY_CHARGING					:= 1 # Show current while charging - 136 bytes
+ENABLE_LCD_INVERT_OPTION				:= 0 # Invert LCD Colors
+#ENABLE_LCD_CONTRAST_OPTION 		 	:= 0 # WIP
+ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1 # Mic Gain Bar while TXing - 255 bytes
 ENABLE_NOSCANTIMEOUT        			:= 1
 ENABLE_KEEPNAMEONSAVE       			:= 1
 ENABLE_FASTER_CHANNEL_SCAN  			:= 1
-
-
-
-#Roger - To Enable MDC, ROGERBEEP HAS TO BE ENABLED
-ENABLE_ROGERBEEP            			:= 0
-ENABLE_MDC                  			:= 0
-
-
-#Spectrum
+ENABLE_CW                   			:= 1 # CW Modulation
+# ---- EXTRA: MESSENGER ----
+ENABLE_MESSENGER            			:= 1
+ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
+ENABLE_MESSENGER_SHOW_RX_FREQ			:= 0 # 124 bytes
+ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1 # 144 (+20) bytes
+ENABLE_MESSENGER_UART					:= 1 # 156 bytes
+# ---- EXTRA: SPECTRUM ----
 ENABLE_SPECTRUM             			:= 1
 ENABLE_SPECTRUM_NUNU           			:= 0
 SPECTRUM_AUTOMATIC_SQUELCH  			:= 1
 SPECTRUM_EXTRA_VALUES       			:= 1
 ENABLE_ALL_REGISTERS        			:= 0
-ENABLE_MATOZ_KEYS           			:= 1
-
-
-#Messenger ( Thanks to joaquimorg https://github.com/joaquimorg )
-ENABLE_MESSENGER            			:= 1
-ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
-#ENABLE_MESSENGER_SHOW_RX_FREQ - 124 bytes
-ENABLE_MESSENGER_SHOW_RX_FREQ			:= 0
-#ENABLE_MESSENGER_SHOW_RX_TX_FREQ - 144 bytes | if ENABLE_MESSENGER_SHOW_RX_FREQ don't count the 124 bytes
-ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
-#ENABLE_MESSENGER_UART - 156 bytes
-ENABLE_MESSENGER_UART					:= 1
-
-#Try to implement CW Modulation like IJV
-ENABLE_CW                   			:= 1
+ENABLE_MATOZ_KEYS           			:= 0
+# ---- DEBUGGING ----
+# ---- COMPILER/LINKER OPTIONS ----
+ENABLE_OVERLAY 							:= 0
+ENABLE_SWD 								:= 0
 
 BSP_DEFINITIONS := $(wildcard hardware/*/*.def)
 BSP_HEADERS := $(patsubst hardware/%,bsp/%,$(BSP_DEFINITIONS))
@@ -239,8 +198,8 @@ endif
 ifeq ($(ENABLE_DTMF_CALLING),1)
 	CFLAGS += -DENABLE_DTMF_CALLING
 endif
-ifeq ($(ENABLE_DTMF_CALLING_FN1_FN2),1)
-	CFLAGS += -DENABLE_DTMF_CALLING_FN1_FN2
+ifeq ($(ENABLE_DTMF_SIDETONES),1)
+	CFLAGS += -DENABLE_DTMF_SIDETONES
 endif
 ifeq ($(ENABLE_MIC_PLUS_GAIN_BAR_TX),1)
 	CFLAGS += -DENABLE_MIC_PLUS_GAIN_BAR_TX
