@@ -22,19 +22,6 @@
 #include "../driver/systick.h"
 #include "../driver/uart.h"
 
-#ifdef ENABLE_CW
-#include "../app/scanner.h"
-#include "../audio.h"
-#include "../driver/bk4819.h"
-#include "../frequencies.h"
-#include "../misc.h"
-#include "../radio.h"
-#include "../settings.h"
-#include "../ui/inputbox.h"
-#include "../ui/ui.h"
-#include "../app/generic.h"
-#endif
-
 #ifdef ENABLE_MDC
 static const uint16_t FSK_RogerTable[7] = {
     0xF1A2, 0x7446, 0x61A4, 0x6544, 0x4E8A, 0xE044, 0xEA84,

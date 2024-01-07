@@ -153,24 +153,34 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
     RADIO_SetTxParameters();
     BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
 
-#ifdef ENABLE_DTMF_CALLING
-    DTMF_Reply();
-#endif
-#if defined(ENABLE_TX1750)
-    if (gAlarmState != ALARM_STATE_OFF) {
-      if (gAlarmState == ALARM_STATE_TX1750) {
-        BK4819_TransmitTone(true, 1750);
-      }
-      SYSTEM_DelayMs(2);
+#ifdef ENABLE_CW	
+    if (gRxVfo->ModulationType == MOD_CW) {
       GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
       gEnableSpeaker = true;
-      break;
-    }
+      BK4819_TransmitTone(true, 641);
+      SYSTEM_DelayMs(2);
+    } else 
 #endif
-    if (gCurrentVfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable) {
-      BK4819_EnableScramble(gCurrentVfo->SCRAMBLING_TYPE - 1U);
-    } else {
-      BK4819_DisableScramble();
+    {
+#ifdef ENABLE_DTMF_CALLING
+      DTMF_Reply();
+#endif
+#if defined(ENABLE_TX1750)
+      if (gAlarmState != ALARM_STATE_OFF) {
+        if (gAlarmState == ALARM_STATE_TX1750) {
+          BK4819_TransmitTone(true, 1750);
+        }
+        SYSTEM_DelayMs(2);
+        GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
+        gEnableSpeaker = true;
+        break;
+      }
+#endif    
+      if (gCurrentVfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable) {
+        BK4819_EnableScramble(gCurrentVfo->SCRAMBLING_TYPE - 1U);
+      } else {
+        BK4819_DisableScramble();
+      }
     }
     break;
   }

@@ -207,10 +207,35 @@ ifeq ($(OS),Windows_NT)
 	TOP := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 	RM = del /Q
 	FixPath = $(subst /,\,$1)
+	WHERE = where
+	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com9 -b
 else
 	TOP := $(shell pwd)
 	RM = rm -f
     FixPath = $1
+	WHERE = which
+	K5PROG = utils/k5prog/k5prog -F -YYYYY -p /dev/ttyUSB3 -b
+endif
+
+ifneq (, $(shell $(WHERE) python))
+	MY_PYTHON := python
+else ifneq (, $(shell $(WHERE) python3))
+	MY_PYTHON := python3
+endif
+
+ifdef MY_PYTHON
+	HAS_CRCMOD := $(shell $(MY_PYTHON) -c "import crcmod" 2>&1)
+endif
+
+ifndef MY_PYTHON
+	$(info )
+	$(info !!!!!!!! PYTHON NOT FOUND, *.PACKED.BIN WON'T BE BUILT)
+	$(info )
+else ifneq (,$(HAS_CRCMOD))
+	$(info )
+	$(info !!!!!!!! CRCMOD NOT INSTALLED, *.PACKED.BIN WON'T BE BUILT)
+	$(info !!!!!!!! run: pip install crcmod)
+	$(info )
 endif
 
 AS = arm-none-eabi-gcc
@@ -356,15 +381,18 @@ INC += -I $(TOP)
 INC += -I $(TOP)/external/CMSIS_5/CMSIS/Core/Include/
 INC += -I $(TOP)/external/CMSIS_5/Device/ARM/ARMCM0/Include
 
+#show size
+LDFLAGS += -Wl,--print-memory-usage
+
 LIBS =
 
 DEPS = $(OBJS:.o=.d)
 
 all: $(TARGET)
-	$(OBJCOPY) -O binary $< $<.bin
-	-python fw-pack.py $<.bin $(GIT_HASH) $<.packed.bin
-	-python3 fw-pack.py $<.bin $(GIT_HASH) $<.packed.bin
-	$(SIZE) $<
+	@echo Create $(notdir $<.bin)
+	@$(OBJCOPY) -O binary $< $<.bin
+	@echo Create $(notdir $<.packed.bin)
+	@-$(MY_PYTHON) utils/fw-pack.py $<.bin MATOZ $(GIT_HASH) $<.packed.bin
 
 debug:
 	/opt/openocd/bin/openocd -c "bindto 0.0.0.0" -f interface/jlink.cfg -f dp32g030.cfg
@@ -375,15 +403,18 @@ flash:
 version.o: .FORCE
 
 $(TARGET): $(OBJS)
-	$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
+	@echo LD $@
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
 bsp/dp32g030/%.h: hardware/dp32g030/%.def
 
 %.o: %.c | $(BSP_HEADERS)
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	@echo CC $<
+	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 %.o: %.S
-	$(AS) $(ASFLAGS) $< -o $@
+	@echo AS $<
+	@$(AS) $(ASFLAGS) $< -o $@
 
 .FORCE:
 
@@ -393,3 +424,5 @@ clean:
 #	rm -f $(TARGET).bin $(TARGET) $(OBJS) $(DEPS)
 	$(RM) $(call FixPath, $(TARGET) $(OBJS) $(DEPS))
 
+prog: all
+	$(K5PROG) firmware.bin
