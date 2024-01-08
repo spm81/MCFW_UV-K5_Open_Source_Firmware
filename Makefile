@@ -9,14 +9,14 @@ TARGET = firmware
 # ---- STOCK QUANSHENG FERATURES ----
 ENABLE_AIRCOPY 							:= 0
 # 3856 bytes
-ENABLE_FMRADIO							:= 0
+ENABLE_FMRADIO							:= 1
 # 84 bytes
 ENABLE_FLASHLIGHT_SOS       			:= 0
 ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
-# Bause we can cut more...
-ENABLE_DTMF_CALLING         			:= 1
- # 1750Hz & 1050Hz FN1 FN2 Tones
+# Bause we can cut more... - 4108 bytes
+ENABLE_DTMF_CALLING         			:= 0
+# 1750Hz & 1050Hz FN1 FN2 Tones
 ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0
 # Keep this in stock options, and add option in mods for extra rogers
@@ -33,7 +33,7 @@ ENABLE_FMRADIO_FAST_RESTORE 			:= 1
 # Battery percentage - 296 bytes
 ENABLE_STATUS_BATTERY_PERC  			:= 1
 # Show current while charging - 136 bytes Thanks Tunas1337
-ENABLE_BATTERY_CHARGING					:= 1
+ENABLE_BATTERY_CHARGING					:= 0
 # Invert LCD Colors
 ENABLE_LCD_INVERT_OPTION				:= 0 
 #ENABLE_LCD_CONTRAST_OPTION 		 	:= 0 # WIP
@@ -59,7 +59,7 @@ ENABLE_SPECTRUM_NUNU           			:= 0
 SPECTRUM_AUTOMATIC_SQUELCH  			:= 1
 SPECTRUM_EXTRA_VALUES       			:= 1
 ENABLE_ALL_REGISTERS        			:= 0
-ENABLE_MATOZ_KEYS           			:= 0
+ENABLE_MATOZ_KEYS           			:= 1
 # ---- DEBUGGING ----
 # ---- COMPILER/LINKER OPTIONS ----
 ENABLE_OVERLAY 							:= 0

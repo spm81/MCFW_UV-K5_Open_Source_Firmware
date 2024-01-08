@@ -63,21 +63,22 @@ void MENU_StopCssScan(void) {
 }
 
 int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
+	*pMin = 0;	
   switch (Cursor) {
   case MENU_SQL:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 9;
     break;
   case MENU_STEP:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 18;
     break;
   case MENU_ABR:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 6;
     break;
   case MENU_F_LOCK:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 4;
     break;
 #ifdef ENABLE_LCD_CONTRAST_OPTION
@@ -88,7 +89,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
 #endif
 
   case MENU_MDF:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 3;
     break;
   case MENU_TXP:
@@ -99,28 +100,28 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
   case MENU_SC_REV:
   case MENU_PONMSG:
   case MENU_ALL_TX:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 2;
     break;
 #if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)	
   case MENU_ROGER:
-    *pMin = 0;
+    //*pMin = 0;
 	*pMax = ARRAY_SIZE(gSubMenu_ROGER) - 1;
     break;
 #endif
 	
   case MENU_UPCONVERTER:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 6;
     break;
   case MENU_R_DCS:
   case MENU_T_DCS:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 208;
     break;
   case MENU_R_CTCS:
   case MENU_T_CTCS:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 50;
     break;
   case MENU_BCL:
@@ -138,28 +139,28 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
   case MENU_200TX:
   case MENU_500TX:
   case MENU_SCREN:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 1;
     break;
   case MENU_W_N:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = ARRAY_SIZE(bwNames) - 1;
     break;
 #ifdef ENABLE_STATUS_BATTERY_PERC	
   case MENU_BATTYP:
-	*pMin = 0;
+	//*pMin = 0;
 	*pMax = 1;
 	break;
 #endif	
   case MENU_AM:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = ARRAY_SIZE(modulationTypeOptions) - 1;
     break;
   case MENU_SCR:
   case MENU_VOX:
   case MENU_TOT:
   case MENU_RP_STE:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 10;
     break;
   case MENU_MEM_CH:
@@ -169,26 +170,26 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
   /*  *pMin = -1;
     *pMax = FREQ_CHANNEL_LAST;
 	*/
-	*pMin = 0;
+	//*pMin = 0;
     *pMax = 199;
     break;  
   case MENU_DEL_CH:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 199;
     break;
   case MENU_SAVE:
   case MENU_MIC:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 4;
     break;
   case MENU_S_LIST:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 2;
     break;
 #ifdef ENABLE_DTMF_CALLING
   case MENU_D_RSP:
   case MENU_PTT_ID:
-    *pMin = 0;
+    //*pMin = 0;
     *pMax = 3;
     break;
   case MENU_D_HOLD:
