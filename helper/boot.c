@@ -144,6 +144,12 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 #else
     gMenuListCount = 44;
 #endif
+
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+    gMenuListCount++;
+#endif
+
+
 		//gMenuListCount = MENU_ITEMS_COUNT;
 		gF_LOCK = true;
 #if defined(ENABLE_AIRCOPY)

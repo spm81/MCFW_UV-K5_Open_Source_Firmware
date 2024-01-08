@@ -159,6 +159,9 @@ void Main(void) {
 #if defined(ENABLE_LCD_CONTRAST_OPTION)
   gMenuListCount += 1;
 #endif
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+    gMenuListCount++;
+#endif
 
     BootMode = BOOT_GetMode();
     if (gEeprom.POWER_ON_PASSWORD < 1000000) {

@@ -25,7 +25,7 @@ void APPMENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     gAppToDisplay = APP_SCANLIST;
     gRequestDisplayScreen = DISPLAY_MAIN;
     break;
-
+#ifdef ENABLE_MESSENGER
 #if defined (ENABLE_MESSENGER_SHOW_RX_FREQ) && !defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
   case KEY_2:
     hasNewMessage = false;
@@ -65,7 +65,8 @@ void APPMENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     gAppToDisplay = APP_MESSENGER;
     gRequestDisplayScreen = DISPLAY_MAIN;    
     break;
-#endif		
+#endif	
+#endif	
 /*
   case KEY_1:
     gAppToDisplay = APP_SPLIT;

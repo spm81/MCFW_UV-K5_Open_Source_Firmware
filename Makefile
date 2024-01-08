@@ -9,7 +9,7 @@ TARGET = firmware
 # ---- STOCK QUANSHENG FERATURES ----
 ENABLE_AIRCOPY 							:= 0
 # 3856 bytes
-ENABLE_FMRADIO							:= 0
+ENABLE_FMRADIO							:= 1
 # 84 bytes
 ENABLE_FLASHLIGHT_SOS       			:= 0
 ENABLE_UART                 			:= 1
@@ -47,7 +47,7 @@ ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 ENABLE_CW                   			:= 1
 
 # ---- EXTRA: MESSENGER ---- Special Thanks to Joaquimorg (www.joaquim.org)
-ENABLE_MESSENGER            			:= 1
+ENABLE_MESSENGER            			:= 0
 ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
 # 124 bytes
 ENABLE_MESSENGER_SHOW_RX_FREQ			:= 0
