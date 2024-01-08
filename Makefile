@@ -1,12 +1,10 @@
 #=================================================================#
-# Matoz @spm81 | Joaquim @joaquimorg | Andrej @Tunas1337 & QSH-OSFW Team
-#=================================================================#
 # FIRMWARE BUILD OPTIONS #  1: Enable  # 0: Disable               #
 #=================================================================#
 
 TARGET = firmware
 
-# ---- STOCK QUANSHENG FERATURES ----
+#======== STOCK QUANSHENG FERATURES ========#
 ENABLE_AIRCOPY 							:= 0
 # 3856 bytes
 ENABLE_FMRADIO							:= 0
@@ -23,10 +21,10 @@ ENABLE_TX1750 							:= 0
 ENABLE_ROGERBEEP            			:= 1
 ENABLE_MDC                  			:= 0
 
-# ---- MODIFICATIONS ----
+#============== MODIFICATIONS =============#
 # AM Modulation Fix - 544 bytes
 ENABLE_AM_FIX 							:= 1
-# Apply to Spectrum - 40 bytes
+# Apply fix to Spectrum - 40 bytes
 ENABLE_AM_FIX_ON_SPECTRUM				:= 1
 ENABLE_SQUELCH_MORE_SENSITIVE			:= 1
 # Restore FM in 1 second after RX - 0 bytes
@@ -46,7 +44,7 @@ ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 # CW Modulation
 ENABLE_CW                   			:= 1
 
-# ---- EXTRA: MESSENGER ---- Special Thanks to Joaquimorg (www.joaquim.org)
+#============ EXTRA: MESSENGER ============# 
 ENABLE_MESSENGER            			:= 0
 ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
 # 124 bytes
@@ -71,6 +69,24 @@ ENABLE_LIVESEEK_MHZ_KEYPAD				:= 1
 # ---- COMPILER/LINKER OPTIONS ----
 ENABLE_OVERLAY 							:= 0
 ENABLE_SWD 								:= 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 BSP_DEFINITIONS := $(wildcard hardware/*/*.def)
 BSP_HEADERS := $(patsubst hardware/%,bsp/%,$(BSP_DEFINITIONS))
@@ -182,14 +198,10 @@ OBJS += ui/welcome.o
 OBJS += apps/scanlist.o
 OBJS += version.o
 OBJS += main.o
+
 ifeq ($(ENABLE_LIVESEEK_MHZ_KEYPAD),1)
-#################### ADDED BY KD8CEC  ###################
-# IF YOU USE THIS FUNCTION, COPY BELOW TO OTHER FIRMWARE#
-#########################################################
 OBJS += ceccommon.o
 endif
-
-################### END OF ADDED BY KD8CEC ##############
 
 ifeq ($(OS),Windows_NT)
 	TOP := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -356,6 +368,10 @@ endif
 ifeq ($(ENABLE_BATTERY_CHARGING),1)
 	CFLAGS += -DENABLE_BATTERY_CHARGING
 endif
+ifeq ($(ENABLE_LIVESEEK_MHZ_KEYPAD),1)
+	CFLAGS += -DENABLE_LIVESEEK_MHZ_KEYPAD
+endif
+
 
 
 

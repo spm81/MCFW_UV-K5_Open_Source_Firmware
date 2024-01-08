@@ -14,7 +14,9 @@
  *     limitations under the License.
  */
 
+
 #include "ceccommon.h"
+
 typedef struct 
 {
     uint8_t LOW_VALUE;
@@ -41,7 +43,7 @@ uint16_t CEC_GetRssi()
 
 void DisplayIntLog(char* displayMessage, int _logInt1, int _logInt2)
 {
-	uint8_t tmpBuff[32];
+	char tmpBuff[32];
 
 	memset(gStatusLine,  0, sizeof(gStatusLine));
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
@@ -66,7 +68,7 @@ uint32_t CommBuffLastUseTime = 0;   //10milisec using millis10() function
 uint8_t CommValue1 = 0;             //temp varaible
 uint8_t CommValue2 = 0;
 uint8_t CommValue3 = 0;
-uint8_t strBuff[32];    //For sprintf
+char strBuff[32];    //For sprintf
 //-----------------------------------------------------------------------------------------
 //=================== End of Common Variables =============================================
 
@@ -107,10 +109,11 @@ void DrawFrequencySmall(uint32_t _frequency, int _startX, int _Length, int _line
     //  58096      48    3284   61428    eff4 firmware
     //  58036      48    3284   61368    efb8 firmware
     //sprintf(strBuff, "%1u.%03u", (_frequency / 100000) % 10, (_frequency / 100) % 1000);
+    
     sprintf(strBuff, "%3u.%03u", _frequency / 100000, (_frequency / 100) % 1000);
     //UI_PrintStringSmallLeft(strBuff, _startX, _startX +  _Length, _lineNumber);
     memset(gFrameBuffer[_lineNumber], 0, 128);
-    UI_PrintStringSmallNormal(strBuff, _startX, 0, _lineNumber);
+    UI_PrintStringSmall(strBuff, _startX, 0, _lineNumber);
 }
 
 void DrawCommBuffToSpectrum(void)
@@ -191,7 +194,7 @@ void CEC_TimeSlice500ms(void)
         CommBuffUsingType = COMBUFF_USE_SEEK_NONE;
         if (gScreenToDisplay == DISPLAY_MAIN)
         {
-            gMonitor = false;
+            //gMonitor = false;
 
             if (addRssiCount > 3)
             {

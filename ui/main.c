@@ -257,7 +257,7 @@ void UI_DisplayMain(void) {
           UI_PrintStringSmallBold(String, 31 + 8, 0, Line);
 
           // show the channel frequency below the channel number/name
-          sprintf(String, "%u.%05u", frequency / 100000, frequency % 100000);
+          sprintf(String, "%u.%05u", (unsigned int) frequency / 100000, (unsigned int) frequency % 100000);
           UI_PrintStringSmall(String, 31 + 8, 0, Line + 1);
         } else {
           UI_PrintString(vfoInfo.Name, 31, 112, i * 4, 8, true);
