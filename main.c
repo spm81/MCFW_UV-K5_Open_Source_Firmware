@@ -51,6 +51,9 @@
 #include "version.h"
 
 #include "driver/eeprom.h"
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+#include "ceccommon.h"
+#endif
 
 void _putchar(char c) {
 #if defined(ENABLE_UART)
@@ -177,6 +180,9 @@ void Main(void) {
     }
     if (gNextTimeslice500ms) {
       APP_TimeSlice500ms();
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	  CEC_TimeSlice500ms();
+#endif	  
       gNextTimeslice500ms = false;
     }
   }

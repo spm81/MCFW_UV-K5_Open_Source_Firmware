@@ -32,6 +32,9 @@
 #include "../ui/inputbox.h"
 #include "../ui/rssi.h"
 #include "../ui/ui.h"
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+#include "ceccommon.h"
+#endif
 #include <string.h>
 
 void UI_DisplayMain(void) {
@@ -301,5 +304,9 @@ void UI_DisplayMain(void) {
 		}
 #endif	  
     }
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	if (CommBuffUsingType == COMBUFF_USE_SEEK_RSSI)
+		DrawCommBuffToSpectrum();
+#endif
   ST7565_BlitFullScreen();
 }

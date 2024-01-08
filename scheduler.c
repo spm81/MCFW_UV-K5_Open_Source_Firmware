@@ -78,6 +78,12 @@ void SystickHandler(void) {
         gCurrentFunction != FUNCTION_TRANSMIT) {
       DECREMENT_AND_TRIGGER(ScanPauseDelayIn10msec, gScheduleScanListen);
     }
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	uint32_t millis10()
+{
+	return  gGlobalSysTickCounter;
+}	
+#endif
   }
 
   DECREMENT_AND_TRIGGER(gTailNoteEliminationCountdown, gFlagTteComplete);

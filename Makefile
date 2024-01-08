@@ -9,19 +9,20 @@ TARGET = firmware
 # ---- STOCK QUANSHENG FERATURES ----
 ENABLE_AIRCOPY 							:= 0
 # 3856 bytes
-ENABLE_FMRADIO							:= 1
+ENABLE_FMRADIO							:= 0
 # 84 bytes
 ENABLE_FLASHLIGHT_SOS       			:= 0
 ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 # Bause we can cut more... - 4108 bytes
-ENABLE_DTMF_CALLING         			:= 0
+ENABLE_DTMF_CALLING         			:= 1
 # 1750Hz & 1050Hz FN1 FN2 Tones
 ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0
 # Keep this in stock options, and add option in mods for extra rogers
-ENABLE_ROGERBEEP            			:= 0
+ENABLE_ROGERBEEP            			:= 1
 ENABLE_MDC                  			:= 0
+
 # ---- MODIFICATIONS ----
 # AM Modulation Fix - 544 bytes
 ENABLE_AM_FIX 							:= 1
@@ -44,7 +45,8 @@ ENABLE_KEEPNAMEONSAVE       			:= 1
 ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 # CW Modulation
 ENABLE_CW                   			:= 1
-# ---- EXTRA: MESSENGER ----
+
+# ---- EXTRA: MESSENGER ---- Special Thanks to Joaquimorg (www.joaquim.org)
 ENABLE_MESSENGER            			:= 1
 ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
 # 124 bytes
@@ -53,6 +55,7 @@ ENABLE_MESSENGER_SHOW_RX_FREQ			:= 0
 ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 # 156 bytes
 ENABLE_MESSENGER_UART					:= 1
+
 # ---- EXTRA: SPECTRUM ----
 ENABLE_SPECTRUM             			:= 1
 ENABLE_SPECTRUM_NUNU           			:= 0
@@ -60,6 +63,10 @@ SPECTRUM_AUTOMATIC_SQUELCH  			:= 1
 SPECTRUM_EXTRA_VALUES       			:= 1
 ENABLE_ALL_REGISTERS        			:= 0
 ENABLE_MATOZ_KEYS           			:= 1
+
+#Thanks to KD8CEC for sharing his code / We have to check the code better, i just code & paste it to the right places...
+ENABLE_LIVESEEK_MHZ_KEYPAD				:= 0
+
 # ---- DEBUGGING ----
 # ---- COMPILER/LINKER OPTIONS ----
 ENABLE_OVERLAY 							:= 0
@@ -174,8 +181,15 @@ OBJS += ui/ui.o
 OBJS += ui/welcome.o
 OBJS += apps/scanlist.o
 OBJS += version.o
-
 OBJS += main.o
+ifeq ($(ENABLE_LIVESEEK_MHZ_KEYPAD),1)
+#################### ADDED BY KD8CEC  ###################
+# IF YOU USE THIS FUNCTION, COPY BELOW TO OTHER FIRMWARE#
+#########################################################
+OBJS += ceccommon.o
+endif
+
+################### END OF ADDED BY KD8CEC ##############
 
 ifeq ($(OS),Windows_NT)
 	TOP := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))

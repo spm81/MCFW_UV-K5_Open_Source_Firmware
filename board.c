@@ -43,6 +43,9 @@
 #if defined(ENABLE_OVERLAY)
 #include "sram-overlay.h"
 #endif
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+#include "ceccommon.h"
+#endif
 
 static const uint32_t gDefaultFrequencyTable[5] = {
 	14502500,
@@ -739,7 +742,16 @@ for (int i = 0; i < 2; i++) {
 			return;
 		}
 	}
-
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	
+	//KD8CEC WORK ===================================
+	EEPROM_ReadBuffer(CEC_EEPROM_START1 + 0, Data, 8);
+	CEC_LiveSeekMode = Data[0] < 7 ? Data[0] : 0;  //
+	CW_KEYTYPE 		 = Data[1] < 7 ? Data[1] : 0;  //
+	CW_SPEED 		 = Data[2] < 51 && Data[2] > 4 ? Data[2] : 10;  //
+	CW_TONE 		 = Data[3] < 120 ? Data[3] : 70;  //
+	//END OF KD8CEC WORK ============================	
+#endif
 	bHasCustomAesKey = false;
 }
 

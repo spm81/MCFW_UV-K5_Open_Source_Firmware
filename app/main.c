@@ -47,6 +47,9 @@
 #include "settings.h"
 #include "ui/inputbox.h"
 #include "ui/ui.h"
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+#include "ceccommon.h"
+#endif
 
 static void SwitchActiveVFO() {
   uint8_t Vfo = gEeprom.TX_CHANNEL;
@@ -326,8 +329,40 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld) {
     return;
   }
   if (gInputBoxIndex) {
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	//KD8CEC. ianlee 
+        if (!bKeyHeld && bKeyPressed)
+        {
+            gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+
+            if (gScanStateDir == SCAN_OFF)
+            {
+                if (gInputBoxIndex == 0)
+                    return;
+
+                if (gInputBoxIndex < 3 || (gTxVfo->pRX->Frequency >= _1GHz_in_KHz && gInputBoxIndex < 4))
+                {
+                    int pointDepth = gTxVfo->pRX->Frequency >= _1GHz_in_KHz ? 4 : 3;
+
+                    //0123
+                    //2__.__
+                    for (int i = gInputBoxIndex -1; i >= 0; i--)
+                        gInputBox[i + (pointDepth - gInputBoxIndex)] = gInputBox[i];
+
+                    for (int i = 0; i < pointDepth - gInputBoxIndex; i++)
+                        gInputBox[i] =0;
+
+                    gInputBoxIndex = pointDepth;
+                }
+
+                gKeyInputCountdown = key_input_timeout_500ms;
+            }           
+        }
+        //end of ianlee for easy input frequency	  
+#else	  
     if (!bKeyHeld && bKeyPressed) {
       gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+#endif	  
     }
     return;
   }
@@ -404,6 +439,9 @@ static void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld,
       if (IS_FREQ_CHANNEL(Channel)) {
         APP_SetFrequencyByStep(gTxVfo, Direction);
         gRequestSaveChannel = 1;
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD		
+		CEC_ApplyChangeRXFreq(11 + Direction);
+#endif						
         return;
       }
       Next = RADIO_FindNextChannel(Channel + Direction, Direction, false, 0);

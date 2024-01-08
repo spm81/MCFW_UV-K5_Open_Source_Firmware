@@ -50,6 +50,9 @@ static const char MenuList[][8] = {
     // 0x08
     "TxOffs",
     "Bandwid",
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	"LIVE.S",
+#endif	
     "Scrambl",
     "BusyCL",
     "ChSave",
@@ -118,6 +121,14 @@ static const char MenuList[][8] = {
     "ScramEn",
 };
 
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+const char gSubMenu_LIVESEEK[3][6] =
+{
+	"NONE",
+	"LIVE",
+	"LIVE+"
+};
+#endif
 #ifdef ENABLE_STATUS_BATTERY_PERC	
 const char gSubMenu_BATTYP[][9] =
 {
@@ -233,7 +244,7 @@ const char gSubMenuBacklight[8][7] = {"OFF",   "5 sec", "10 sec", "20 sec",
 
 static const char *defaultEnableDisable[3] = {"DEFAULT", "ENABLE", "DISABLE"};
 static const char *offOn[3] = {"OFF", "ON"};
-static const char *upconverterFreqNames[7] = {"OFF", "50M", "70M", "106M", "125M", "140M", "200"};
+static const char *upconverterFreqNames[7] = {"OFF", "50M", "70M", "106M", "125M", "140M", "200M"};
 bool gIsInSubMenu;
 
 uint8_t gMenuCursor;
@@ -353,6 +364,12 @@ void UI_DisplayMenu(void) {
     strcpy(String, bwNames[gSubMenuSelection]);
     break;
 
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	case MENU_LIVESEEK:
+	strcpy(String, gSubMenu_LIVESEEK[gSubMenuSelection]);
+	break;
+#endif
+	
   case MENU_SCR:
   case MENU_VOX:
     if (gSubMenuSelection == 0) {

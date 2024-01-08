@@ -43,6 +43,9 @@
 #include "ui/inputbox.h"
 #include "ui/menu.h"
 #include "ui/ui.h"
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+#include "ceccommon.h"
+#endif
 
 /*#ifndef ARRAY_SIZE
 	#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
@@ -65,6 +68,14 @@ void MENU_StopCssScan(void) {
 int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
 	*pMin = 0;	
   switch (Cursor) {
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+//============= KD8CEC WORK ==================
+  case MENU_LIVESEEK:
+  //*pMin = 0;
+  *pMax = ARRAY_SIZE(gSubMenu_LIVESEEK) - 1;
+  break;
+//============= END OF KD8CEC WORK ===========
+#endif		
   case MENU_SQL:
     //*pMin = 0;
     *pMax = 9;
@@ -382,6 +393,12 @@ void MENU_AcceptSetting(void) {
   case MENU_MDF:
     gEeprom.CHANNEL_DISPLAY_MODE = gSubMenuSelection;
     break;
+
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	case MENU_LIVESEEK:
+	CEC_LiveSeekMode = gSubMenuSelection;
+	break;
+#endif			
 
   case MENU_AUTOLK:
     gEeprom.AUTO_KEYPAD_LOCK = gSubMenuSelection;
@@ -730,6 +747,12 @@ void MENU_ShowCurrentSetting(void) {
     gSubMenuSelection = gEeprom.CHANNEL_DISPLAY_MODE;
     break;
 
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	case MENU_LIVESEEK:
+	gSubMenuSelection = CEC_LiveSeekMode;
+	break;
+#endif
+			
   case MENU_AUTOLK:
     gSubMenuSelection = gEeprom.AUTO_KEYPAD_LOCK;
     break;

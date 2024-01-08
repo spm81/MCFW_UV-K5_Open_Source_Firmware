@@ -24,7 +24,9 @@
 #endif
 #include "misc.h"
 #include "settings.h"
-
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+#include "ceccommon.h"
+#endif
 EEPROM_Config_t gEeprom;
 
 #if defined(ENABLE_FMRADIO)
@@ -184,6 +186,19 @@ void SETTINGS_SaveSettings(void)
 	State[6] = gSetting_ScrambleEnable;
 
 	EEPROM_WriteBuffer(0x0F40, State);
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	//KD8CEC WORK ===================================
+	State[0] = CEC_LiveSeekMode;
+	State[1] = CW_KEYTYPE;
+	State[2] = CW_SPEED;
+	State[3] = CW_TONE;
+	State[4] = 0xFF;
+	State[5] = 0xFF;
+	State[6] = 0xFF;
+	State[7] = 0xFF;
+	EEPROM_WriteBuffer(CEC_EEPROM_START1 + 0, State);
+	//END OF KD8CEC WORK ============================		
+#endif	
 }
 
 void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, uint8_t Mode)
