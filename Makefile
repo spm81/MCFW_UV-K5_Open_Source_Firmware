@@ -9,13 +9,13 @@ TARGET = firmware
 # ---- STOCK QUANSHENG FERATURES ----
 ENABLE_AIRCOPY 							:= 0
 # 3856 bytes
-ENABLE_FMRADIO							:= 1
+ENABLE_FMRADIO							:= 0
 # 84 bytes
 ENABLE_FLASHLIGHT_SOS       			:= 0
 ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 # Bause we can cut more... - 4108 bytes
-ENABLE_DTMF_CALLING         			:= 1
+ENABLE_DTMF_CALLING         			:= 0
 # 1750Hz & 1050Hz FN1 FN2 Tones
 ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0
@@ -57,7 +57,7 @@ ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 ENABLE_MESSENGER_UART					:= 1
 
 # ---- EXTRA: SPECTRUM ----
-ENABLE_SPECTRUM             			:= 1
+ENABLE_SPECTRUM             			:= 0
 ENABLE_SPECTRUM_NUNU           			:= 0
 SPECTRUM_AUTOMATIC_SQUELCH  			:= 1
 SPECTRUM_EXTRA_VALUES       			:= 1
@@ -65,7 +65,7 @@ ENABLE_ALL_REGISTERS        			:= 0
 ENABLE_MATOZ_KEYS           			:= 1
 
 #Thanks to KD8CEC for sharing his code / We have to check the code better, i just code & paste it to the right places...
-ENABLE_LIVESEEK_MHZ_KEYPAD				:= 0
+ENABLE_LIVESEEK_MHZ_KEYPAD				:= 1
 
 # ---- DEBUGGING ----
 # ---- COMPILER/LINKER OPTIONS ----

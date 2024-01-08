@@ -80,8 +80,8 @@ extern uint8_t CEC_LiveSeekMode;   //0:NONE, 1:LIVE, 2:LIVE+1, 3:LIVE+2
 #define GET_FREQ_OFFSET(__rxmode__) ( CW_LR_MODE (__rxmode__ == MODULATION_CW ||__rxmode__ == MODULATION_CWN ? (CWTone) : 0))
 #define delay(delayTime) SYSTEM_DelayMs(delayTime)
 
-ChannelAttributes_t MR_ChannelAttributes(int _channelIndex);
-void SetMR_ChannelAttributes(int channel, ChannelAttributes_t att);
+uint8_t MR_ChannelAttributes(int _channelIndex);
+void SetMR_ChannelAttributes(int channel, uint8_t att);
 void CEC_ApplyChangeRXFreq(int _applyOption);
 void CEC_TimeSlice500ms(void);
 void DrawCommBuffToSpectrum(void);

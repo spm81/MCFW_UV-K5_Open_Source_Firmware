@@ -47,13 +47,13 @@ void DisplayIntLog(char* displayMessage, int _logInt1, int _logInt2)
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
 
 	sprintf(tmpBuff, "%s : %d", displayMessage, _logInt1);
-	UI_PrintString(tmpBuff, 2, 127, 0, 8);
+	UI_PrintString(tmpBuff, 2, 127, 0, 8, true);
 
 	sprintf(tmpBuff, "1: %u", _logInt1);
-	UI_PrintString(tmpBuff, 2, 127, 2, 8);
+	UI_PrintString(tmpBuff, 2, 127, 2, 8, true);
 
 	sprintf(tmpBuff, "2: %u", _logInt2);
-	UI_PrintString(tmpBuff, 2, 127, 4, 8);
+	UI_PrintString(tmpBuff, 2, 127, 4, 8, true);
 
 	ST7565_BlitFullScreen();
 }
@@ -132,12 +132,12 @@ void DrawCommBuffToSpectrum(void)
             _lowValue = CommBuff[i];
     }
 
-    //DrawFrequencyKhzSmall(gTxVfo->freq_config_RX.Frequency, lastSeekDirection == 12 ? 100 : 0, 55, 3);
+    //DrawFrequencyKhzSmall(gTxVfo->ConfigRX.Frequency, lastSeekDirection == 12 ? 100 : 0, 55, 3);
 
-    //DrawFrequencyKhzSmall(gTxVfo->freq_config_RX.Frequency + (gTxVfo->StepFrequency * 64) * (lastSeekDirection == 12 ? -1 : 1), 
+    //DrawFrequencyKhzSmall(gTxVfo->ConfigRX.Frequency + (gTxVfo->StepFrequency * 64) * (lastSeekDirection == 12 ? -1 : 1), 
     //    57, 55, 3);
 
-    //DrawFrequencyKhzSmall(gTxVfo->freq_config_RX.Frequency + (gTxVfo->StepFrequency * 127) * (lastSeekDirection == 12 ? -1 : 1), 
+    //DrawFrequencyKhzSmall(gTxVfo->ConfigRX.Frequency + (gTxVfo->StepFrequency * 127) * (lastSeekDirection == 12 ? -1 : 1), 
     //    lastSeekDirection == 12 ? 0 : 100, 55, 3);
     memset(gFrameBuffer[6], 0, 128);    //Clear Last Line
 
@@ -162,7 +162,7 @@ void DrawCommBuffToSpectrum(void)
         else if (_drawTextPosition < 0)
         {
             _drawTextPosition = 0;
-            _drawFreq = gTxVfo->freq_config_RX.Frequency - (gTxVfo->StepFrequency * 127);
+            _drawFreq = gTxVfo->ConfigRX.Frequency - (gTxVfo->StepFrequency * 127);
         }
     }
     else
@@ -174,7 +174,7 @@ void DrawCommBuffToSpectrum(void)
         else if (_drawTextPosition > 73)
         {
             _drawTextPosition = 73;
-            _drawFreq = gTxVfo->freq_config_RX.Frequency + (gTxVfo->StepFrequency * 127);
+            _drawFreq = gTxVfo->ConfigRX.Frequency + (gTxVfo->StepFrequency * 127);
         }
     }
 
@@ -217,7 +217,7 @@ void CEC_ApplyChangeRXFreq(int _applyOption)
     if (CEC_LiveSeekMode == LIVESEEK_NONE)
         return;
 
-    BK4819_SetFrequency(gTxVfo->freq_config_RX.Frequency);
+    BK4819_SetFrequency(gTxVfo->ConfigRX.Frequency);
     BK4819_RX_TurnOn();
 
     //BK4819_SetFrequency(frequency);
@@ -234,7 +234,7 @@ void CEC_ApplyChangeRXFreq(int _applyOption)
         if (lastSeekDirection != _applyOption || (millis10() -CommBuffLastUseTime > 70))
         {
             memset(CommBuff, 0, sizeof(CommBuff));
-            rssiStartFreq = gTxVfo->freq_config_RX.Frequency;
+            rssiStartFreq = gTxVfo->ConfigRX.Frequency;
             addRssiCount = 0;
             CommValue1 = gCurrentFunction;
         }
@@ -261,12 +261,12 @@ void CEC_ApplyChangeRXFreq(int _applyOption)
     if (gEeprom.SQUELCH_LEVEL == 0)
     {
         if (addRssiCount > 2)
-            APP_StartListening(FUNCTION_MONITOR);
+            APP_StartListening(FUNCTION_MONITOR, true);
         //delay(200);
     }
     else if (tmpRssi > STOP_RSSI_LIMIT)
     {
-        APP_StartListening(FUNCTION_MONITOR);
+        APP_StartListening(FUNCTION_MONITOR, true);
         delay(STOP_RSSI_TIME);
         RADIO_SetupRegisters(true);
     }
