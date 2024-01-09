@@ -22,8 +22,8 @@
 #include "app/fm.h"
 #endif
 #ifdef ENABLE_MESSENGER
-	#include "app/messenger.h"
-  #include "external/printf/printf.h"
+#include "app/messenger.h"
+#include "external/printf/printf.h"
 #endif
 #include "app/uart.h"
 #include "board.h"
@@ -50,24 +50,29 @@
 
 #define DMA_INDEX(x, y) (((x) + (y)) % sizeof(UART_DMA_Buffer))
 
-typedef struct {
+typedef struct
+{
   uint16_t ID;
   uint16_t Size;
 } Header_t;
 
-typedef struct {
+typedef struct
+{
   uint8_t Padding[2];
   uint16_t ID;
 } Footer_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
   uint32_t Timestamp;
 } CMD_0514_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
-  struct {
+  struct
+  {
     char Version[16];
     bool bHasCustomAesKey;
     bool bIsInLockScreen;
@@ -76,7 +81,8 @@ typedef struct {
   } Data;
 } REPLY_0514_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
   uint16_t Offset;
   uint8_t Size;
@@ -84,9 +90,11 @@ typedef struct {
   uint32_t Timestamp;
 } CMD_051B_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
-  struct {
+  struct
+  {
     uint16_t Offset;
     uint8_t Size;
     uint8_t Padding;
@@ -94,7 +102,8 @@ typedef struct {
   } Data;
 } REPLY_051B_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
   uint16_t Offset;
   uint8_t Size;
@@ -103,71 +112,87 @@ typedef struct {
   uint8_t Data[0];
 } CMD_051D_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
-  struct {
+  struct
+  {
     uint16_t Offset;
   } Data;
 } REPLY_051D_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
-  struct {
+  struct
+  {
     uint16_t RSSI;
     uint8_t ExNoiseIndicator;
     uint8_t GlitchIndicator;
   } Data;
 } REPLY_0527_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
-  struct {
+  struct
+  {
     uint16_t Voltage;
     uint16_t Current;
   } Data;
 } REPLY_0529_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
   uint32_t Response[4];
 } CMD_052D_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
-  struct {
+  struct
+  {
     bool bIsLocked;
     uint8_t Padding[3];
   } Data;
 } REPLY_052D_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
   uint32_t Timestamp;
 } CMD_052F_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
   uint8_t RegNum;
 } CMD_0601_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
-  struct {
+  struct
+  {
     uint16_t Val;
     uint8_t v1;
     uint8_t v2;
   } Data;
 } REPLY_0601_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
   uint8_t RegNum;
   uint16_t RegValue;
 } CMD_0602_t;
 
-typedef struct {
+typedef struct
+{
   Header_t Header;
-  struct {
+  struct
+  {
     uint16_t Val;
     uint8_t v1;
     uint8_t v2;
@@ -178,9 +203,11 @@ static const uint8_t Obfuscation[16] = {0x16, 0x6C, 0x14, 0xE6, 0x2E, 0x91,
                                         0x0D, 0x40, 0x21, 0x35, 0xD5, 0x40,
                                         0x13, 0x03, 0xE9, 0x80};
 
-static union {
+static union
+{
   uint8_t Buffer[256];
-  struct {
+  struct
+  {
     Header_t Header;
     uint8_t Data[252];
   };
@@ -190,15 +217,18 @@ static uint32_t Timestamp;
 static uint16_t gUART_WriteIndex;
 static bool bIsEncrypted = true;
 
-static void SendReply(void *pReply, uint16_t Size) {
+static void SendReply(void *pReply, uint16_t Size)
+{
   Header_t Header;
   Footer_t Footer;
   uint8_t *pBytes;
   uint16_t i;
 
-  if (bIsEncrypted) {
+  if (bIsEncrypted)
+  {
     pBytes = (uint8_t *)pReply;
-    for (i = 0; i < Size; i++) {
+    for (i = 0; i < Size; i++)
+    {
       pBytes[i] ^= Obfuscation[i % 16];
     }
   }
@@ -207,10 +237,13 @@ static void SendReply(void *pReply, uint16_t Size) {
   Header.Size = Size;
   UART_Send(&Header, sizeof(Header));
   UART_Send(pReply, Size);
-  if (bIsEncrypted) {
+  if (bIsEncrypted)
+  {
     Footer.Padding[0] = Obfuscation[(Size + 0) % 16] ^ 0xFF;
     Footer.Padding[1] = Obfuscation[(Size + 1) % 16] ^ 0xFF;
-  } else {
+  }
+  else
+  {
     Footer.Padding[0] = 0xFF;
     Footer.Padding[1] = 0xFF;
   }
@@ -219,7 +252,8 @@ static void SendReply(void *pReply, uint16_t Size) {
   UART_Send(&Footer, sizeof(Footer));
 }
 
-static void SendVersion(void) {
+static void SendVersion(void)
+{
   REPLY_0514_t Reply;
 
   Reply.Header.ID = 0x0515;
@@ -236,7 +270,8 @@ static void SendVersion(void) {
 }
 
 static bool IsBadChallenge(const uint32_t *pKey, const uint32_t *pIn,
-                           const uint32_t *pResponse) {
+                           const uint32_t *pResponse)
+{
   uint8_t i;
   uint32_t IV[4];
 
@@ -245,8 +280,10 @@ static bool IsBadChallenge(const uint32_t *pKey, const uint32_t *pIn,
   IV[2] = 0;
   IV[3] = 0;
   AES_Encrypt(pKey, IV, pIn, IV, true);
-  for (i = 0; i < 4; i++) {
-    if (IV[i] != pResponse[i]) {
+  for (i = 0; i < 4; i++)
+  {
+    if (IV[i] != pResponse[i])
+    {
       return true;
     }
   }
@@ -254,7 +291,8 @@ static bool IsBadChallenge(const uint32_t *pKey, const uint32_t *pIn,
   return false;
 }
 
-static void CMD_0514(const uint8_t *pBuffer) {
+static void CMD_0514(const uint8_t *pBuffer)
+{
   const CMD_0514_t *pCmd = (const CMD_0514_t *)pBuffer;
 
   Timestamp = pCmd->Timestamp;
@@ -265,12 +303,14 @@ static void CMD_0514(const uint8_t *pBuffer) {
   SendVersion();
 }
 
-static void CMD_051B(const uint8_t *pBuffer) {
+static void CMD_051B(const uint8_t *pBuffer)
+{
   const CMD_051B_t *pCmd = (const CMD_051B_t *)pBuffer;
   REPLY_051B_t Reply;
   bool bLocked = false;
 
-  if (pCmd->Timestamp != Timestamp) {
+  if (pCmd->Timestamp != Timestamp)
+  {
     return;
   }
 
@@ -283,24 +323,28 @@ static void CMD_051B(const uint8_t *pBuffer) {
   Reply.Data.Offset = pCmd->Offset;
   Reply.Data.Size = pCmd->Size;
 
-  if (bHasCustomAesKey) {
+  if (bHasCustomAesKey)
+  {
     bLocked = gIsLocked;
   }
 
-  if (!bLocked) {
+  if (!bLocked)
+  {
     EEPROM_ReadBuffer(pCmd->Offset, Reply.Data.Data, pCmd->Size);
   }
 
   SendReply(&Reply, pCmd->Size + 8);
 }
 
-static void CMD_051D(const uint8_t *pBuffer) {
+static void CMD_051D(const uint8_t *pBuffer)
+{
   const CMD_051D_t *pCmd = (const CMD_051D_t *)pBuffer;
   REPLY_051D_t Reply;
   bool bReloadEeprom;
   bool bIsLocked;
 
-  if (pCmd->Timestamp != Timestamp) {
+  if (pCmd->Timestamp != Timestamp)
+  {
     return;
   }
 
@@ -314,29 +358,36 @@ static void CMD_051D(const uint8_t *pBuffer) {
   Reply.Data.Offset = pCmd->Offset;
 
   bIsLocked = bHasCustomAesKey;
-  if (bHasCustomAesKey) {
+  if (bHasCustomAesKey)
+  {
     bIsLocked = gIsLocked;
   }
 
-  if (!bIsLocked) {
+  if (!bIsLocked)
+  {
     uint16_t i;
 
-    for (i = 0; i < (pCmd->Size / 8U); i++) {
+    for (i = 0; i < (pCmd->Size / 8U); i++)
+    {
       uint16_t Offset = pCmd->Offset + (i * 8U);
 
-      if (Offset >= 0x0F30 && Offset < 0x0F40) {
-        if (!gIsLocked) {
+      if (Offset >= 0x0F30 && Offset < 0x0F40)
+      {
+        if (!gIsLocked)
+        {
           bReloadEeprom = true;
         }
       }
 
       if ((Offset < 0x0E98 || Offset >= 0x0EA0) || !bIsInLockScreen ||
-          pCmd->bAllowPassword) {
+          pCmd->bAllowPassword)
+      {
         EEPROM_WriteBuffer(Offset, &pCmd->Data[i * 8U]);
       }
     }
 
-    if (bReloadEeprom) {
+    if (bReloadEeprom)
+    {
       BOARD_EEPROM_Init();
     }
   }
@@ -344,7 +395,8 @@ static void CMD_051D(const uint8_t *pBuffer) {
   SendReply(&Reply, sizeof(Reply));
 }
 
-static void CMD_0527(void) {
+static void CMD_0527(void)
+{
   REPLY_0527_t Reply;
 
   Reply.Header.ID = 0x0528;
@@ -356,7 +408,8 @@ static void CMD_0527(void) {
   SendReply(&Reply, sizeof(Reply));
 }
 
-static void CMD_0529(void) {
+static void CMD_0529(void)
+{
   REPLY_0529_t Reply;
 
   Reply.Header.ID = 0x52A;
@@ -366,7 +419,8 @@ static void CMD_0529(void) {
   SendReply(&Reply, sizeof(Reply));
 }
 
-static void CMD_052D(const uint8_t *pBuffer) {
+static void CMD_052D(const uint8_t *pBuffer)
+{
   const CMD_052D_t *pCmd = (const CMD_052D_t *)pBuffer;
   REPLY_052D_t Reply;
   bool bIsLocked;
@@ -379,20 +433,27 @@ static void CMD_052D(const uint8_t *pBuffer) {
 
   bIsLocked = bHasCustomAesKey;
 
-  if (!bIsLocked) {
+  if (!bIsLocked)
+  {
     bIsLocked = IsBadChallenge(gCustomAesKey, gChallenge, pCmd->Response);
   }
-  if (!bIsLocked) {
+  if (!bIsLocked)
+  {
     bIsLocked = IsBadChallenge(gDefaultAesKey, gChallenge, pCmd->Response);
-    if (bIsLocked) {
+    if (bIsLocked)
+    {
       gTryCount++;
     }
   }
-  if (gTryCount < 3) {
-    if (!bIsLocked) {
+  if (gTryCount < 3)
+  {
+    if (!bIsLocked)
+    {
       gTryCount = 0;
     }
-  } else {
+  }
+  else
+  {
     gTryCount = 3;
     bIsLocked = true;
   }
@@ -401,7 +462,8 @@ static void CMD_052D(const uint8_t *pBuffer) {
   SendReply(&Reply, sizeof(Reply));
 }
 
-static void CMD_052F(const uint8_t *pBuffer) {
+static void CMD_052F(const uint8_t *pBuffer)
+{
   const CMD_052F_t *pCmd = (const CMD_052F_t *)pBuffer;
 
   gEeprom.DUAL_WATCH = DUAL_WATCH_OFF;
@@ -414,7 +476,8 @@ static void CMD_052F(const uint8_t *pBuffer) {
   gEeprom.VfoInfo[0].FREQUENCY_DEVIATION_SETTING = FREQUENCY_DEVIATION_OFF;
   gEeprom.VfoInfo[0].DTMF_PTT_ID_TX_MODE = PTT_ID_OFF;
   gEeprom.VfoInfo[0].DTMF_DECODING_ENABLE = false;
-  if (gCurrentFunction == FUNCTION_POWER_SAVE) {
+  if (gCurrentFunction == FUNCTION_POWER_SAVE)
+  {
     FUNCTION_Select(FUNCTION_FOREGROUND);
   }
   Timestamp = pCmd->Timestamp;
@@ -425,7 +488,8 @@ static void CMD_052F(const uint8_t *pBuffer) {
 
 #ifdef ENABLE_UART_CAT
 
-static void CMD_0601(const uint8_t *pBuffer) {
+static void CMD_0601(const uint8_t *pBuffer)
+{
   const CMD_0601_t *pCmd = (const CMD_0601_t *)pBuffer;
   REPLY_0601_t Reply;
 
@@ -437,7 +501,8 @@ static void CMD_0601(const uint8_t *pBuffer) {
   SendReply(&Reply, sizeof(Reply));
 }
 
-static void CMD_0602(const uint8_t *pBuffer) {
+static void CMD_0602(const uint8_t *pBuffer)
+{
   const CMD_0602_t *pCmd = (const CMD_0602_t *)pBuffer;
   REPLY_0602_t Reply;
 
@@ -452,11 +517,13 @@ static void CMD_0602(const uint8_t *pBuffer) {
 
 #endif
 
-uint64_t xtou64(const char *str) {
+uint64_t xtou64(const char *str)
+{
   uint64_t res = 0;
   char c;
 
-  while ((c = *str++)) {
+  while ((c = *str++))
+  {
     char v = ((c & 0xF) + (c >> 6)) | ((c >> 3) & 0x8);
     res = (res << 4) | (uint64_t)v;
   }
@@ -466,14 +533,18 @@ uint64_t xtou64(const char *str) {
 
 #ifdef ENABLE_MESSENGER
 #ifdef ENABLE_MESSENGER_UART
-void remove(char cstring[], char letter) {
-    for(int i = 0; cstring[i] != '\0'; i++) {
-        if(cstring[i] == letter) cstring[i] = '\0';
-    } 
+void remove(char cstring[], char letter)
+{
+  for (int i = 0; cstring[i] != '\0'; i++)
+  {
+    if (cstring[i] == letter)
+      cstring[i] = '\0';
+  }
 }
 #endif
 #endif
-bool UART_IsCommandAvailable(void) {
+bool UART_IsCommandAvailable(void)
+{
   uint16_t DmaLength;
   uint16_t CommandLength;
   uint16_t Index;
@@ -483,119 +554,144 @@ bool UART_IsCommandAvailable(void) {
   uint16_t i;
 
   DmaLength = DMA_CH0->ST & 0xFFFU;
-  while (1) {    
+  while (1)
+  {
 
-    if (gUART_WriteIndex == DmaLength) {
+    if (gUART_WriteIndex == DmaLength)
+    {
       return false;
     }
 
 #ifdef ENABLE_MESSENGER
 #ifdef ENABLE_MESSENGER_UART
 
-    if ( UART_DMA_Buffer[gUART_WriteIndex] == 'S' && UART_DMA_Buffer[gUART_WriteIndex + 1] == 'M' && UART_DMA_Buffer[ gUART_WriteIndex + 2] == 'S' && UART_DMA_Buffer[gUART_WriteIndex + 3] == ':') {
-      
+    if (UART_DMA_Buffer[gUART_WriteIndex] == 'S' && UART_DMA_Buffer[gUART_WriteIndex + 1] == 'M' && UART_DMA_Buffer[gUART_WriteIndex + 2] == 'S' && UART_DMA_Buffer[gUART_WriteIndex + 3] == ':')
+    {
+
       char txMessage[TX_MSG_LENGTH + 4];
       memset(txMessage, 0, sizeof(txMessage));
       snprintf(txMessage, (TX_MSG_LENGTH + 4), "%s", &UART_DMA_Buffer[gUART_WriteIndex + 4]);
 
       remove(txMessage, '\n');
-      remove(txMessage, '\r');      
+      remove(txMessage, '\r');
 
-      if (strlen(txMessage) > 0) {        
-        MSG_Send(txMessage);
+      if (strlen(txMessage) > 0)
+      {
+        MSG_Send(txMessage, false);
         UART_printf("SMS>%s\r\n", txMessage);
         gUpdateDisplay = true;
-      }      
-      
+      }
     }
-  
-#endif  
+
+#endif
 #endif
     while (gUART_WriteIndex != DmaLength &&
-           UART_DMA_Buffer[gUART_WriteIndex] != 0xABU) {
+           UART_DMA_Buffer[gUART_WriteIndex] != 0xABU)
+    {
       gUART_WriteIndex = DMA_INDEX(gUART_WriteIndex, 1);
     }
 
-    if (gUART_WriteIndex == DmaLength) {
+    if (gUART_WriteIndex == DmaLength)
+    {
       return false;
     }
 
-    if (gUART_WriteIndex < DmaLength) {
+    if (gUART_WriteIndex < DmaLength)
+    {
       CommandLength = DmaLength - gUART_WriteIndex;
-    } else {
+    }
+    else
+    {
       CommandLength = (DmaLength + sizeof(UART_DMA_Buffer)) - gUART_WriteIndex;
     }
-    if (CommandLength < 8) {
+    if (CommandLength < 8)
+    {
       return 0;
     }
-    if (UART_DMA_Buffer[DMA_INDEX(gUART_WriteIndex, 1)] == 0xCD) {
+    if (UART_DMA_Buffer[DMA_INDEX(gUART_WriteIndex, 1)] == 0xCD)
+    {
       break;
     }
     gUART_WriteIndex = DMA_INDEX(gUART_WriteIndex, 1);
   }
 
-
   Index = DMA_INDEX(gUART_WriteIndex, 2);
   Size = (UART_DMA_Buffer[DMA_INDEX(Index, 1)] << 8) | UART_DMA_Buffer[Index];
-  if (Size + 8 > sizeof(UART_DMA_Buffer)) {
+  if (Size + 8 > sizeof(UART_DMA_Buffer))
+  {
     gUART_WriteIndex = DmaLength;
     return false;
   }
-  if (CommandLength < Size + 8) {
+  if (CommandLength < Size + 8)
+  {
     return false;
   }
 
   Index = DMA_INDEX(Index, 2);
   TailIndex = DMA_INDEX(Index, Size + 2);
   if (UART_DMA_Buffer[TailIndex] != 0xDC ||
-      UART_DMA_Buffer[DMA_INDEX(TailIndex, 1)] != 0xBA) {
+      UART_DMA_Buffer[DMA_INDEX(TailIndex, 1)] != 0xBA)
+  {
     gUART_WriteIndex = DmaLength;
     return false;
   }
-  if (TailIndex < Index) {
+  if (TailIndex < Index)
+  {
     uint16_t ChunkSize = sizeof(UART_DMA_Buffer) - Index;
 
     memcpy(UART_Command.Buffer, UART_DMA_Buffer + Index, ChunkSize);
     memcpy(UART_Command.Buffer + ChunkSize, UART_DMA_Buffer, TailIndex);
-  } else {
+  }
+  else
+  {
     memcpy(UART_Command.Buffer, UART_DMA_Buffer + Index, TailIndex - Index);
   }
 
   TailIndex = DMA_INDEX(TailIndex, 2);
-  if (TailIndex < gUART_WriteIndex) {
+  if (TailIndex < gUART_WriteIndex)
+  {
     memset(UART_DMA_Buffer + gUART_WriteIndex, 0,
            sizeof(UART_DMA_Buffer) - gUART_WriteIndex);
     memset(UART_DMA_Buffer, 0, TailIndex);
-  } else {
+  }
+  else
+  {
     memset(UART_DMA_Buffer + gUART_WriteIndex, 0, TailIndex - gUART_WriteIndex);
   }
 
   gUART_WriteIndex = TailIndex;
 
-  if (UART_Command.Header.ID == 0x0514) {
+  if (UART_Command.Header.ID == 0x0514)
+  {
     bIsEncrypted = false;
   }
-  if (UART_Command.Header.ID == 0x6902) {
+  if (UART_Command.Header.ID == 0x6902)
+  {
     bIsEncrypted = true;
   }
 
-  if (bIsEncrypted) {
-    for (i = 0; i < Size + 2; i++) {
+  if (bIsEncrypted)
+  {
+    for (i = 0; i < Size + 2; i++)
+    {
       UART_Command.Buffer[i] ^= Obfuscation[i % 16];
     }
   }
 
   CRC = UART_Command.Buffer[Size] | (UART_Command.Buffer[Size + 1] << 8);
-  if (CRC_Calculate(UART_Command.Buffer, Size) != CRC) {
+  if (CRC_Calculate(UART_Command.Buffer, Size) != CRC)
+  {
     return false;
   }
 
   return true;
 }
 
-void UART_HandleCommand(void) {  
+void UART_HandleCommand(void)
+{
 
-  switch (UART_Command.Header.ID) {
+  switch (UART_Command.Header.ID)
+  {
   case 0x0514:
     CMD_0514(UART_Command.Buffer);
     break;

@@ -8,17 +8,19 @@
 #include <string.h>
 #include "driver/keyboard.h"
 
-typedef enum KeyboardType {
+typedef enum KeyboardType
+{
 	UPPERCASE,
-  	LOWERCASE,
-  	NUMERIC,
-  	END_TYPE_KBRD
+	LOWERCASE,
+	NUMERIC,
+	END_TYPE_KBRD
 } KeyboardType;
 
-typedef enum MsgStatus {
+typedef enum MsgStatus
+{
 	READY,
-  	SENDING,
-  	RECEIVING,
+	SENDING,
+	RECEIVING,
 } MsgStatus;
 
 #define TX_MSG_LENGTH 30
@@ -26,7 +28,7 @@ typedef enum MsgStatus {
 extern KeyboardType keyboardType;
 extern char cMessage[TX_MSG_LENGTH];
 extern char rxMessage[4][TX_MSG_LENGTH + 3];
-#if defined (ENABLE_MESSENGER_SHOW_RX_FREQ) || defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
+#if defined(ENABLE_MESSENGER_SHOW_RX_FREQ) || defined(ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
 extern char msgFreqInfo[30];
 #endif
 extern bool hasNewMessage;
@@ -37,7 +39,7 @@ void MSG_EnableRX(const bool enable);
 void MSG_StorePacket(const uint16_t interrupt_bits);
 void MSG_Init();
 void MSG_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
-void MSG_Send(const char txMessage[TX_MSG_LENGTH]);
+void MSG_Send(const char txMessage[TX_MSG_LENGTH], bool bServiceMessage);
 
 #endif
 

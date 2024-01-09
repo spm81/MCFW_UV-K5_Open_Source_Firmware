@@ -45,12 +45,12 @@ ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 ENABLE_CW                   			:= 1
 
 #============ EXTRA: MESSENGER ============# 
-ENABLE_MESSENGER            			:= 0
+ENABLE_MESSENGER            			:= 1
 ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
 # 124 bytes
-ENABLE_MESSENGER_SHOW_RX_FREQ			:= 0
+ENABLE_MESSENGER_SHOW_RX_FREQ			:= 1
 # 124 (+20) bytes
-ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
+ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 0
 # 156 bytes
 ENABLE_MESSENGER_UART					:= 1
 
@@ -63,7 +63,7 @@ ENABLE_ALL_REGISTERS        			:= 0
 ENABLE_MATOZ_KEYS           			:= 1
 
 #Thanks to KD8CEC for sharing his code / We have to check the code better, i just code & paste it to the right places...
-ENABLE_LIVESEEK_MHZ_KEYPAD				:= 1
+ENABLE_LIVESEEK_MHZ_KEYPAD				:= 0
 
 # ---- DEBUGGING ----
 # ---- COMPILER/LINKER OPTIONS ----
