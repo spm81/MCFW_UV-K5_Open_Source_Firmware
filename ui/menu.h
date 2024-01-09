@@ -105,9 +105,9 @@ extern const char gSubMenu_ROGER[10][9];
 extern const char gSubMenu_ROGER[9][9];
 #elif defined (ENABLE_MDC) && !defined (ENABLE_ROGERBEEP)
 extern const char gSubMenu_ROGER[2][4];
+#endif
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
 extern const char gSubMenu_LIVESEEK[3][6];
-#endif
 #endif
 void UI_DisplayMenu(void);
 

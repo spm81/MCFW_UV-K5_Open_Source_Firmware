@@ -276,7 +276,7 @@ bool UI_NoChannelName(char *channelName) {
   return channelName[0] < 32 || channelName[0] > 127;
 }
 
-#ifdef ENABLE_MESSENGER	
+#if defined(ENABLE_MESSENGER) || defined(ENABLE_LIVESEEK_MHZ_KEYPAD)	
 
 void UI_DrawPixelBuffer(uint8_t (*buffer)[128], uint8_t x, uint8_t y, bool black) 
 {

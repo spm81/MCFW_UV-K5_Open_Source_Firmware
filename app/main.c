@@ -48,7 +48,7 @@
 #include "ui/inputbox.h"
 #include "ui/ui.h"
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-#include "ceccommon.h"
+#include "app/ceccommon.h"
 #endif
 
 static void SwitchActiveVFO() {
@@ -335,14 +335,14 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld) {
         {
             gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 
-            if (gScanStateDir == SCAN_OFF)
+            if (gScanState == SCAN_OFF)
             {
                 if (gInputBoxIndex == 0)
                     return;
 
-                if (gInputBoxIndex < 3 || (gTxVfo->pRX->Frequency >= _1GHz_in_KHz && gInputBoxIndex < 4))
+                if (gInputBoxIndex < 3 || (gTxVfo->pRX->Frequency >= 100000000 && gInputBoxIndex < 4))
                 {
-                    int pointDepth = gTxVfo->pRX->Frequency >= _1GHz_in_KHz ? 4 : 3;
+                    int pointDepth = gTxVfo->pRX->Frequency >= 100000000 /* 1 GHz in KHz*/ ? 4 : 3;
 
                     //0123
                     //2__.__
@@ -355,15 +355,14 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld) {
                     gInputBoxIndex = pointDepth;
                 }
 
-                gKeyInputCountdown = key_input_timeout_500ms;
             }           
         }
         //end of ianlee for easy input frequency	  
 #else	  
     if (!bKeyHeld && bKeyPressed) {
       gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
-#endif	  
     }
+    #endif	  
     return;
   }
   if (bKeyHeld || !bKeyPressed) {
@@ -382,6 +381,7 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld) {
       gDTMF_InputMode = true;
       memcpy(gDTMF_InputBox, gDTMF_String, 15);
       gDTMF_InputIndex = 0;
+      
 #endif	  
       gRequestDisplayScreen = DISPLAY_MAIN;
       return;

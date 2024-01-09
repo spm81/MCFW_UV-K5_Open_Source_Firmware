@@ -55,7 +55,7 @@ void CHFRSCANNER_Start(const bool storeBackupSettings, const int8_t scan_directi
 	else
 	{	// frequency mode
 		if (storeBackupSettings) {
-			initialFrqOrChan = gRxVfo->freq_config_RX.Frequency;
+			initialFrqOrChan = gRxVfo->ConfigRX.Frequency;
 			lastFoundFrqOrChan = initialFrqOrChan;
 		}
 		NextFreqChannel();
@@ -113,7 +113,7 @@ void CHFRSCANNER_Found(void)
 		lastFoundFrqOrChan = gRxVfo->CHANNEL_SAVE;
 	}
 	else { // frequency scan
-		lastFoundFrqOrChan = gRxVfo->freq_config_RX.Frequency;
+		lastFoundFrqOrChan = gRxVfo->ConfigRX.Frequency;
 	}
 
 
@@ -142,7 +142,7 @@ void CHFRSCANNER_Stop(void)
 		}
 	}
 	else {
-		gRxVfo->freq_config_RX.Frequency = chFr;
+		gRxVfo->ConfigRX.Frequency = chFr;
 		RADIO_ApplyTxOffset(gRxVfo);
 		RADIO_ConfigureSquelchAndOutputPower(gRxVfo);
 		if(channelChanged) {
@@ -158,11 +158,11 @@ static void NextFreqChannel(void)
 {
 #ifdef ENABLE_SCAN_RANGES
 	if(gScanRangeStart) {
-		gRxVfo->freq_config_RX.Frequency = APP_SetFreqByStepAndLimits(gRxVfo, gScanStateDir, gScanRangeStart, gScanRangeStop);
+		gRxVfo->ConfigRX.Frequency = APP_SetFreqByStepAndLimits(gRxVfo, gScanStateDir, gScanRangeStart, gScanRangeStop);
 	}
 	else
 #endif
-		gRxVfo->freq_config_RX.Frequency = APP_SetFrequencyByStep(gRxVfo, gScanStateDir);
+		gRxVfo->ConfigRX.Frequency = APP_SetFrequencyByStep(gRxVfo, gScanStateDir);
 
 	RADIO_ApplyTxOffset(gRxVfo);
 	RADIO_ConfigureSquelchAndOutputPower(gRxVfo);

@@ -20,31 +20,31 @@
 
 #ifndef CEC_COMMON_H
 #define CEC_COMMON_H
-
 #include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
-#include "driver\bk4819.h"
-#include "driver\keyboard.h"
+#include "driver/bk4819.h"
+#include "driver/keyboard.h"
 #include "audio.h"
 #include "string.h"
 #include <stdint.h>
 #include <string.h>
 #include "external/printf/printf.h"
 //#include "gpsinfo.h"
-#include "driver\eeprom.h"
+#include "driver/eeprom.h"
 #include "misc.h"
 #include "radio.h"
-#include "driver\system.h"
-#include "driver\st7565.h"
+#include "driver/system.h"
+#include "driver/st7565.h"
 #include "settings.h"
-#include "driver\systick.h"
-#include "ui\helper.h"
-#include "ui\ui.h"
-#include "ui\main.h"
+#include "driver/systick.h"
+#include "ui/helper.h"
+#include "ui/ui.h"
+#include "ui/main.h"
 #include "font.h"
 #include "functions.h"
-#include "app\app.h"
+#include "app.h"
+
 
 #define _MAX_READ_CH_ATTRIBUTES 7
 #define COMBUFF_USE_SEEK_RSSI   01

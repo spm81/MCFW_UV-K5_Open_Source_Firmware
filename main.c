@@ -52,7 +52,7 @@
 
 #include "driver/eeprom.h"
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-#include "ceccommon.h"
+#include "app/ceccommon.h"
 #endif
 
 void _putchar(char c) {

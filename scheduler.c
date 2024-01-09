@@ -77,13 +77,7 @@ void SystickHandler(void) {
     if (gCurrentFunction != FUNCTION_MONITOR &&
         gCurrentFunction != FUNCTION_TRANSMIT) {
       DECREMENT_AND_TRIGGER(ScanPauseDelayIn10msec, gScheduleScanListen);
-    }
-#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-	uint32_t millis10()
-{
-	return  gGlobalSysTickCounter;
-}	
-#endif
+    }  
   }
 
   DECREMENT_AND_TRIGGER(gTailNoteEliminationCountdown, gFlagTteComplete);
@@ -100,3 +94,10 @@ void SystickHandler(void) {
     gVoxStopCountdown--;
   }
 }
+
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	uint32_t millis10()
+{
+	return  gGlobalSysTickCounter;
+}	
+#endif  
