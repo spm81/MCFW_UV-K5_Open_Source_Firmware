@@ -44,7 +44,7 @@
 #include "ui/menu.h"
 #include "ui/ui.h"
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-#include "ceccommon.h"
+#include "app/ceccommon.h"
 #endif
 
 /*#ifndef ARRAY_SIZE

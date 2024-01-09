@@ -48,8 +48,7 @@
 #include "ui/inputbox.h"
 #include "ui/ui.h"
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-#include "ceccommon.h"
-#include "app/chFrScanner.h"
+#include "app/ceccommon.h"
 #endif
 
 static void SwitchActiveVFO() {

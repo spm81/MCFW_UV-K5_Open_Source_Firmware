@@ -25,7 +25,7 @@
 #include "misc.h"
 #include "settings.h"
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-#include "ceccommon.h"
+#include "app/ceccommon.h"
 #endif
 EEPROM_Config_t gEeprom;
 

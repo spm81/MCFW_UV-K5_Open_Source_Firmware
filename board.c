@@ -44,7 +44,7 @@
 #include "sram-overlay.h"
 #endif
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-#include "ceccommon.h"
+#include "app/ceccommon.h"
 #endif
 
 static const uint32_t gDefaultFrequencyTable[5] = {

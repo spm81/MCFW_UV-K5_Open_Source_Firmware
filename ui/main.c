@@ -33,7 +33,7 @@
 #include "../ui/rssi.h"
 #include "../ui/ui.h"
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-#include "ceccommon.h"
+#include "app/ceccommon.h"
 #endif
 #include <string.h>
 

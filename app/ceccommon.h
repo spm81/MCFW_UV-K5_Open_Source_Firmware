@@ -20,7 +20,6 @@
 
 #ifndef CEC_COMMON_H
 #define CEC_COMMON_H
-
 #include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
@@ -44,7 +43,8 @@
 #include "ui/main.h"
 #include "font.h"
 #include "functions.h"
-#include "app/app.h"
+#include "app.h"
+
 
 #define _MAX_READ_CH_ATTRIBUTES 7
 #define COMBUFF_USE_SEEK_RSSI   01

@@ -31,7 +31,7 @@ TADC_RANGE CW_KEY_ADC[3];
 
 //================================= For Reduce Use Memory ====================
 //gMR_ChannelAttributes[207]; -> function
-//resize to 7 byte and Move to ceccommon.c 
+//resize to 7 byte and Move to app/ceccommon.c 
 uint16_t CEC_GetRssi() 
 {
   int _wait_count = 0;
@@ -115,6 +115,7 @@ void DrawFrequencySmall(uint32_t _frequency, int _startX, int _Length, int _line
     memset(gFrameBuffer[_lineNumber], 0, 128);
     UI_PrintStringSmall(strBuff, _startX, 0, _lineNumber);
 }
+
 
 void DrawCommBuffToSpectrum(void)
 {

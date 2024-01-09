@@ -157,6 +157,7 @@ endif
 ifeq ($(ENABLE_SPECTRUM_NUNU), 1)
 OBJS += app/spectrumnunu.o
 endif
+
 ifeq ($(ENABLE_UART),1)
 OBJS += app/uart.o
 endif
@@ -184,6 +185,9 @@ endif
 ifeq ($(ENABLE_MESSENGER),1)
 	OBJS += ui/messenger.o
 endif
+ifeq ($(ENABLE_LIVESEEK_MHZ_KEYPAD),1)
+OBJS += app/ceccommon.o
+endif
 OBJS += ui/helper.o
 OBJS += ui/inputbox.o
 OBJS += ui/lock.o
@@ -198,10 +202,6 @@ OBJS += ui/welcome.o
 OBJS += apps/scanlist.o
 OBJS += version.o
 OBJS += main.o
-
-ifeq ($(ENABLE_LIVESEEK_MHZ_KEYPAD),1)
-OBJS += ceccommon.o
-endif
 
 ifeq ($(OS),Windows_NT)
 	TOP := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
