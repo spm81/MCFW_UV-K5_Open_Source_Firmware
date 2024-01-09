@@ -21,11 +21,11 @@ void UI_DisplayMSG(void) {
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
 	memset(String, 0, sizeof(String));
 
-	UI_PrintStringSmallBold("MESSENGER", 0, 127, 0);
+	//UI_PrintStringSmallBold("MESSENGER", 0, 127, 0);
 	//UI_PrintStringSmall("Messenger", 1, 127, 0);
 
-	UI_DrawDottedLineBuffer(gFrameBuffer, 2, 3, 26, 3, true, 2);
-	UI_DrawDottedLineBuffer(gFrameBuffer, 100, 3, 126, 3, true, 2);
+	//UI_DrawDottedLineBuffer(gFrameBuffer, 2, 3, 26, 3, true, 2);
+	//UI_DrawDottedLineBuffer(gFrameBuffer, 100, 3, 126, 3, true, 2);
 
 	/*if ( msgStatus == SENDING ) {
 		GUI_DisplaySmallest("SENDING", 100, 6, false, true);
@@ -41,9 +41,9 @@ void UI_DisplayMSG(void) {
 
 	memset(String, 0, sizeof(String));
 	
-	uint8_t mPos = 8;
+	uint8_t mPos = 1;//8;
 	const uint8_t mLine = 7;
-	for (int i = 0; i < 4; ++i) {
+	for (int i = 0; i < 5; ++i) {
 		sprintf(String, "%s", rxMessage[i]);
 		GUI_DisplaySmallest(String, 2, mPos, false, true);
 		mPos += mLine;

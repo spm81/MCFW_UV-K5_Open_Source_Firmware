@@ -36,7 +36,7 @@ char cMessage[TX_MSG_LENGTH];
 char msgFreqInfo[30];
 #endif
 char lastcMessage[TX_MSG_LENGTH];
-char rxMessage[4][TX_MSG_LENGTH + 3];
+char rxMessage[5][TX_MSG_LENGTH + 3];
 unsigned char cIndex = 0;
 unsigned char prevKey = 0, prevLetter = 0;
 KeyboardType keyboardType = UPPERCASE;
@@ -540,9 +540,10 @@ void moveUP(char (*rxMessages)[TX_MSG_LENGTH + 3])
 	strcpy(rxMessages[0], rxMessages[1]);
 	strcpy(rxMessages[1], rxMessages[2]);
 	strcpy(rxMessages[2], rxMessages[3]);
+	strcpy(rxMessages[3], rxMessages[4]);
 
 	// Insert the new line at the last position
-	memset(rxMessages[3], 0, sizeof(rxMessages[3]));
+	memset(rxMessages[4], 0, sizeof(rxMessages[4]));
 }
 
 void MSG_Send(const char txMessage[TX_MSG_LENGTH], bool bServiceMessage)
@@ -583,7 +584,7 @@ void MSG_Send(const char txMessage[TX_MSG_LENGTH], bool bServiceMessage)
 			if (!bServiceMessage)
 			{
 				moveUP(rxMessage);
-				sprintf(rxMessage[3], "> %s", txMessage);
+				sprintf(rxMessage[4], "> %s", txMessage);
 				memset(lastcMessage, 0, sizeof(lastcMessage));
 				memcpy(lastcMessage, txMessage, TX_MSG_LENGTH);
 				cIndex = 0;
@@ -653,7 +654,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 				if (msgFSKBuffer[5] == 'R' && msgFSKBuffer[6] == 'C' && msgFSKBuffer[7] == 'V' && msgFSKBuffer[8] == 'D')
 				{
 					UART_printf("SVC<RCPT\r\n");
-					rxMessage[3][0] = '+';
+					rxMessage[4][0] = '+';
 					gUpdateStatus = true;
 					gUpdateDisplay = true;
 				}
@@ -664,11 +665,11 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 				moveUP(rxMessage);
 				if (msgFSKBuffer[0] != 'M' || msgFSKBuffer[1] != 'S')
 				{
-					snprintf(rxMessage[3], TX_MSG_LENGTH + 2, "? unknown msg format!");
+					snprintf(rxMessage[4], TX_MSG_LENGTH + 2, "? unknown msg format!");
 				}
 				else
 				{
-					snprintf(rxMessage[3], TX_MSG_LENGTH + 2, "< %s", &msgFSKBuffer[2]);
+					snprintf(rxMessage[4], TX_MSG_LENGTH + 2, "< %s", &msgFSKBuffer[2]);
 				}
 
 #ifdef ENABLE_MESSENGER_UART
