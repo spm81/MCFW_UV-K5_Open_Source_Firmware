@@ -16,6 +16,8 @@
 
 
 #include "ceccommon.h"
+#include "ui/helper.h"
+#include "ui/ui.h"
 
 typedef struct 
 {
