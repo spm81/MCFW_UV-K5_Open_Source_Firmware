@@ -27,7 +27,11 @@ typedef enum MsgStatus
 
 extern KeyboardType keyboardType;
 extern char cMessage[TX_MSG_LENGTH];
+#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)
 extern char rxMessage[5][TX_MSG_LENGTH + 3];
+#else
+extern char rxMessage[4][TX_MSG_LENGTH + 3];
+#endif
 #if defined(ENABLE_MESSENGER_SHOW_RX_FREQ) || defined(ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
 extern char msgFreqInfo[30];
 #endif

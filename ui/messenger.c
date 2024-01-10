@@ -20,13 +20,19 @@ void UI_DisplayMSG(void) {
 
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
 	memset(String, 0, sizeof(String));
-
+#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)
 	//UI_PrintStringSmallBold("MESSENGER", 0, 127, 0);
 	//UI_PrintStringSmall("Messenger", 1, 127, 0);
 
 	//UI_DrawDottedLineBuffer(gFrameBuffer, 2, 3, 26, 3, true, 2);
 	//UI_DrawDottedLineBuffer(gFrameBuffer, 100, 3, 126, 3, true, 2);
+#else
+	UI_PrintStringSmallBold("MESSENGER", 0, 127, 0);
+	//UI_PrintStringSmall("Messenger", 1, 127, 0);
 
+	UI_DrawDottedLineBuffer(gFrameBuffer, 2, 3, 26, 3, true, 2);
+	UI_DrawDottedLineBuffer(gFrameBuffer, 100, 3, 126, 3, true, 2);	
+#endif	
 	/*if ( msgStatus == SENDING ) {
 		GUI_DisplaySmallest("SENDING", 100, 6, false, true);
 	} else if ( msgStatus == RECEIVING ) {
@@ -40,10 +46,15 @@ void UI_DisplayMSG(void) {
 	//GUI_DisplaySmallest("RX", 4, 34, false, true);
 
 	memset(String, 0, sizeof(String));
-	
+#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)
 	uint8_t mPos = 1;//8;
 	const uint8_t mLine = 7;
 	for (int i = 0; i < 5; ++i) {
+#else
+uint8_t mPos = 8;
+	const uint8_t mLine = 7;
+	for (int i = 0; i < 4; ++i) {
+#endif		
 		sprintf(String, "%s", rxMessage[i]);
 		GUI_DisplaySmallest(String, 2, mPos, false, true);
 		mPos += mLine;
