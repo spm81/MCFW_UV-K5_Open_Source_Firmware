@@ -20,7 +20,7 @@ void UI_DisplayMSG(void) {
 
 	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
 	memset(String, 0, sizeof(String));
-#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)
+#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
 	//UI_PrintStringSmallBold("MESSENGER", 0, 127, 0);
 	//UI_PrintStringSmall("Messenger", 1, 127, 0);
 
@@ -46,7 +46,7 @@ void UI_DisplayMSG(void) {
 	//GUI_DisplaySmallest("RX", 4, 34, false, true);
 
 	memset(String, 0, sizeof(String));
-#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)
+#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
 	uint8_t mPos = 1;//8;
 	const uint8_t mLine = 7;
 	for (int i = 0; i < 5; ++i) {

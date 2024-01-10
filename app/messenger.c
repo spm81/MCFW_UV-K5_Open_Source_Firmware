@@ -36,7 +36,7 @@ char cMessage[TX_MSG_LENGTH];
 char msgFreqInfo[30];
 #endif
 char lastcMessage[TX_MSG_LENGTH];
-#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)
+#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
 char rxMessage[5][TX_MSG_LENGTH + 3];
 #else
 char rxMessage[4][TX_MSG_LENGTH + 3];
@@ -544,12 +544,12 @@ void moveUP(char (*rxMessages)[TX_MSG_LENGTH + 3])
 	strcpy(rxMessages[0], rxMessages[1]);
 	strcpy(rxMessages[1], rxMessages[2]);
 	strcpy(rxMessages[2], rxMessages[3]);
-#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)
+#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
 	strcpy(rxMessages[3], rxMessages[4]);
 #endif	
 
 	// Insert the new line at the last position
-#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)
+#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
 	memset(rxMessages[4], 0, sizeof(rxMessages[4]));
 #else
 	memset(rxMessages[3], 0, sizeof(rxMessages[3]));
@@ -594,7 +594,7 @@ void MSG_Send(const char txMessage[TX_MSG_LENGTH], bool bServiceMessage)
 			if (!bServiceMessage)
 			{
 				moveUP(rxMessage);
-#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)
+#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
 				sprintf(rxMessage[4], "> %s", txMessage);
 #else
 				sprintf(rxMessage[3], "> %s", txMessage);
@@ -668,7 +668,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 				if (msgFSKBuffer[5] == 'R' && msgFSKBuffer[6] == 'C' && msgFSKBuffer[7] == 'V' && msgFSKBuffer[8] == 'D')
 				{
 					UART_printf("SVC<RCPT\r\n");
-#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)
+#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
 					rxMessage[4][0] = '+';
 #else
 					rxMessage[3][0] = '+';
@@ -683,7 +683,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 				moveUP(rxMessage);
 				if (msgFSKBuffer[0] != 'M' || msgFSKBuffer[1] != 'S')
 				{
-#ifdef defined(ENABLE_MESSENGER_MORE_ONE_LINE)					
+#ifdef ENABLE_MESSENGER_MORE_ONE_LINE					
 					snprintf(rxMessage[4], TX_MSG_LENGTH + 2, "? unknown msg format!");
 				}
 				else
