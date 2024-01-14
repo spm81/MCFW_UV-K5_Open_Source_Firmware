@@ -48,7 +48,7 @@ void DisplayIntLog(char* displayMessage, int _logInt1, int _logInt2)
 	char tmpBuff[32];
 
 	memset(gStatusLine,  0, sizeof(gStatusLine));
-	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
+	UI_DisplayClear();
 
 	sprintf(tmpBuff, "%s : %d", displayMessage, _logInt1);
 	UI_PrintString(tmpBuff, 2, 127, 0, 8, true);

@@ -51,3 +51,5 @@ void UI_PrintStringSmallest(const char *pString, uint8_t x, uint8_t y,
 void UI_DrawScanListFlag(uint8_t *pLine, uint8_t attrs);
 bool UI_NoChannelName(char *channelName);
 #endif
+
+void UI_DisplayClear();

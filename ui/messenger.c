@@ -13,12 +13,15 @@
 #include "ui/helper.h"
 #include "ui/inputbox.h"
 #include "ui/ui.h"
+#ifdef ENABLE_DOCK
+	#include "app/uart.h"
+#endif
 
 void UI_DisplayMSG(void) {
 	
 	static char String[37];
 
-	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
+	UI_DisplayClear();
 	memset(String, 0, sizeof(String));
 #ifdef ENABLE_MESSENGER_MORE_ONE_LINE
 	//UI_PrintStringSmallBold("MESSENGER", 0, 127, 0);
@@ -57,6 +60,9 @@ uint8_t mPos = 8;
 #endif		
 		sprintf(String, "%s", rxMessage[i]);
 		GUI_DisplaySmallest(String, 2, mPos, false, true);
+		#ifdef ENABLE_DOCK
+			UART_SendUiElement(1, 2, (mPos / 6), 4, strlen(rxMessage[i]), rxMessage[i]);
+		#endif		
 		mPos += mLine;
     }
 
@@ -79,14 +85,22 @@ uint8_t mPos = 8;
 
 	UI_DrawRectangleBuffer(gFrameBuffer, 2, 36, 10, 44, true);
 	GUI_DisplaySmallest(String, 5, 38, false, true);
+	#ifdef ENABLE_DOCK
+		UART_SendUiElement(2, 5, (32 / 6), 4, strlen(String), String);
+	#endif	
 #if defined (ENABLE_MESSENGER_SHOW_RX_FREQ) || defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
 	GUI_DisplaySmallest(msgFreqInfo, 20, 38, false, true);	
+	#ifdef ENABLE_DOCK
+		UART_SendUiElement(2, 20, (32 / 6), 4, strlen(msgFreqInfo), msgFreqInfo);
+	#endif	
 #endif
 	memset(String, 0, sizeof(String));
 	sprintf(String, "%s_", cMessage);
 	//UI_PrintStringSmall(String, 3, 0, 6);
 	GUI_DisplaySmallest(String, 5, 48, false, true);
-
+	#ifdef ENABLE_DOCK
+		UART_SendUiElement(2, 5, (38 / 6), 4, strlen(String), String);
+	#endif
 	// debug msg
 	/*memset(String, 0, sizeof(String));
 	sprintf(String, "S:%u", gErrorsDuringMSG);

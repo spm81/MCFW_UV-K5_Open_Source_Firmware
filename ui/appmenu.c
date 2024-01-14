@@ -1,7 +1,7 @@
 #include "appmenu.h"
 
 void UI_DisplayAppMenu() {
-  memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
+  UI_DisplayClear();
   
      // UI_PrintStringSmallest("Press MENU to enter MENU", 0, 8, false, true);
 

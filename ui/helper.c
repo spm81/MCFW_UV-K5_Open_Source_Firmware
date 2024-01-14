@@ -24,6 +24,11 @@
 #include <stdint.h>
 #include <string.h>
 
+#ifdef ENABLE_DOCK
+	#include "app/uart.h"
+  #include "ui.h"
+#endif
+
 void UI_GenerateChannelString(char *pString, uint8_t Channel) {
   uint8_t i;
 
@@ -79,6 +84,9 @@ void UI_PrintString(const char *pString, uint8_t Start, uint8_t End,
   if (bCentered) {
     Start += (((End - Start) - (Length * Width)) + 1) / 2;
   }
+  #ifdef ENABLE_DOCK
+		UART_SendUiElement(0, Start, Line, Width, Length, pString);
+	#endif
   for (i = 0; i < Length; i++) {
     if (pString[i] >= ' ') {
       uint8_t Index = pString[i] - ' ';
@@ -94,11 +102,16 @@ void UI_PrintStringSmall(const char *pString, uint8_t Start, uint8_t End,
   const size_t Length = strlen(pString);
   size_t i;
 
-  if (End > Start)
-    Start += (((End - Start) - (Length * 8)) + 1) / 2;
-
   const unsigned int char_width = ARRAY_SIZE(gFontSmall[0]);
   const unsigned int char_spacing = char_width + 1;
+
+  if (End > Start)
+    Start += (((End - Start) - (Length * char_spacing)) + 1) / 2;
+
+	#ifdef ENABLE_DOCK
+		UART_SendUiElement(1, Start, Line, char_width, Length, pString);
+	#endif
+
   uint8_t *pFb = gFrameBuffer[Line] + Start;
   for (i = 0; i < Length; i++) {
     if (pString[i] >= 32) {
@@ -120,6 +133,10 @@ void UI_PrintStringSmallBold(const char *pString, uint8_t Start, uint8_t End,
   if (End > Start)
     Start += (((End - Start) - (Length * char_spacing)) + 1) / 2;
 
+  #ifdef ENABLE_DOCK
+		UART_SendUiElement(2, Start, Line, char_width, Length, pString);
+	#endif
+
   uint8_t *pFb = gFrameBuffer[Line] + Start;
   for (i = 0; i < Length; i++) {
     if (pString[i] >= 32) {
@@ -138,7 +155,6 @@ void UI_DisplayFrequency(const char *pDigits, uint8_t X, uint8_t Y,
   uint8_t *pFb1 = pFb0 + 128;
   bool bCanDisplay = false;
   unsigned int i = 0;
-
   // MHz
   while (i < 4) {
     const unsigned int Digit = pDigits[i++];
@@ -239,6 +255,12 @@ void UI_PrintStringSmallest(const char *pString, uint8_t x, uint8_t y,
   uint8_t pixels;
   const uint8_t *p = (const uint8_t *)pString;
 
+  #ifdef ENABLE_DOCK
+	  if (gAppToDisplay != APP_MESSENGER && !statusbar) {
+		  UART_SendUiElement(1, x, (y / 8), 4, strlen(pString), pString);
+	  }
+  #endif
+
   while ((c = *p++) && c != '\0') {
     c -= 0x20;
     for (int i = 0; i < 3; ++i) {
@@ -297,6 +319,9 @@ static void sort(int16_t *a, int16_t *b)
 
 void UI_DrawLineBuffer(uint8_t (*buffer)[128], int16_t x1, int16_t y1, int16_t x2, int16_t y2, bool black)
 {
+  #ifdef ENABLE_DOCK
+		UART_SendUiElement(4, x1|(y1<<8), x2|(y2<<8), 0, 0, &black);
+	#endif
 	if(x2==x1) {
 		sort(&y1, &y2);
 		for(int16_t i = y1; i <= y2; i++) {
@@ -365,3 +390,11 @@ void GUI_DisplaySmallest(const char *pString, uint8_t x, uint8_t y,
   }
 }
 #endif
+
+void UI_DisplayClear()
+{
+	#ifdef ENABLE_DOCK
+		UART_SendUiElement(5, 1, 7, 0, 0, &gFrameBuffer);
+	#endif
+	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
+}

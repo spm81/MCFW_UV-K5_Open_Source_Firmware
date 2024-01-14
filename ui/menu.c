@@ -34,6 +34,9 @@
 #include "inputbox.h"
 #include "ui.h"
 #include <string.h>
+#ifdef ENABLE_DOCK
+	#include "app/uart.h"
+#endif
 
 //char               str[64];  // bigger cuz we can now do multi-line in one string (use '\n' char)
 
@@ -112,6 +115,9 @@ static const char MenuList[][8] = {
     "ChDele",
     "Reset",
     "Upconv",
+#ifdef ENABLE_DOCK
+    "Remote",
+#endif    
     "Tx 350",
     "F Lock",
     "Tx 200",
@@ -258,7 +264,7 @@ void UI_DisplayMenu(void) {
 #endif
   uint8_t i;
 
-  memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
+  UI_DisplayClear();
 
   uint8_t offset = Clamp(gMenuCursor - 2, 0, gMenuListCount - 6);
   for (int i = 0; i < 6; ++i) {
@@ -393,6 +399,9 @@ void UI_DisplayMenu(void) {
     strcpy(String, defaultEnableDisable[gSubMenuSelection]);
     break;
 
+#ifdef ENABLE_DOCK
+	case MENU_REMOTE_UI:
+#endif
   case MENU_BCL:
   case MENU_BEEP:
   case MENU_AUTOLK:

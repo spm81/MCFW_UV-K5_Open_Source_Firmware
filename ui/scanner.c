@@ -30,7 +30,7 @@ void UI_DisplayScanner(void)
 	bool bCentered;
 	uint8_t Start;
 
-	memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
+	UI_DisplayClear();
 	memset(String, 0, sizeof(String));
 
 	if (gScanSingleFrequency || (gScanCssState != SCAN_CSS_STATE_OFF && gScanCssState != SCAN_CSS_STATE_FAILED)) {

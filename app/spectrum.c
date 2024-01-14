@@ -1362,7 +1362,7 @@ static void RenderStill() {
 }
 
 static void Render() {
-  memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
+  UI_DisplayClear();
 
   switch (currentState) {
   case SPECTRUM:

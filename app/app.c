@@ -898,8 +898,9 @@ void APP_CheckKeys(void) {
     }
     gKeyBeingHeld = false;
   } else if (gDebounceCounter == 128) {
-    if (Key == KEY_STAR || Key == KEY_F || Key == KEY_SIDE2 ||
-        Key == KEY_SIDE1 || Key == KEY_UP || Key == KEY_DOWN) {
+    /*if (Key == KEY_STAR || Key == KEY_F || Key == KEY_SIDE2 ||
+        Key == KEY_SIDE1 || Key == KEY_UP || Key == KEY_DOWN) {*/
+    if (Key != KEY_PTT) {
       gKeyBeingHeld = true;
       APP_ProcessKey(Key, true, true);
     }

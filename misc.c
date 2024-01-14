@@ -145,6 +145,10 @@ uint16_t gCurrentRSSI;
 
 uint8_t gIsLocked = 0xFF;
 
+#ifdef ENABLE_DOCK
+	bool		  gSetting_Remote_UI = true;
+#endif
+
 // --------
 
 void NUMBER_Get(char *pDigits, uint32_t *pInteger)

@@ -63,6 +63,11 @@ SPECTRUM_EXTRA_VALUES       			:= 1
 ENABLE_ALL_REGISTERS        			:= 0
 ENABLE_MATOZ_KEYS           			:= 1
 
+# https://github.com/nicsure/QuanshengDock
+# ---- EXTRA: DOCK ----
+# 2204 bytes
+ENABLE_DOCK                   			:= 0
+
 #Thanks to KD8CEC for sharing his code / We have to check the code better, i just code & paste it to the right places...
 ENABLE_LIVESEEK_MHZ_KEYPAD				:= 0
 
@@ -209,7 +214,7 @@ ifeq ($(OS),Windows_NT)
 	RM = del /Q
 	FixPath = $(subst /,\,$1)
 	WHERE = where
-	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com9 -b
+	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com3 -b
 else
 	TOP := $(shell pwd)
 	RM = rm -f
@@ -257,6 +262,9 @@ CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-builtin -fshort-enums -fno-delet
 CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
 
+ifeq ($(ENABLE_DOCK),1)
+	CFLAGS += -DENABLE_DOCK
+endif
 ifeq ($(ENABLE_LCD_INVERT_OPTION),1)
 	CFLAGS += -DENABLE_LCD_INVERT_OPTION
 endif

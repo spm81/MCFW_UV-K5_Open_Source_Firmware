@@ -32,12 +32,19 @@
 #include "../settings.h"
 #include "../ui/helper.h"
 #include "status.h"
-
+#ifdef ENABLE_DOCK
+	#include "app/uart.h"
+#endif
 
 void UI_DisplayStatus(void) {
 
   // memset(gStatusLine, 64, sizeof(gStatusLine));
   memset(gStatusLine, 0, sizeof(gStatusLine));
+  #ifdef ENABLE_DOCK
+		uint8_t val1=0;
+		uint8_t val2=0;	
+		uint8_t val3=0;	
+	#endif
 
   if (gBatteryDisplayLevel < 2) {
     if (gLowBatteryBlink == 1) {
@@ -99,4 +106,68 @@ void UI_DisplayStatus(void) {
   UI_PrintStringSmallest(String, 0, 0, true, true);
 
   ST7565_BlitStatusLine();
+
+  #ifdef ENABLE_DOCK
+    // -nicsure- bit 0 of val1 is TX
+		//val1 |= 0b00000001;
+
+    // -nicsure- bit 1 of val1 is RX
+		//val1 |= 0b00000010;
+
+    if(isPowerSave) {
+      // -nicsure- bit 2 of val1 is PowerSave
+		  val1 |= 0b00000100;
+    }
+
+    // -nicsure- bit 3 of val1 is NOAA
+		//val1 |= 0b00001000;
+
+    // -nicsure- bit 4 of val1 is DTMF
+		//val1 |= 0b00010000;
+
+    if(isFm) {
+      // -nicsure- bit 5 of val1 is FM
+		  val1 |= 0b00100000;
+    }
+
+    // -nicsure- val3 is the scan indicator
+		//val3 = *s;
+
+    // -nicsure- bit 6 of val1 is voice prompt
+		//val1 |= 0b01000000;
+
+    if(isDw) {
+      // -nicsure- bit 7 of val1 is tdr1
+		  val1 |= 0b10000000;
+    } else {
+      // -nicsure- bit 0 of val2 is tdr2
+		  val2 |= 0b00000001;
+    }
+
+    if(isWx) {
+      // -nicsure- bit 1 of val2 is xb
+		  val2 |= 0b00000010;
+    }
+
+    if(isVox) {
+      // -nicsure- bit 2 of val2 is vox
+		  val2 |= 0b00000100;
+    }
+
+    if(isKeyLock) {
+      // -nicsure- bit 3 of val2 is key lock
+		  val2 |= 0b00001000;
+    }
+
+    if(isFPressed) {
+      // -nicsure- bit 4 of val2 is F key mode
+		  val2 |= 0b00010000;
+    }
+    
+    // -nicsure- bit 5 of val2 is USB C Charging
+		//val2 |= 0b00100000;
+    
+    UART_SendUiElement(5, 0, 0, 0, 0, NULL);
+		UART_SendUiElement(6, val1, val2, val3, (gBatteryVoltageAverage>999?999:gBatteryVoltageAverage)>>2, NULL );
+  #endif
 }

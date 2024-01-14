@@ -28,6 +28,10 @@
 #include "../ui/helper.h"
 #include <string.h>
 
+#ifdef ENABLE_DOCK
+	#include "app/uart.h"
+#endif
+
 void UI_DisplayRSSIBar(int16_t rssi) {
   char String[16];
 
@@ -39,6 +43,9 @@ void UI_DisplayRSSIBar(int16_t rssi) {
   uint8_t *line = gFrameBuffer[LINE];
 
   memset(line, 0, 128);
+  #ifdef ENABLE_DOCK		
+			UART_SendUiElement(5, LINE+1, LINE+1, 0, 0, NULL);
+	#endif
 
   for (int i = BAR_LEFT_MARGIN, sv = 1; i < BAR_LEFT_MARGIN + s * 4;
        i += 4, sv++) {
@@ -49,11 +56,19 @@ void UI_DisplayRSSIBar(int16_t rssi) {
   sprintf(String, "%d", dBm);
   UI_PrintStringSmallest(String, 110, 25, false, true);
   if (s < 10) {
-    sprintf(String, "S%u", s);
+    sprintf(String, "S%u", s);    
   } else {
     sprintf(String, "S9+%u0", s - 9);
   }
   UI_PrintStringSmallest(String, 3, 25, false, true);
+  #ifdef ENABLE_DOCK
+  if (s < 10) {
+		  UART_SendUiElement(8, s, 0, 0, 0, NULL);
+  } else {
+    	UART_SendUiElement(8, 9, s / 10, 0, 0, NULL);
+  }
+	#endif
+  
   ST7565_BlitFullScreen();
 }
 

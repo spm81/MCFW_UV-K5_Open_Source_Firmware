@@ -201,6 +201,10 @@ extern volatile bool gFlagTteComplete;
 extern volatile bool gScheduleFM;
 #endif
 
+#ifdef ENABLE_DOCK
+	extern bool		  		 gSetting_Remote_UI;
+#endif
+
 extern uint16_t gCurrentRSSI;
 
 extern uint8_t gIsLocked;

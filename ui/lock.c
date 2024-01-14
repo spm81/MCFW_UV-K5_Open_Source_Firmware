@@ -33,7 +33,10 @@ static void Render(void) {
   uint8_t i;
 
   memset(gStatusLine, 0, sizeof(gStatusLine));
-  memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
+  UI_DisplayClear();
+  #ifdef ENABLE_DOCK 
+		UART_SendUiElement(5, 0, 0, 0, 0, NULL);
+	#endif
   //strcpy(String, "LOCK");
   //UI_PrintString(String, 0, 127, 1, 12, true);
    UI_PrintStringSmallest("LOCK", 55, 15, false, true);

@@ -135,6 +135,9 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     //*pMin = 0;
     *pMax = 50;
     break;
+#ifdef ENABLE_DOCK
+	case MENU_REMOTE_UI:
+#endif    
   case MENU_BCL:
   case MENU_BEEP:
   case MENU_AUTOLK:
@@ -371,6 +374,12 @@ void MENU_AcceptSetting(void) {
     gRequestSaveSettings = true;
     gUpdateStatus = true;
     return;
+
+#ifdef ENABLE_DOCK
+		case MENU_REMOTE_UI:
+			gSetting_Remote_UI = gSubMenuSelection;
+			break;
+#endif
 
   case MENU_BEEP:
     gEeprom.BEEP_CONTROL = gSubMenuSelection;
@@ -726,6 +735,12 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_WX:
     gSubMenuSelection = gEeprom.CROSS_BAND_RX_TX;
     break;
+
+#ifdef ENABLE_DOCK
+		case MENU_REMOTE_UI:
+			gSubMenuSelection = gSetting_Remote_UI;
+			break;
+#endif
 
   case MENU_BEEP:
     gSubMenuSelection = gEeprom.BEEP_CONTROL;

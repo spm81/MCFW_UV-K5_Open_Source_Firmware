@@ -23,11 +23,17 @@
 #include "helper.h"
 #include "../version.h"
 #include <string.h>
+#ifdef ENABLE_DOCK
+	#include "app/uart.h"
+#endif
 
 void UI_DisplayWelcome(void) {
   memset(gStatusLine, 0, sizeof(gStatusLine));
-  memset(gFrameBuffer, 0, sizeof(gFrameBuffer));
-
+  UI_DisplayClear();
+	#ifdef ENABLE_DOCK
+		UART_SendUiElement(5, 0, 0, 0, 0, NULL);
+	#endif
+  
   if (gEeprom.POWER_ON_DISPLAY_MODE == POWER_ON_DISPLAY_MODE_FULL_SCREEN) {
    // ST7565_FillScreen(0xFF);
   } else {
