@@ -725,11 +725,13 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 		}
 
 		gFSKWriteIndex = 0;
+#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION 		
 		// Transmit a message to the sender that we have received the message (Unless it's a service message)
 		if (msgFSKBuffer[0] == 'M' && msgFSKBuffer[1] == 'S' && msgFSKBuffer[2] != 0x1b)
 		{
 			MSG_Send("\x1b\x1b\x1bRCVD                       ", true);
 		}
+#endif		
 	}
 }
 
