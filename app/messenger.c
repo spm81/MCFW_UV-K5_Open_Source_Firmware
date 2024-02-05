@@ -742,7 +742,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 						// Transmit a message to the sender that we have received the message (Unless it's a service message)
 						if (dataPacket.data.payload[2] != 0x1b)
 						{
-							MSG_Send("\x1b\x1b\x1bRCVD ", true);
+							MSG_Send("\x1b\x1b\x1bRCVD                       ", true);
 						}
 					}
 				}
