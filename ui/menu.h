@@ -47,6 +47,14 @@ enum {
 	#endif
 	MENU_TDR,
 	MENU_WX,
+#ifdef ENABLE_ENCRYPTION
+	MENU_ENC_KEY,
+	MENU_MSG_ENC,
+#endif
+#ifdef ENABLE_MESSENGER
+	MENU_MSG_ACK,
+	MENU_MSG_MODULATION,
+#endif	
 	MENU_BEEP,
 	MENU_TOT,
 //	MENU_VOICE,
@@ -112,6 +120,14 @@ extern const char gSubMenu_ROGER[2][4];
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
 extern const char gSubMenu_LIVESEEK[3][6];
 #endif
+
+#ifdef ENABLE_MESSENGER
+extern const char        gSubMenu_MSG_MODULATION[3][10];
+#endif
+
+extern char              edit[17];
+extern int               edit_index;
+
 void UI_DisplayMenu(void);
 
 #endif

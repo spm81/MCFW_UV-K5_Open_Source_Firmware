@@ -27,6 +27,11 @@
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
 #include "app/ceccommon.h"
 #endif
+
+#ifdef ENABLE_ENCRYPTION
+	#include "helper/crypto.h"
+#endif
+
 EEPROM_Config_t gEeprom;
 
 #if defined(ENABLE_FMRADIO)
@@ -75,6 +80,22 @@ void SETTINGS_SaveVfoIndices(void)
 
 	EEPROM_WriteBuffer(0x0E80, State);
 }
+
+#ifdef ENABLE_ENCRYPTION
+void SETTINGS_SaveEncryptionKey()
+{	
+	EEPROM_WriteBuffer(0x0F30, gEeprom.ENC_KEY);
+	EEPROM_WriteBuffer(0x0F38, gEeprom.ENC_KEY + 8);
+	gRecalculateEncKey = true;
+}
+
+void SETTINGS_ClearEncryptionKey()
+{	
+	uint8_t State[8] = { 0xFF };
+	EEPROM_WriteBuffer(0x0F30, State);
+	EEPROM_WriteBuffer(0x0F38, State);
+}
+#endif
 
 void SETTINGS_SaveSettings(void)
 {
@@ -131,7 +152,9 @@ void SETTINGS_SaveSettings(void)
 	memset(State, 0xFF, sizeof(State));
 
 	State[0] = gEeprom.VOICE_PROMPT;
-
+	#ifdef ENABLE_MESSENGER
+	State[3] = gEeprom.MESSENGER_CONFIG.__val;
+	#endif
 	EEPROM_WriteBuffer(0x0EA0, State);
 
 	State[0] = 0xFF;
@@ -199,6 +222,11 @@ void SETTINGS_SaveSettings(void)
 	EEPROM_WriteBuffer(CEC_EEPROM_START1 + 0, State);
 	//END OF KD8CEC WORK ============================		
 #endif	
+	
+#ifdef ENABLE_ENCRYPTION
+	SETTINGS_SaveEncryptionKey();
+#endif
+
 }
 
 void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, uint8_t Mode)

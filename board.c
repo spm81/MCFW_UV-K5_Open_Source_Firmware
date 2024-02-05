@@ -520,7 +520,7 @@ void BOARD_Init(void)
 void BOARD_EEPROM_Init(void)
 {
 	uint8_t Data[16];
-	uint8_t i;
+	//uint8_t i;
 
 	memset(Data, 0, sizeof(Data));
 
@@ -607,6 +607,10 @@ void BOARD_EEPROM_Init(void)
 	// 0EA0..0EA7
 	EEPROM_ReadBuffer(0x0EA0, Data, 8);
 	gEeprom.VOICE_PROMPT = (Data[0] < 3) ? Data[0] : VOICE_PROMPT_CHINESE;
+
+	#ifdef ENABLE_MESSENGER
+	gEeprom.MESSENGER_CONFIG.__val = Data[3];
+	#endif
 
 	// 0EA8..0EAF
 	EEPROM_ReadBuffer(0x0EA8, Data, 8);
@@ -734,14 +738,19 @@ for (int i = 0; i < 2; i++) {
 	EEPROM_ReadBuffer(0x0D60, gMR_ChannelAttributes, sizeof(gMR_ChannelAttributes));
 
 	// 0F30..0F3F
-	EEPROM_ReadBuffer(0x0F30, gCustomAesKey, sizeof(gCustomAesKey));
+	//EEPROM_ReadBuffer(0x0F30, gCustomAesKey, sizeof(gCustomAesKey));
 
-	for (i = 0; i < 4; i++) {
+	#ifdef ENABLE_ENCRYPTION
+		// 0F30..0F3F - load encryption key
+		EEPROM_ReadBuffer(0x0F30, gEeprom.ENC_KEY, sizeof(gEeprom.ENC_KEY));
+	#endif
+
+	/*for (i = 0; i < 4; i++) {
 		if (gCustomAesKey[i] != 0xFFFFFFFFU) {
 			bHasCustomAesKey = true;
 			return;
 		}
-	}
+	}*/
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
 	
 	//KD8CEC WORK ===================================

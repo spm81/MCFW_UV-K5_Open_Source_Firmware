@@ -23,6 +23,11 @@
 #ifdef ENABLE_STATUS_BATTERY_PERC	
 #include <helper/battery.h>
 #endif
+
+#ifdef ENABLE_MESSENGER
+	#include "app/messenger.h"
+#endif
+
 enum POWER_OnDisplayMode_t {
 	POWER_ON_DISPLAY_MODE_FULL_SCREEN = 0U,
 	POWER_ON_DISPLAY_MODE_MESSAGE     = 1U,
@@ -216,6 +221,14 @@ uint8_t LCD_CONTRAST;
 	uint8_t field78_0x96;
 	uint8_t field79_0x97;
 	VFO_Info_t VfoInfo[2];
+
+#ifdef ENABLE_ENCRYPTION
+	char                  ENC_KEY[16];
+#endif
+#ifdef ENABLE_MESSENGER
+	MessengerConfig       MESSENGER_CONFIG;
+#endif
+
 } EEPROM_Config_t;
 
 extern EEPROM_Config_t gEeprom;
@@ -226,5 +239,9 @@ void SETTINGS_SaveSettings(void);
 void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, uint8_t Mode);
 void SETTINGS_UpdateChannel(uint8_t Channel, const VFO_Info_t *pVFO, bool bUpdate);
 void GetChannelName(uint8_t num, char *name);
+#ifdef ENABLE_ENCRYPTION
+	void SETTINGS_SaveEncryptionKey();
+	void SETTINGS_ClearEncryptionKey();
+#endif
 #endif
 

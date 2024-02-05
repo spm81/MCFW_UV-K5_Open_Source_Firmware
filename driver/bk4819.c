@@ -949,7 +949,7 @@ void BK4819_PlayBeep(const uint16_t freq, const int delay)
   BK4819_EnterTxMute();
 }
 
-#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER_DELIVERY_NOTIFICATION)
+#if defined(ENABLE_ROGERBEEP) //|| defined(ENABLE_MESSENGER_DELIVERY_NOTIFICATION)
 void BK4819_PlayRoger(int t)
 {
   BK4819_EnterTxMute();
@@ -1022,13 +1022,13 @@ void BK4819_PlayRoger(int t)
 	
 #endif	
 
-#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
+//#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
     case 99: // NOKIA SMS Tone2
       BK4819_PlayBeep(800, 200);  // Frequency and duration can be adjusted
       BK4819_PlayBeep(600, 200);
       BK4819_PlayBeep(1000, 200);
 	break;  
-#endif	
+//#endif	
 
   }
 

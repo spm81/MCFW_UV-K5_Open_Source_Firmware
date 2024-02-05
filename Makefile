@@ -46,14 +46,14 @@ ENABLE_CW                   			:= 1
 
 #============ EXTRA: MESSENGER ============# 
 ENABLE_MESSENGER            			:= 1
-ENABLE_MESSENGER_DELIVERY_NOTIFICATION	:= 1
 ENABLE_MESSENGER_MORE_ONE_LINE			:= 1
 # 124 bytes
 ENABLE_MESSENGER_SHOW_RX_FREQ			:= 1
 # 124 (+20) bytes
-ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 0
+ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 # 156 bytes
 ENABLE_MESSENGER_UART					:= 1
+ENABLE_ENCRYPTION                       := 1
 
 # ---- EXTRA: SPECTRUM ----
 ENABLE_SPECTRUM             			:= 0
@@ -191,6 +191,10 @@ endif
 ifeq ($(ENABLE_MESSENGER),1)
 	OBJS += ui/messenger.o
 endif
+ifeq ($(ENABLE_ENCRYPTION),1)
+	OBJS += external/chacha/chacha.o
+	OBJS += helper/crypto.o
+endif
 ifeq ($(ENABLE_LIVESEEK_MHZ_KEYPAD),1)
 OBJS += app/ceccommon.o
 endif
@@ -214,7 +218,7 @@ ifeq ($(OS),Windows_NT)
 	RM = del /Q
 	FixPath = $(subst /,\,$1)
 	WHERE = where
-	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com3 -b
+	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com9 -b
 else
 	TOP := $(shell pwd)
 	RM = rm -f
@@ -258,7 +262,8 @@ ifeq ($(ENABLE_OVERLAY),1)
 ASFLAGS += -DENABLE_OVERLAY
 endif
 
-CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-builtin -fshort-enums -fno-delete-null-pointer-checks -std=c11 -MMD
+#CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-builtin -fshort-enums -fno-delete-null-pointer-checks -std=c11 -MMD
+CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-delete-null-pointer-checks -std=c11 -MMD
 CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
 
@@ -356,9 +361,6 @@ endif
 ifeq ($(ENABLE_MESSENGER),1)
 	CFLAGS += -DENABLE_MESSENGER
 endif
-ifeq ($(ENABLE_MESSENGER_DELIVERY_NOTIFICATION),1)
-	CFLAGS += -DENABLE_MESSENGER_DELIVERY_NOTIFICATION
-endif
 ifeq ($(ENABLE_MESSENGER_MORE_ONE_LINE),1)
 	CFLAGS += -DENABLE_MESSENGER_MORE_ONE_LINE
 endif
@@ -373,6 +375,9 @@ ifeq ($(ENABLE_UART), 0)
 endif
 ifeq ($(ENABLE_MESSENGER_UART),1)
 	CFLAGS += -DENABLE_MESSENGER_UART
+endif
+ifeq ($(ENABLE_ENCRYPTION),1)
+	CFLAGS  += -DENABLE_ENCRYPTION
 endif
 ifeq ($(ENABLE_CW),1)
 	CFLAGS += -DENABLE_CW

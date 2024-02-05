@@ -153,9 +153,21 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
   case MENU_200TX:
   case MENU_500TX:
   case MENU_SCREN:
+#ifdef ENABLE_ENCRYPTION
+		case MENU_MSG_ENC:
+#endif
+#ifdef ENABLE_MESSENGER
+		case MENU_MSG_ACK:
+#endif  
     //*pMin = 0;
     *pMax = 1;
     break;
+#ifdef ENABLE_MESSENGER
+		case MENU_MSG_MODULATION:
+			*pMin = 0;
+			*pMax = ARRAY_SIZE(gSubMenu_MSG_MODULATION) - 1;
+			break;
+#endif    
   case MENU_W_N:
     //*pMin = 0;
     *pMax = ARRAY_SIZE(bwNames) - 1;
@@ -557,6 +569,34 @@ void MENU_AcceptSetting(void) {
     gFlagReconfigureVfos = true;
     return;
 
+#ifdef ENABLE_ENCRYPTION
+			case MENU_ENC_KEY:
+				memset(gEeprom.ENC_KEY, 0, sizeof(gEeprom.ENC_KEY));
+				memmove(gEeprom.ENC_KEY, edit, sizeof(gEeprom.ENC_KEY));
+				memset(edit, 0, sizeof(edit));
+				gUpdateStatus        = true;
+				break;
+
+			case MENU_MSG_ENC:
+				gEeprom.MESSENGER_CONFIG.data.encrypt = gSubMenuSelection;
+        // Clear old KEY ???
+        //if ( gEeprom.MESSENGER_CONFIG.data.encrypt == 0 ) {
+        //  SETTINGS_ClearEncryptionKey();
+        //}
+				break;
+		#endif
+
+		#ifdef ENABLE_MESSENGER
+
+			case MENU_MSG_ACK:
+				gEeprom.MESSENGER_CONFIG.data.ack = gSubMenuSelection;
+				break;
+
+			case MENU_MSG_MODULATION:
+				gEeprom.MESSENGER_CONFIG.data.modulation = gSubMenuSelection;
+				break;
+		#endif    
+
   default:
     return;
   }
@@ -888,6 +928,23 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_SCREN:
     gSubMenuSelection = gSetting_ScrambleEnable;
     break;
+#ifdef ENABLE_ENCRYPTION
+			case MENU_MSG_ENC:
+				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.encrypt;
+				break;
+		#endif
+
+		#ifdef ENABLE_MESSENGER
+
+			case MENU_MSG_ACK:
+				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.ack;
+				break;
+
+			case MENU_MSG_MODULATION:
+				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.modulation;
+				break;
+		#endif
+        
 #ifdef ENABLE_STATUS_BATTERY_PERC	
   case MENU_BATTYP:
 	gSubMenuSelection = gEeprom.BATTERY_TYPE;
@@ -933,6 +990,24 @@ static void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     }
     gInputBoxIndex = 0;
   } else {
+    if (edit_index != -1 && gMenuCursor == MENU_ENC_KEY) {
+      if (edit_index < 10)
+      {
+        if (Key <= KEY_9)
+        {
+          edit[edit_index] = '0' + Key - KEY_0;
+
+          if (++edit_index >= 10)
+          {	// exit edit
+            gFlagAcceptSetting  = false;
+            gAskForConfirmation = 1;
+          }
+
+          gRequestDisplayScreen = DISPLAY_MENU;
+        }
+      }
+      return;
+    }
     if (gMenuCursor == MENU_OFFSET) {
       uint32_t Frequency;
 
@@ -1032,9 +1107,42 @@ static void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld) {
     if (!gIsInSubMenu) {
       gAskForConfirmation = 0;
       gIsInSubMenu = true;
+      edit_index     = -1;
+
     } else {
+
+      #ifdef ENABLE_ENCRYPTION
+        if (gMenuCursor == MENU_ENC_KEY)
+        {
+          if (edit_index < 0)
+          {	// enter encryption key edit mode
+            // pad the encryption key out with '_'
+            edit_index = strlen(edit);
+            while (edit_index < 10)
+              edit[edit_index++] = '_';
+            edit[edit_index] = 0;
+            edit_index = 0;  // 'edit_index' is going to be used as the cursor position
+
+            return;
+          }
+          else if (edit_index >= 0 && edit_index < 10)
+          {	// editing the encryption key characters
+
+            if (++edit_index < 10)
+              return;	// next char
+
+            // exit, save encryption key
+          }
+        }
+      #endif
+
+
       if (gMenuCursor == MENU_RESET || gMenuCursor == MENU_MEM_CH ||
-          gMenuCursor == MENU_DEL_CH) {
+          gMenuCursor == MENU_DEL_CH
+#ifdef ENABLE_ENCRYPTION
+          || gMenuCursor == MENU_ENC_KEY
+#endif
+          ) {
         switch (gAskForConfirmation) {
         case 0:
           gAskForConfirmation = 1;
@@ -1091,6 +1199,33 @@ static void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld,
   uint8_t VFO;
   uint8_t Channel;
   bool bCheckScanList;
+
+  #ifdef ENABLE_ENCRYPTION
+
+  if (gIsInSubMenu && edit_index >= 0 && gMenuCursor == MENU_ENC_KEY )
+	{	// change the character
+		if (bKeyPressed && edit_index < 10 && Direction != 0)
+		{
+			// TODO: Allow special chars when setting encryption key
+			const char   unwanted[] = "$%&!\"':;?^`|{}";
+			char         c          = edit[edit_index] + Direction;
+			unsigned int i          = 0;
+			while (i < sizeof(unwanted) && c >= 32 && c <= 126)
+			{
+				if (c == unwanted[i++])
+				{	// choose next character
+					c += Direction;
+					i = 0;
+				}
+			}
+			edit[edit_index] = (c < 32) ? 126 : (c > 126) ? 32 : c;
+
+			gRequestDisplayScreen = DISPLAY_MENU;
+		}
+		return;
+	}
+
+  #endif
 
   if (!bKeyHeld) {
     if (!bKeyPressed) {
@@ -1190,6 +1325,20 @@ void MENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     MENU_Key_STAR(bKeyPressed, bKeyHeld);
     break;
   case KEY_F:
+#ifdef ENABLE_ENCRYPTION  
+    if (edit_index >= 0 && gMenuCursor == MENU_ENC_KEY ) {
+      if (!bKeyHeld && bKeyPressed)
+      {
+        gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
+        if (edit_index >= 0)
+        {
+          edit_index--;
+          gRequestDisplayScreen = DISPLAY_MENU;
+        }
+      }
+      break;
+    }
+#endif    
     GENERIC_Key_F(bKeyPressed, bKeyHeld);
     break;
   case KEY_PTT:

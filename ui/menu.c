@@ -38,6 +38,10 @@
 	#include "app/uart.h"
 #endif
 
+#ifdef ENABLE_ENCRYPTION
+	#include "helper/crypto.h"
+#endif
+
 //char               str[64];  // bigger cuz we can now do multi-line in one string (use '\n' char)
 
 static const char MenuList[][8] = {
@@ -72,6 +76,14 @@ static const char MenuList[][8] = {
     // 0x10
     "DualRx",
     "XBand",
+#ifdef ENABLE_ENCRYPTION
+	  "EncKey",
+	  "MsgEnc",
+#endif
+#ifdef ENABLE_MESSENGER
+	  "MsgAck",
+	  "MsgMod",
+#endif    
     "Beep",
     "TxTime",
    // "Voice",
@@ -100,7 +112,7 @@ static const char MenuList[][8] = {
     "D Prel",
     "PTT ID",
     "D Decd",
-    "D List",
+    "D List",    
 #endif
     "PonMsg",
 #if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
@@ -227,14 +239,21 @@ const char gSubMenu_ROGER[][9] = {
 /*	"MARIO",*/
 };
 
+#ifdef ENABLE_MESSENGER
+	const char gSubMenu_MSG_MODULATION[][10] =
+	{
+		"AFSK 1.2K",
+		"FSK 700",
+    "FSK 450",
+		
+	};
+#endif
+
 #elif defined (ENABLE_MDC)
 const char gSubMenu_ROGER[][4] = {
 	"OFF",
     "MDC",
 };
-
-
-
 #endif
 
 static const char gSubMenu_RESET[2][4] = {
@@ -256,6 +275,10 @@ bool gIsInSubMenu;
 uint8_t gMenuCursor;
 int8_t gMenuScrollDirection;
 uint32_t gSubMenuSelection;
+
+// edit box
+char    edit[17];
+int     edit_index;
 
 void UI_DisplayMenu(void) {
   char String[16];
@@ -297,6 +320,7 @@ void UI_DisplayMenu(void) {
   }
 
   memset(String, 0, sizeof(String));
+  bool already_printed = false;
 
   switch (gMenuCursor) {
   case MENU_SQL:
@@ -401,6 +425,12 @@ void UI_DisplayMenu(void) {
 
 #ifdef ENABLE_DOCK
 	case MENU_REMOTE_UI:
+#endif
+#ifdef ENABLE_ENCRYPTION
+  case MENU_MSG_ENC:
+#endif
+#ifdef ENABLE_MESSENGER
+  case MENU_MSG_ACK:
 #endif
   case MENU_BCL:
   case MENU_BEEP:
@@ -557,16 +587,68 @@ case MENU_S_LIST:
   case MENU_F_LOCK:
     strcpy(String, gSubMenu_F_LOCK[gSubMenuSelection]);
     break;
+
+#ifdef ENABLE_ENCRYPTION
+				case MENU_ENC_KEY:
+				{
+          //const unsigned int menu_item_x1    =  50;
+          //const unsigned int menu_item_x2    = LCD_WIDTH - 1;
+					if (!gIsInSubMenu)
+					{	// show placeholder in main menu
+						strcpy(String, "****");
+						//UI_PrintString(String, menu_item_x1, menu_item_x2, 2, 8, true);
+					}
+					else
+					{	// show the key being edited
+						/*if (edit_index != -1 || gAskForConfirmation) {
+							UI_PrintString(edit, (menu_item_x1 -2), 0, 2, 8, true);
+							// show the cursor
+							if(edit_index < 10)
+								UI_PrintString(     "^", (menu_item_x1 -2) + (8 * edit_index), 0, 4, 8, true);  
+						}
+						else{*/            
+
+            if (edit_index != -1 || gAskForConfirmation) {
+              strcpy(String, edit); 
+              UI_PrintStringSmall(String, 55, 0, 2);
+              if(edit_index < 10)
+							  UI_PrintStringSmall("^", 55 + (7 * edit_index), 0, 3);
+              already_printed = true;
+            } else {							
+
+              UI_PrintStringSmall("hashed", 55, 127, 1);
+							memset(String, 0, sizeof(String));
+							
+							CRYPTO_DisplayHash(gEeprom.ENC_KEY, String, sizeof(gEeprom.ENC_KEY));
+							UI_PrintStringSmall(String, 55, 127, 3);
+              already_printed = true;
+						}			
+					}
+					
+					break;
+				}
+			#endif
+
+			#ifdef ENABLE_MESSENGER
+				case MENU_MSG_MODULATION:
+					strcpy(String, gSubMenu_MSG_MODULATION[gSubMenuSelection]);
+					break;
+			#endif
   }
 
-  UI_PrintString(String, 50, 127, 2, 8, true);
+  if (!already_printed)
+    UI_PrintString(String, 50, 127, 2, 8, true);
 
   if (gMenuCursor == MENU_OFFSET) {
     UI_PrintString("MHz", 50, 127, 4, 8, true);
   }
 
   if ((gMenuCursor == MENU_RESET || gMenuCursor == MENU_MEM_CH ||
-       gMenuCursor == MENU_DEL_CH) &&
+       gMenuCursor == MENU_DEL_CH
+        #ifdef ENABLE_ENCRYPTION
+          || gMenuCursor == MENU_ENC_KEY
+        #endif
+       ) &&
       gAskForConfirmation) {
     if (gAskForConfirmation == 1) {
       strcpy(String, "SURE?");

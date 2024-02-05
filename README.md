@@ -25,6 +25,7 @@ Many thanks to various people on Telegram for putting up with me during this eff
 * [DualTachyon](https://github.com/DualTachyon)
 * [Joaquim](https://github.com/joaquimorg)
 * [Mikhail](https://github.com/fagci)
+* [kamilsss655](https://github.com/kamilsss655)
 * [Andrej](https://github.com/Tunas1337)
 * [Manuel](https://github.com/manujedi)
 * [Adam Mnemonic](https://github.com/amnemonic)

@@ -23,15 +23,8 @@ void UI_DisplayMSG(void) {
 
 	UI_DisplayClear();
 	memset(String, 0, sizeof(String));
-#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
-	//UI_PrintStringSmallBold("MESSENGER", 0, 127, 0);
-	//UI_PrintStringSmall("Messenger", 1, 127, 0);
-
-	//UI_DrawDottedLineBuffer(gFrameBuffer, 2, 3, 26, 3, true, 2);
-	//UI_DrawDottedLineBuffer(gFrameBuffer, 100, 3, 126, 3, true, 2);
-#else
+#ifndef ENABLE_MESSENGER_MORE_ONE_LINE
 	UI_PrintStringSmallBold("MESSENGER", 0, 127, 0);
-	//UI_PrintStringSmall("Messenger", 1, 127, 0);
 
 	UI_DrawDottedLineBuffer(gFrameBuffer, 2, 3, 26, 3, true, 2);
 	UI_DrawDottedLineBuffer(gFrameBuffer, 100, 3, 126, 3, true, 2);	
@@ -49,15 +42,13 @@ void UI_DisplayMSG(void) {
 	//GUI_DisplaySmallest("RX", 4, 34, false, true);
 
 	memset(String, 0, sizeof(String));
+	const uint8_t mLine = 6;
 #ifdef ENABLE_MESSENGER_MORE_ONE_LINE
-	uint8_t mPos = 1;//8;
-	const uint8_t mLine = 7;
-	for (int i = 0; i < 5; ++i) {
+	uint8_t mPos = 0;//8;
 #else
-uint8_t mPos = 8;
-	const uint8_t mLine = 7;
-	for (int i = 0; i < 4; ++i) {
+	uint8_t mPos = 8;	
 #endif		
+	for (int i = 0; i < LAST_LINE + 1; ++i) {
 		sprintf(String, "%s", rxMessage[i]);
 		GUI_DisplaySmallest(String, 2, mPos, false, true);
 		#ifdef ENABLE_DOCK
@@ -68,11 +59,11 @@ uint8_t mPos = 8;
 
 	// TX Screen
 #if defined (ENABLE_MESSENGER_SHOW_RX_FREQ) && ! defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
-	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 40, 126, 40, true, 4);
+	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 42, 126, 40, true, 4);
 #elif defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ) && ! defined (ENABLE_MESSENGER_SHOW_RX_FREQ) || defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ) && defined (ENABLE_MESSENGER_SHOW_RX_FREQ)
-//	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 40, 126, 40, true, 4);
+//	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 42, 126, 40, true, 4);
 #else
-	UI_DrawDottedLineBuffer(gFrameBuffer, 14, 40, 126, 40, true, 4);
+	UI_DrawDottedLineBuffer(gFrameBuffer, 14, 42, 126, 40, true, 4);
 #endif
 	memset(String, 0, sizeof(String));
 	if ( keyboardType == NUMERIC ) {
@@ -83,13 +74,13 @@ uint8_t mPos = 8;
 		strcpy(String, "b");
 	}
 
-	UI_DrawRectangleBuffer(gFrameBuffer, 2, 36, 10, 44, true);
-	GUI_DisplaySmallest(String, 5, 38, false, true);
+	UI_DrawRectangleBuffer(gFrameBuffer, 2, 38, 10, 46, true);
+	GUI_DisplaySmallest(String, 5, 40, false, true);
 	#ifdef ENABLE_DOCK
 		UART_SendUiElement(2, 5, (32 / 6), 4, strlen(String), String);
 	#endif	
 #if defined (ENABLE_MESSENGER_SHOW_RX_FREQ) || defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
-	GUI_DisplaySmallest(msgFreqInfo, 20, 38, false, true);	
+	GUI_DisplaySmallest(msgFreqInfo, 20, 40, false, true);	
 	#ifdef ENABLE_DOCK
 		UART_SendUiElement(2, 20, (32 / 6), 4, strlen(msgFreqInfo), msgFreqInfo);
 	#endif	
@@ -97,7 +88,7 @@ uint8_t mPos = 8;
 	memset(String, 0, sizeof(String));
 	sprintf(String, "%s_", cMessage);
 	//UI_PrintStringSmall(String, 3, 0, 6);
-	GUI_DisplaySmallest(String, 5, 48, false, true);
+	GUI_DisplaySmallest(String, 5, 50, false, true);
 	#ifdef ENABLE_DOCK
 		UART_SendUiElement(2, 5, (38 / 6), 4, strlen(String), String);
 	#endif

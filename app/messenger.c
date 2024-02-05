@@ -16,6 +16,9 @@
 #include "ui/ui.h"
 #include "ui/status.h"
 #include "frequencies.h"
+#ifdef ENABLE_ENCRYPTION
+#include "helper/crypto.h"
+#endif
 #ifdef ENABLE_MESSENGER_UART
 #include "driver/uart.h"
 #endif
@@ -36,18 +39,15 @@ char cMessage[TX_MSG_LENGTH];
 char msgFreqInfo[30];
 #endif
 char lastcMessage[TX_MSG_LENGTH];
-#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
-char rxMessage[5][TX_MSG_LENGTH + 3];
-#else
-char rxMessage[4][TX_MSG_LENGTH + 3];
-#endif	
+char rxMessage[LAST_LINE + 1][TX_MSG_LENGTH + 2];
+
 unsigned char cIndex = 0;
 unsigned char prevKey = 0, prevLetter = 0;
 KeyboardType keyboardType = UPPERCASE;
 
 MsgStatus msgStatus = READY;
 
-uint8_t msgFSKBuffer[2 + TX_MSG_LENGTH];
+union DataPacket dataPacket;
 
 bool hasNewMessage = false;
 
@@ -62,6 +62,126 @@ uint8_t validate_char(uint8_t rchar)
 		return rchar;
 	}
 	return 32;
+}
+
+void MSG_ConfigureTone(void)
+{
+	uint16_t TONE2_FREQ = 12389u;
+
+	// Tone2 = FSK baudrate                       // kamilsss655 2024
+	switch(gEeprom.MESSENGER_CONFIG.data.modulation)
+	{
+
+		case MOD_FSK_700:
+			TONE2_FREQ = 7227u;
+			break;
+		case MOD_FSK_450:
+			TONE2_FREQ = 4646u;
+			break;
+	}
+
+	BK4819_WriteRegister(BK4819_REG_72, TONE2_FREQ);
+
+	switch(gEeprom.MESSENGER_CONFIG.data.modulation)
+	{
+		case MOD_FSK_700:
+		case MOD_FSK_450:
+			BK4819_WriteRegister(BK4819_REG_58,
+				(0u << 13) |		// 1 FSK TX mode selection
+									//   0 = FSK 1.2K and FSK 2.4K TX .. no tones, direct FM
+									//   1 = FFSK 1200 / 1800 TX
+									//   2 = ???
+									//   3 = FFSK 1200 / 2400 TX
+									//   4 = ???
+									//   5 = NOAA SAME TX
+									//   6 = ???
+									//   7 = ???
+									//
+				(0u << 10) |		// 0 FSK RX mode selection
+									//   0 = FSK 1.2K, FSK 2.4K RX and NOAA SAME RX .. no tones, direct FM
+									//   1 = ???
+									//   2 = ???
+									//   3 = ???
+									//   4 = FFSK 1200 / 2400 RX
+									//   5 = ???
+									//   6 = ???
+									//   7 = FFSK 1200 / 1800 RX
+									//
+				(3u << 8) |			// 0 FSK RX gain
+									//   0 ~ 3
+									//
+				(0u << 6) |			// 0 ???
+									//   0 ~ 3
+									//
+				(0u << 4) |			// 0 FSK preamble type selection
+									//   0 = 0xAA or 0x55 due to the MSB of FSK sync byte 0
+									//   1 = ???
+									//   2 = 0x55
+									//   3 = 0xAA
+									//
+				(0u << 1) |			// 1 FSK RX bandwidth setting
+									//   0 = FSK 1.2K .. no tones, direct FM
+									//   1 = FFSK 1200 / 1800
+									//   2 = NOAA SAME RX
+									//   3 = ???
+									//   4 = FSK 2.4K and FFSK 1200 / 2400
+									//   5 = ???
+									//   6 = ???
+									//   7 = ???
+									//
+				(1u << 0));			// 1 FSK enable
+									//   0 = disable
+									//   1 = enable
+		break;
+		case MOD_AFSK_1200:
+			BK4819_WriteRegister(BK4819_REG_58,
+				(1u << 13) |		// 1 FSK TX mode selection
+									//   0 = FSK 1.2K and FSK 2.4K TX .. no tones, direct FM
+									//   1 = FFSK 1200 / 1800 TX
+									//   2 = ???
+									//   3 = FFSK 1200 / 2400 TX
+									//   4 = ???
+									//   5 = NOAA SAME TX
+									//   6 = ???
+									//   7 = ???
+									//
+				(7u << 10) |		// 0 FSK RX mode selection
+									//   0 = FSK 1.2K, FSK 2.4K RX and NOAA SAME RX .. no tones, direct FM
+									//   1 = ???
+									//   2 = ???
+									//   3 = ???
+									//   4 = FFSK 1200 / 2400 RX
+									//   5 = ???
+									//   6 = ???
+									//   7 = FFSK 1200 / 1800 RX
+									//
+				(3u << 8) |			// 0 FSK RX gain
+									//   0 ~ 3
+									//
+				(0u << 6) |			// 0 ???
+									//   0 ~ 3
+									//
+				(0u << 4) |			// 0 FSK preamble type selection
+									//   0 = 0xAA or 0x55 due to the MSB of FSK sync byte 0
+									//   1 = ???
+									//   2 = 0x55
+									//   3 = 0xAA
+									//
+				(1u << 1) |			// 1 FSK RX bandwidth setting
+									//   0 = FSK 1.2K .. no tones, direct FM
+									//   1 = FFSK 1200 / 1800
+									//   2 = NOAA SAME RX
+									//   3 = ???
+									//   4 = FSK 2.4K and FFSK 1200 / 2400
+									//   5 = ???
+									//   6 = ???
+									//   7 = ???
+									//
+				(1u << 0));			// 1 FSK enable
+									//   0 = disable
+									//   1 = enable
+		break;
+	}
 }
 
 void MSG_FSKSendData()
@@ -85,9 +205,6 @@ void MSG_FSKSendData()
 		{
 		case BK4819_FILTER_BW_WIDE:
 			deviation = 1050;
-			break;
-		case BK4819_FILTER_BW_NARROW:
-			deviation = 850;
 			break;
 		case BK4819_FILTER_BW_NARROWER:
 			deviation = 750;
@@ -116,64 +233,7 @@ void MSG_FSKSendData()
 	// *******************************************
 	// setup the FFSK modem as best we can
 
-	// Uses 1200/1800 Hz FSK tone frequencies 1200 bits/s
-	//
-	BK4819_WriteRegister(BK4819_REG_58, // 0x37C3);   // 001 101 11 11 00 001 1
-						 (1u << 13) |	// 1 FSK TX mode selection
-									  //   0 = FSK 1.2K and FSK 2.4K TX .. no tones, direct FM
-									  //   1 = FFSK 1200/1800 TX
-									  //   2 = ???
-									  //   3 = FFSK 1200/2400 TX
-									  //   4 = ???
-									  //   5 = NOAA SAME TX
-									  //   6 = ???
-									  //   7 = ???
-									  //
-							 (7u << 10) | // 0 FSK RX mode selection
-										  //   0 = FSK 1.2K, FSK 2.4K RX and NOAA SAME RX .. no tones, direct FM
-										  //   1 = ???
-										  //   2 = ???
-										  //   3 = ???
-										  //   4 = FFSK 1200/2400 RX
-										  //   5 = ???
-										  //   6 = ???
-										  //   7 = FFSK 1200/1800 RX
-										  //
-							 (0u << 8) | // 0 FSK RX gain
-										 //   0 ~ 3
-										 //
-							 (0u << 6) | // 0 ???
-										 //   0 ~ 3
-										 //
-							 (0u << 4) | // 0 FSK preamble type selection
-										 //   0 = 0xAA or 0x55 due to the MSB of FSK sync byte 0
-										 //   1 = ???
-										 //   2 = 0x55
-										 //   3 = 0xAA
-										 //
-							 (1u << 1) | // 1 FSK RX bandwidth setting
-										 //   0 = FSK 1.2K .. no tones, direct FM
-										 //   1 = FFSK 1200/1800
-										 //   2 = NOAA SAME RX
-										 //   3 = ???
-										 //   4 = FSK 2.4K and FFSK 1200/2400
-										 //   5 = ???
-										 //   6 = ???
-										 //   7 = ???
-										 //
-							 (1u << 0)); // 1 FSK enable
-										 //   0 = disable
-										 //   1 = enable
-
-	// REG_72
-	//
-	// <15:0> 0x2854 TONE-2 / FSK frequency control word
-	//        = freq(Hz) * 10.32444 for XTAL 13M / 26M or
-	//        = freq(Hz) * 10.48576 for XTAL 12.8M / 19.2M / 25.6M / 38.4M
-	//
-	// tone-2 = 1200Hz
-	//
-	BK4819_WriteRegister(BK4819_REG_72, 0x3065);
+	MSG_ConfigureTone();
 
 	// REG_70
 	//
@@ -236,7 +296,12 @@ void MSG_FSKSendData()
 	fsk_reg59 |= 15u << 4;
 
 	// Set packet length (not including pre-amble and sync bytes that we can't seem to disable)
-	BK4819_WriteRegister(BK4819_REG_5D, ((TX_MSG_LENGTH + 2) << 8));
+	//BK4819_WriteRegister(BK4819_REG_5D, ((TX_MSG_LENGTH + 2) << 8));
+
+	uint16_t size = sizeof(dataPacket.serializedArray);
+	// size -= (fsk_reg59 & (1u << 3)) ? 4 : 2;
+
+	BK4819_WriteRegister(BK4819_REG_5D, (size << 8));
 
 	// REG_5A
 	//
@@ -275,11 +340,10 @@ void MSG_FSKSendData()
 
 	SYSTEM_DelayMs(100);
 
-	{ // load the entire packet data into the TX FIFO buffer
-		unsigned int i;
-		const uint16_t *p = (const uint16_t *)msgFSKBuffer;
-		for (i = 0; i < (sizeof(msgFSKBuffer) / sizeof(p[0])); i++)
-			BK4819_WriteRegister(BK4819_REG_5F, p[i]); // load 16-bits at a time
+	{	// load the entire packet data into the TX FIFO buffer
+		for (size_t i = 0, j = 0; i < sizeof(dataPacket.serializedArray); i += 2, j++) {
+        	BK4819_WriteRegister(BK4819_REG_5F, (dataPacket.serializedArray[i + 1] << 8) | dataPacket.serializedArray[i]);
+    	}
 	}
 
 	// enable FSK TX
@@ -447,55 +511,7 @@ void MSG_EnableRX(const bool enable)
 								 (1u << 7) |  // 1
 								 (96u << 0)); // 96
 
-		// Tone2 baudrate 1200
-		BK4819_WriteRegister(BK4819_REG_72, 0x3065);
-
-		BK4819_WriteRegister(BK4819_REG_58,
-							 (1u << 13) | // 1 FSK TX mode selection
-										  //   0 = FSK 1.2K and FSK 2.4K TX .. no tones, direct FM
-										  //   1 = FFSK 1200 / 1800 TX
-										  //   2 = ???
-										  //   3 = FFSK 1200 / 2400 TX
-										  //   4 = ???
-										  //   5 = NOAA SAME TX
-										  //   6 = ???
-										  //   7 = ???
-										  //
-								 (7u << 10) | // 0 FSK RX mode selection
-											  //   0 = FSK 1.2K, FSK 2.4K RX and NOAA SAME RX .. no tones, direct FM
-											  //   1 = ???
-											  //   2 = ???
-											  //   3 = ???
-											  //   4 = FFSK 1200 / 2400 RX
-											  //   5 = ???
-											  //   6 = ???
-											  //   7 = FFSK 1200 / 1800 RX
-											  //
-								 (3u << 8) | // 0 FSK RX gain
-											 //   0 ~ 3
-											 //
-								 (0u << 6) | // 0 ???
-											 //   0 ~ 3
-											 //
-								 (0u << 4) | // 0 FSK preamble type selection
-											 //   0 = 0xAA or 0x55 due to the MSB of FSK sync byte 0
-											 //   1 = ???
-											 //   2 = 0x55
-											 //   3 = 0xAA
-											 //
-								 (1u << 1) | // 1 FSK RX bandwidth setting
-											 //   0 = FSK 1.2K .. no tones, direct FM
-											 //   1 = FFSK 1200 / 1800
-											 //   2 = NOAA SAME RX
-											 //   3 = ???
-											 //   4 = FSK 2.4K and FFSK 1200 / 2400
-											 //   5 = ???
-											 //   6 = ???
-											 //   7 = ???
-											 //
-								 (1u << 0)); // 1 FSK enable
-											 //   0 = disable
-											 //   1 = enable
+		MSG_ConfigureTone();
 
 		// REG_5A .. bytes 0 & 1 sync pattern
 		//
@@ -514,16 +530,15 @@ void MSG_EnableRX(const bool enable)
 		// BK4819_WriteRegister(BK4819_REG_5C, 0xAA30);   // 10101010 0 0 110000
 
 		// set the almost full threshold
-		BK4819_WriteRegister(BK4819_REG_5E, (2u << 3) | (1u << 0)); // 0 ~ 127, 0 ~ 7
+		BK4819_WriteRegister(BK4819_REG_5E, (64u << 3) | (1u << 0));  // 0 ~ 127, 0 ~ 7
 
-		{ // packet size .. sync + 14 bytes - size of a single packet
+		// packet size .. sync + packet - size of a single packet
 
-			// uint16_t size = 2 + TX_MSG_LENGTH;
-			//  size -= (fsk_reg59 & (1u << 3)) ? 4 : 2;
-			// size = (((size + 1) / 2) * 2) + 2;             // round up to even, else FSK RX doesn't work
-			// BK4819_WriteRegister(BK4819_REG_5D, ((size - 1) << 8));
-			BK4819_WriteRegister(BK4819_REG_5D, ((TX_MSG_LENGTH + 2) << 8));
-		}
+		uint16_t size = sizeof(dataPacket.serializedArray);
+		// size -= (fsk_reg59 & (1u << 3)) ? 4 : 2;
+		size = (((size + 1) / 2) * 2) + 2;             // round up to even, else FSK RX doesn't work
+
+		BK4819_WriteRegister(BK4819_REG_5D, (size << 8));
 
 		// clear FIFO's then enable RX
 		BK4819_WriteRegister(BK4819_REG_59, (1u << 15) | (1u << 14) | fsk_reg59);
@@ -538,22 +553,12 @@ void MSG_EnableRX(const bool enable)
 
 // -----------------------------------------------------
 
-void moveUP(char (*rxMessages)[TX_MSG_LENGTH + 3])
+void moveUP(char (*rxMessages)[TX_MSG_LENGTH + 2])
 {
-	// Shift existing lines up
-	strcpy(rxMessages[0], rxMessages[1]);
-	strcpy(rxMessages[1], rxMessages[2]);
-	strcpy(rxMessages[2], rxMessages[3]);
-#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
-	strcpy(rxMessages[3], rxMessages[4]);
-#endif	
-
-	// Insert the new line at the last position
-#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
-	memset(rxMessages[4], 0, sizeof(rxMessages[4]));
-#else
-	memset(rxMessages[3], 0, sizeof(rxMessages[3]));
-#endif
+	for (size_t i = 0; i < LAST_LINE; i++) {
+		strcpy(rxMessages[i], rxMessages[i + 1]);
+	}
+	
 }
 
 void MSG_Send(const char txMessage[TX_MSG_LENGTH], bool bServiceMessage)
@@ -570,11 +575,52 @@ void MSG_Send(const char txMessage[TX_MSG_LENGTH], bool bServiceMessage)
 			RADIO_SetVfoState(VFO_STATE_NORMAL);
 			BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
 			msgStatus = SENDING;
+			memset(dataPacket.serializedArray, 0, sizeof(dataPacket.serializedArray));
+			if (bServiceMessage) {
+				dataPacket.data.header=ACK_PACKET;
+			} else {
+			#ifdef ENABLE_ENCRYPTION
+				if(gEeprom.MESSENGER_CONFIG.data.encrypt) {
+					dataPacket.data.header=ENCRYPTED_MESSAGE_PACKET;
+				} else {
+					dataPacket.data.header=MESSAGE_PACKET;
+				}
+			#else
+				dataPacket.data.header=MESSAGE_PACKET;
+			#endif
+			}
+			
+			dataPacket.data.payload[0] = 'M';
+			dataPacket.data.payload[1] = 'S';
+			memcpy(dataPacket.data.payload + 2, txMessage, TX_MSG_LENGTH);
+			
+			if (!bServiceMessage) {
+				moveUP(rxMessage);
+				sprintf(rxMessage[LAST_LINE], "> %s", txMessage);
 
-			memset(msgFSKBuffer, 0, sizeof(msgFSKBuffer));
-			msgFSKBuffer[0] = 'M';
-			msgFSKBuffer[1] = 'S';
-			memcpy(msgFSKBuffer + 2, txMessage, TX_MSG_LENGTH);
+				memset(lastcMessage, 0, sizeof(lastcMessage));
+				memcpy(lastcMessage, txMessage, TX_MSG_LENGTH);
+				cIndex = 0;
+				prevKey = 0;
+				prevLetter = 0;
+				memset(cMessage, 0, sizeof(cMessage));
+			}			
+
+			#ifdef ENABLE_ENCRYPTION
+			if(dataPacket.data.header == ENCRYPTED_MESSAGE_PACKET){
+				
+				CRYPTO_Random(dataPacket.data.nonce, NONCE_LENGTH);
+
+				CRYPTO_Crypt(
+					dataPacket.data.payload,
+					TX_MSG_LENGTH,
+					dataPacket.data.payload,
+					&dataPacket.data.nonce,
+					gEncryptionKey,
+					256
+				);
+			}
+			#endif			
 
 			BK4819_DisableDTMF();
 			RADIO_SetTxParameters();
@@ -591,21 +637,7 @@ void MSG_Send(const char txMessage[TX_MSG_LENGTH], bool bServiceMessage)
 			BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, false);
 
 			MSG_EnableRX(true);
-			if (!bServiceMessage)
-			{
-				moveUP(rxMessage);
-#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
-				sprintf(rxMessage[4], "> %s", txMessage);
-#else
-				sprintf(rxMessage[3], "> %s", txMessage);
-#endif	
-				memset(lastcMessage, 0, sizeof(lastcMessage));
-				memcpy(lastcMessage, txMessage, TX_MSG_LENGTH);
-				cIndex = 0;
-				prevKey = 0;
-				prevLetter = 0;
-				memset(cMessage, 0, sizeof(cMessage));
-			}
+			
 			msgStatus = READY;
 		}
 		else
@@ -629,7 +661,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 	if (rx_sync)
 	{
 		gFSKWriteIndex = 0;
-		memset(msgFSKBuffer, 0, sizeof(msgFSKBuffer));
+		memset(dataPacket.serializedArray, 0, sizeof(dataPacket.serializedArray));
 		msgStatus = RECEIVING;
 	}
 
@@ -640,10 +672,10 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 		for (uint16_t i = 0; i < count; i++)
 		{
 			const uint16_t word = BK4819_ReadRegister(BK4819_REG_5F);
-			if (gFSKWriteIndex < sizeof(msgFSKBuffer))
-				msgFSKBuffer[gFSKWriteIndex++] = validate_char((word >> 0) & 0xff);
-			if (gFSKWriteIndex < sizeof(msgFSKBuffer))
-				msgFSKBuffer[gFSKWriteIndex++] = validate_char((word >> 8) & 0xff);
+			if (gFSKWriteIndex < sizeof(dataPacket.serializedArray))
+				dataPacket.serializedArray[gFSKWriteIndex++] = (word >> 0) & 0xff;
+			if (gFSKWriteIndex < sizeof(dataPacket.serializedArray))
+				dataPacket.serializedArray[gFSKWriteIndex++] = (word >> 8) & 0xff;
 		}
 
 		SYSTEM_DelayMs(10);
@@ -660,55 +692,61 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 		if (gFSKWriteIndex > 2)
 		{
 
+			#ifdef ENABLE_ENCRYPTION
+			if(dataPacket.data.header == ENCRYPTED_MESSAGE_PACKET) {
+				CRYPTO_Crypt(dataPacket.data.payload,
+					TX_MSG_LENGTH,
+					dataPacket.data.payload,
+					dataPacket.data.nonce,
+					gEncryptionKey,
+					256);
+			}
+
+			#endif
+
 			// If there's three 0x1b bytes, then it's a service message
-			if (msgFSKBuffer[2] == 0x1b && msgFSKBuffer[3] == 0x1b && msgFSKBuffer[4] == 0x1b)
+			if (dataPacket.data.payload[2] == 0x1b && dataPacket.data.payload[3] == 0x1b && dataPacket.data.payload[4] == 0x1b)
 			{
-#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION // TO:DO; Properly adding messenger ACK option to makefile
-				// If the next 4 bytes are "RCVD", then it's a delivery notification
-				if (msgFSKBuffer[5] == 'R' && msgFSKBuffer[6] == 'C' && msgFSKBuffer[7] == 'V' && msgFSKBuffer[8] == 'D')
-				{
-					UART_printf("SVC<RCPT\r\n");
-#ifdef ENABLE_MESSENGER_MORE_ONE_LINE
-					rxMessage[4][0] = '+';
-#else
-					rxMessage[3][0] = '+';
-#endif	
-					gUpdateStatus = true;
-					gUpdateDisplay = true;
+
+				if(gEeprom.MESSENGER_CONFIG.data.ack) {
+					if (dataPacket.data.payload[5] == 'R' && dataPacket.data.payload[6] == 'C' && dataPacket.data.payload[7] == 'V' && dataPacket.data.payload[8] == 'D')
+					{
+						UART_printf("SVC<RCPT\r\n");
+						rxMessage[LAST_LINE][0] = '+';
+						gUpdateStatus = true;
+						gUpdateDisplay = true;
+					}
 				}
-#endif
 			}
 			else
 			{
 				moveUP(rxMessage);
-				if (msgFSKBuffer[0] != 'M' || msgFSKBuffer[1] != 'S')
+				if (dataPacket.data.payload[0] != 'M' || dataPacket.data.payload[1] != 'S')
 				{
-#ifdef ENABLE_MESSENGER_MORE_ONE_LINE					
-					snprintf(rxMessage[4], TX_MSG_LENGTH + 2, "? unknown msg format!");
+					snprintf(rxMessage[LAST_LINE], TX_MSG_LENGTH + 2, "? unknown msg format!");
 				}
 				else
 				{
-					snprintf(rxMessage[4], TX_MSG_LENGTH + 2, "< %s", &msgFSKBuffer[2]);
-				}
-#else
-					snprintf(rxMessage[3], TX_MSG_LENGTH + 2, "? unknown msg format!");
-				}
-				else
-				{
-					snprintf(rxMessage[3], TX_MSG_LENGTH + 2, "< %s", &msgFSKBuffer[2]);
-				}	
-#endif
-#ifdef ENABLE_MESSENGER_UART
-				UART_printf("SMS<%s\r\n", &msgFSKBuffer[2]);
-#endif
+					snprintf(rxMessage[LAST_LINE], TX_MSG_LENGTH + 2, "< %s", &dataPacket.data.payload[2]);
+					#ifdef ENABLE_MESSENGER_UART
+					UART_printf("SMS<%s\r\n", &dataPacket.data.payload[2]);
+					#endif
 
-#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION
-				BK4819_DisableDTMF();
-				RADIO_SetTxParameters();
-				SYSTEM_DelayMs(500);
-				BK4819_ExitTxMute();
-				BK4819_PlayRoger(99);
-#endif
+					if(gEeprom.MESSENGER_CONFIG.data.ack) {
+						BK4819_DisableDTMF();
+						RADIO_SetTxParameters();
+						SYSTEM_DelayMs(500);
+						BK4819_ExitTxMute();
+						BK4819_PlayRoger(99);
+			
+						// Transmit a message to the sender that we have received the message (Unless it's a service message)
+						if (dataPacket.data.payload[2] != 0x1b)
+						{
+							MSG_Send("\x1b\x1b\x1bRCVD ", true);
+						}
+					}
+				}
+
 			}
 
 			if (gAppToDisplay != APP_MESSENGER)
@@ -725,13 +763,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 		}
 
 		gFSKWriteIndex = 0;
-#ifdef ENABLE_MESSENGER_DELIVERY_NOTIFICATION 		
-		// Transmit a message to the sender that we have received the message (Unless it's a service message)
-		if (msgFSKBuffer[0] == 'M' && msgFSKBuffer[1] == 'S' && msgFSKBuffer[2] != 0x1b)
-		{
-			MSG_Send("\x1b\x1b\x1bRCVD                       ", true);
-		}
-#endif		
+		
 	}
 }
 
@@ -745,6 +777,9 @@ void MSG_Init()
 	prevKey = 0;
 	prevLetter = 0;
 	cIndex = 0;
+	#ifdef ENABLE_ENCRYPTION
+		gRecalculateEncKey = true;
+	#endif
 }
 
 // ---------------------------------------------------------------------------------
@@ -843,7 +878,7 @@ void MSG_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 			MSG_Init();
 			break;
 		default:
-			gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+			//gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 			break;
 		}
 		gUpdateDisplay = true;
