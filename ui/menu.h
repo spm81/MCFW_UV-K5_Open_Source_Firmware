@@ -111,9 +111,9 @@ extern uint8_t gMenuCursor;
 extern int8_t gMenuScrollDirection;
 extern uint32_t gSubMenuSelection;
 #if defined (ENABLE_ROGERBEEP) && defined (ENABLE_MDC)
-extern const char gSubMenu_ROGER[10][9];
+extern const char gSubMenu_ROGER[11][9];
 #elif defined (ENABLE_ROGERBEEP) && !defined (ENABLE_MDC)
-extern const char gSubMenu_ROGER[9][9];
+extern const char gSubMenu_ROGER[10][9];
 #elif defined (ENABLE_MDC) && !defined (ENABLE_ROGERBEEP)
 extern const char gSubMenu_ROGER[2][4];
 #endif

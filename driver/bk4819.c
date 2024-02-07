@@ -1015,10 +1015,22 @@ void BK4819_PlayRoger(int t)
       BK4819_PlayBeep(1075, 60);
 	break;
 
-	case 7: //  // Baofeng UV-5RC
+	case 7: // Baofeng UV-5RC
       BK4819_PlayBeep(1120, 135);
       BK4819_PlayBeep(861, 200);
 	break;
+
+ 	case 8: // Mario Dies
+      BK4819_PlayBeep(494, 286/2);
+      BK4819_PlayBeep(698, 190/2);
+      BK4819_PlayBeep(0, 306/2);
+      BK4819_PlayBeep(698, 258/2);
+      BK4819_PlayBeep(698, 340/2);
+      BK4819_PlayBeep(659, 328/2);
+      BK4819_PlayBeep(587, 344/2);
+      BK4819_PlayBeep(523, 262/2);
+	break;
+
 	
 #endif	
 

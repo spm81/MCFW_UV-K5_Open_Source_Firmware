@@ -213,30 +213,31 @@ static const char gSubMenu_PONMSG[3][5] = {
 
 #if defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
 const char gSubMenu_ROGER[][9] = {
-    "OFF",
-    "DEFAULT",
+  "OFF",
+  "DEFAULT",
 	"MOTOTRBO",
-    "MOTO TPT",
+  "MOTO TPT",
 	"MOTO T40",
 	"MOTO T80",
 	"C.AM845",
 	"POLIZIA", // Thanks to IU0PUW , Roger Beep Italy Police
 	"B.UV-5RC",
+  "MARIO",
 	"MDC",
 };
 
 #elif defined (ENABLE_ROGERBEEP)
 const char gSubMenu_ROGER[][9] = {
-    "OFF",
-    "DEFAULT",
-	"MOTOTRBO",
-    "MOTO TPT",
-	"MOTO T40",
-	"MOTO T80",
-	"C.AM845",
-	"POLIZIA", // Thanks to IU0PUW , Roger Beep Italy Police
-	"B.UV-5RC",
-/*	"MARIO",*/
+  "OFF",
+  "DEFAULT",
+  "MOTOTRBO",
+  "MOTO TPT",
+  "MOTO T40",
+  "MOTO T80",
+  "C.AM845",
+  "POLIZIA", // Thanks to IU0PUW , Roger Beep Italy Police
+  "B.UV-5RC",
+  "MARIO",
 };
 
 #ifdef ENABLE_MESSENGER
