@@ -990,6 +990,7 @@ static void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     }
     gInputBoxIndex = 0;
   } else {
+	#ifdef ENABLE_ENCRYPTION	  
     if (edit_index != -1 && gMenuCursor == MENU_ENC_KEY) {
       if (edit_index < 10)
       {
@@ -1008,6 +1009,7 @@ static void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
       }
       return;
     }
+	#endif
     if (gMenuCursor == MENU_OFFSET) {
       uint32_t Frequency;
 

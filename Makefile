@@ -7,7 +7,7 @@ TARGET = firmware
 #======== STOCK QUANSHENG FERATURES ========#
 ENABLE_AIRCOPY 							:= 0
 # 3856 bytes
-ENABLE_FMRADIO							:= 0
+ENABLE_FMRADIO							:= 1
 # 84 bytes
 ENABLE_FLASHLIGHT_SOS       			:= 0
 ENABLE_UART                 			:= 1
@@ -18,14 +18,14 @@ ENABLE_DTMF_CALLING         			:= 0
 ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0
 # Keep this in stock options, and add option in mods for extra rogers
-ENABLE_ROGERBEEP            			:= 1
+ENABLE_ROGERBEEP            			:= 0
 ENABLE_MDC                  			:= 0
 
 #============== MODIFICATIONS =============#
 # AM Modulation Fix - 544 bytes
 ENABLE_AM_FIX 							:= 1
 # Apply fix to Spectrum - 40 bytes
-ENABLE_AM_FIX_ON_SPECTRUM				:= 1
+ENABLE_AM_FIX_ON_SPECTRUM				:= 0
 ENABLE_SQUELCH_MORE_SENSITIVE			:= 1
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 			:= 1
@@ -42,7 +42,7 @@ ENABLE_NOSCANTIMEOUT        			:= 1
 ENABLE_KEEPNAMEONSAVE       			:= 1
 ENABLE_FASTER_CHANNEL_SCAN  			:= 1
 # CW Modulation
-ENABLE_CW                   			:= 1
+ENABLE_CW                   			:= 0
 
 #============ EXTRA: MESSENGER ============# 
 ENABLE_MESSENGER            			:= 1
@@ -53,14 +53,18 @@ ENABLE_MESSENGER_SHOW_RX_FREQ			:= 1
 ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 # 156 bytes
 ENABLE_MESSENGER_UART					:= 1
-ENABLE_ENCRYPTION                       := 1
+# 3408 bytes
+ENABLE_ENCRYPTION                       := 0
+ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION := 0
 
 # ---- EXTRA: SPECTRUM ----
-ENABLE_SPECTRUM             			:= 0
+ENABLE_SPECTRUM             			:= 1
 ENABLE_SPECTRUM_NUNU           			:= 0
 SPECTRUM_AUTOMATIC_SQUELCH  			:= 1
 SPECTRUM_EXTRA_VALUES       			:= 1
+# 3568 bytes
 ENABLE_ALL_REGISTERS        			:= 0
+# 0 bytes
 ENABLE_MATOZ_KEYS           			:= 1
 
 # https://github.com/nicsure/QuanshengDock
@@ -69,14 +73,14 @@ ENABLE_MATOZ_KEYS           			:= 1
 ENABLE_DOCK                   			:= 0
 
 #Thanks to KD8CEC for sharing his code / We have to check the code better, i just code & paste it to the right places...
+# 1476 bytes
 ENABLE_LIVESEEK_MHZ_KEYPAD				:= 0
+
 
 # ---- DEBUGGING ----
 # ---- COMPILER/LINKER OPTIONS ----
 ENABLE_OVERLAY 							:= 0
 ENABLE_SWD 								:= 0
-
-
 
 
 
@@ -379,6 +383,9 @@ endif
 ifeq ($(ENABLE_ENCRYPTION),1)
 	CFLAGS  += -DENABLE_ENCRYPTION
 endif
+ifeq ($(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION),1)
+	CFLAGS += -DENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+endif
 ifeq ($(ENABLE_CW),1)
 	CFLAGS += -DENABLE_CW
 endif
@@ -447,3 +454,4 @@ clean:
 
 prog: all
 	$(K5PROG) firmware.bin
+	

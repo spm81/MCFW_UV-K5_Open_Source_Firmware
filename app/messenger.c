@@ -737,8 +737,9 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 						RADIO_SetTxParameters();
 						SYSTEM_DelayMs(500);
 						BK4819_ExitTxMute();
+					#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION	
 						BK4819_PlayRoger(99);
-			
+					#endif
 						// Transmit a message to the sender that we have received the message (Unless it's a service message)
 						if (dataPacket.data.payload[2] != 0x1b)
 						{

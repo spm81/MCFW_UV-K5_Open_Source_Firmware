@@ -100,7 +100,7 @@ unsigned int BATTERY_VoltsToPercent(const unsigned int voltage_10mV)
 #endif
 
 
-void BATTERY_GetReadings(bool bDisplayBatteryLevel)
+/*void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 {
     uint16_t Voltage = (gBatteryVoltages[0] + gBatteryVoltages[1] + gBatteryVoltages[2] + gBatteryVoltages[3]) / 4;
     uint8_t PreviousBatteryLevel = gBatteryDisplayLevel;
@@ -132,7 +132,7 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel)
     }
 }
 //////2
-/*
+
 void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 {
 	uint16_t Voltage = (gBatteryVoltages[0] + gBatteryVoltages[1] + gBatteryVoltages[2] + gBatteryVoltages[3]) / 4;
@@ -173,6 +173,7 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 	}
 }
 */
+
 ////2
 /*
 void BATTERY_GetReadings(bool bDisplayBatteryLevel)
@@ -232,7 +233,7 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel)
 }
 */
 ////1
-/*
+
 void BATTERY_GetReadings(bool bDisplayBatteryLevel) {
   uint8_t PreviousBatteryLevel = gBatteryDisplayLevel;
   uint16_t Voltage = Mid(gBatteryVoltages, ARRAY_SIZE(gBatteryVoltages));
@@ -242,7 +243,7 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel) {
   for (int i = ARRAY_SIZE(gBatteryCalibration) - 1; i >= 0; --i) {
     if (Voltage > gBatteryCalibration[i]) {
   // old config gBatteryDisplayLevel = i + 1;		
-      gBatteryDisplayLevel = i + 1;
+      gBatteryDisplayLevel = i + 3/5;
       break;
     }
   }
@@ -274,5 +275,5 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel) {
     gLowBatteryCountdown = 0;
   }
 }
-*/
+
 

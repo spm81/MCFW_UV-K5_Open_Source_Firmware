@@ -240,20 +240,19 @@ const char gSubMenu_ROGER[][9] = {
   "MARIO",
 };
 
-#ifdef ENABLE_MESSENGER
-	const char gSubMenu_MSG_MODULATION[][10] =
-	{
-		"AFSK 1.2K",
-		"FSK 700",
-    "FSK 450",
-		
-	};
-#endif
-
 #elif defined (ENABLE_MDC)
 const char gSubMenu_ROGER[][4] = {
 	"OFF",
     "MDC",
+};
+#endif
+
+#ifdef ENABLE_MESSENGER
+const char gSubMenu_MSG_MODULATION[3][10] =
+{
+    "AFSK 1.2K",
+    "FSK 700",
+    "FSK 450",
 };
 #endif
 

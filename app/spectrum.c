@@ -1593,7 +1593,8 @@ void APP_RunSpectrum() {
 
   RelaunchScan();
 
-  memset(rssiHistory, 0, 128);
+  //memset(rssiHistory, 0, 128);
+  memset(rssiHistory, 0, 128 * sizeof(*rssiHistory));
 
   isInitialized = true;
 
