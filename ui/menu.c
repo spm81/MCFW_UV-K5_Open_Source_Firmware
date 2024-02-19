@@ -26,7 +26,6 @@
 #include "../helper/battery.h"
 #include "../helper/measurements.h"
 #include "../misc.h"
-#include "../app/menu.h"
 #ifdef ENABLE_LCD_CONTRAST_OPTION
 #include "driver/st7565.h"
 #endif
@@ -322,8 +321,6 @@ void UI_DisplayMenu(void) {
 
   memset(String, 0, sizeof(String));
   bool already_printed = false;
-
-  MENU_ShowCurrentSetting();
 
   switch (gMenuCursor) {
   case MENU_SQL:

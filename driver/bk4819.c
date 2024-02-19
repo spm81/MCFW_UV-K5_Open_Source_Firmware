@@ -287,10 +287,22 @@ void BK4819_EnableVox(uint16_t VoxEnableThreshold,
   BK4819_WriteRegister(BK4819_REG_46, 0xA000 | (VoxEnableThreshold & 0x07FF));
   // 0x1800 is undocumented?
   BK4819_WriteRegister(BK4819_REG_79, 0x1800 | (VoxDisableThreshold & 0x07FF));
+  
+#ifdef ENABLE_VOX_MAX_DELAY
+ // Set VOX delay
+	// Bottom 12 bits are undocumented, 15:12 vox disable delay *128ms
+	// BK4819_WriteRegister(BK4819_REG_7A, 0x289A); // vox disable delay = 128*5 = 640ms
+	// max delay = F89A = 1920ms
+	// min delay = 089A = 0ms
+const uint16_t vox_delay_max = 0xF89A;
+BK4819_WriteRegister(BK4819_REG_7A, (0x289A & ~(0xF << 12)) | ((uint16_t)(vox_delay_max << 12)));
+#else  
   // Bottom 12 bits are undocumented, 15:12 vox disable delay *128ms
-  BK4819_WriteRegister(BK4819_REG_7A,
-                       0x289A); // vox disable delay = 128*5 = 640ms
-  // Enable VOX
+  BK4819_WriteRegister(BK4819_REG_7A, 0x289A); // vox disable delay = 128*5 = 640ms
+#endif 
+
+
+ // Enable VOX
   BK4819_WriteRegister(BK4819_REG_31, REG_31_Value | 4); // bit 2 - VOX Enable
 }
 

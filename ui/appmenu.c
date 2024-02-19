@@ -1,5 +1,5 @@
 #include "appmenu.h"
-
+#include "../app/menu.h"
 void UI_DisplayAppMenu() {
   UI_DisplayClear();
   
@@ -33,5 +33,5 @@ void UI_DisplayAppMenu() {
   ST7565_BlitFullScreen();
       
   gUpdateDisplay = true;
-
+  MENU_ShowCurrentSetting();
 }
