@@ -38,7 +38,7 @@
 	#include "app/uart.h"
 #endif
 
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 	#include "helper/crypto.h"
 #endif
 
@@ -76,7 +76,7 @@ static const char MenuList[][8] = {
     // 0x10
     "DualRx",
     "XBand",
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 	  "EncKey",
 	  "MsgEnc",
 #endif
@@ -426,7 +426,7 @@ void UI_DisplayMenu(void) {
 #ifdef ENABLE_DOCK
 	case MENU_REMOTE_UI:
 #endif
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
   case MENU_MSG_ENC:
 #endif
 #ifdef ENABLE_MESSENGER
@@ -588,7 +588,7 @@ case MENU_S_LIST:
     strcpy(String, gSubMenu_F_LOCK[gSubMenuSelection]);
     break;
 
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 				case MENU_ENC_KEY:
 				{
           //const unsigned int menu_item_x1    =  50;
@@ -645,7 +645,7 @@ case MENU_S_LIST:
 
   if ((gMenuCursor == MENU_RESET || gMenuCursor == MENU_MEM_CH ||
        gMenuCursor == MENU_DEL_CH
-        #ifdef ENABLE_ENCRYPTION
+        #ifdef ENABLE_MESSENGER_ENCRYPTION
           || gMenuCursor == MENU_ENC_KEY
         #endif
        ) &&

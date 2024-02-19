@@ -153,7 +153,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
   case MENU_200TX:
   case MENU_500TX:
   case MENU_SCREN:
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 		case MENU_MSG_ENC:
 #endif
 #ifdef ENABLE_MESSENGER
@@ -569,7 +569,7 @@ void MENU_AcceptSetting(void) {
     gFlagReconfigureVfos = true;
     return;
 
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 			case MENU_ENC_KEY:
 				memset(gEeprom.ENC_KEY, 0, sizeof(gEeprom.ENC_KEY));
 				memmove(gEeprom.ENC_KEY, edit, sizeof(gEeprom.ENC_KEY));
@@ -928,7 +928,7 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_SCREN:
     gSubMenuSelection = gSetting_ScrambleEnable;
     break;
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 			case MENU_MSG_ENC:
 				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.encrypt;
 				break;
@@ -990,7 +990,7 @@ static void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     }
     gInputBoxIndex = 0;
   } else {
-	#ifdef ENABLE_ENCRYPTION	  
+	#ifdef ENABLE_MESSENGER_ENCRYPTION	  
     if (edit_index != -1 && gMenuCursor == MENU_ENC_KEY) {
       if (edit_index < 10)
       {
@@ -1113,7 +1113,7 @@ static void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld) {
 
     } else {
 
-      #ifdef ENABLE_ENCRYPTION
+      #ifdef ENABLE_MESSENGER_ENCRYPTION
         if (gMenuCursor == MENU_ENC_KEY)
         {
           if (edit_index < 0)
@@ -1141,7 +1141,7 @@ static void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld) {
 
       if (gMenuCursor == MENU_RESET || gMenuCursor == MENU_MEM_CH ||
           gMenuCursor == MENU_DEL_CH
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
           || gMenuCursor == MENU_ENC_KEY
 #endif
           ) {
@@ -1202,7 +1202,7 @@ static void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld,
   uint8_t Channel;
   bool bCheckScanList;
 
-  #ifdef ENABLE_ENCRYPTION
+  #ifdef ENABLE_MESSENGER_ENCRYPTION
 
   if (gIsInSubMenu && edit_index >= 0 && gMenuCursor == MENU_ENC_KEY )
 	{	// change the character
@@ -1327,7 +1327,7 @@ void MENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     MENU_Key_STAR(bKeyPressed, bKeyHeld);
     break;
   case KEY_F:
-#ifdef ENABLE_ENCRYPTION  
+#ifdef ENABLE_MESSENGER_ENCRYPTION  
     if (edit_index >= 0 && gMenuCursor == MENU_ENC_KEY ) {
       if (!bKeyHeld && bKeyPressed)
       {

@@ -16,7 +16,7 @@
 #include "ui/ui.h"
 #include "ui/status.h"
 #include "frequencies.h"
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 #include "helper/crypto.h"
 #endif
 #ifdef ENABLE_MESSENGER_UART
@@ -579,7 +579,7 @@ void MSG_Send(const char txMessage[TX_MSG_LENGTH], bool bServiceMessage)
 			if (bServiceMessage) {
 				dataPacket.data.header=ACK_PACKET;
 			} else {
-			#ifdef ENABLE_ENCRYPTION
+			#ifdef ENABLE_MESSENGER_ENCRYPTION
 				if(gEeprom.MESSENGER_CONFIG.data.encrypt) {
 					dataPacket.data.header=ENCRYPTED_MESSAGE_PACKET;
 				} else {
@@ -606,7 +606,7 @@ void MSG_Send(const char txMessage[TX_MSG_LENGTH], bool bServiceMessage)
 				memset(cMessage, 0, sizeof(cMessage));
 			}			
 
-			#ifdef ENABLE_ENCRYPTION
+			#ifdef ENABLE_MESSENGER_ENCRYPTION
 			if(dataPacket.data.header == ENCRYPTED_MESSAGE_PACKET){
 				
 				CRYPTO_Random(dataPacket.data.nonce, NONCE_LENGTH);
@@ -692,7 +692,7 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 		if (gFSKWriteIndex > 2)
 		{
 
-			#ifdef ENABLE_ENCRYPTION
+			#ifdef ENABLE_MESSENGER_ENCRYPTION
 			if(dataPacket.data.header == ENCRYPTED_MESSAGE_PACKET) {
 				CRYPTO_Crypt(dataPacket.data.payload,
 					TX_MSG_LENGTH,
@@ -778,7 +778,7 @@ void MSG_Init()
 	prevKey = 0;
 	prevLetter = 0;
 	cIndex = 0;
-	#ifdef ENABLE_ENCRYPTION
+	#ifdef ENABLE_MESSENGER_ENCRYPTION
 		gRecalculateEncKey = true;
 	#endif
 }

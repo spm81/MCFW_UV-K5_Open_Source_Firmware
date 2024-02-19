@@ -223,7 +223,7 @@ uint8_t LCD_CONTRAST;
 	uint8_t field79_0x97;
 	VFO_Info_t VfoInfo[2];
 
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 	char                  ENC_KEY[16];
 #endif
 #ifdef ENABLE_MESSENGER
@@ -240,7 +240,7 @@ void SETTINGS_SaveSettings(void);
 void SETTINGS_SaveChannel(uint8_t Channel, uint8_t VFO, const VFO_Info_t *pVFO, uint8_t Mode);
 void SETTINGS_UpdateChannel(uint8_t Channel, const VFO_Info_t *pVFO, bool bUpdate);
 void GetChannelName(uint8_t num, char *name);
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 	void SETTINGS_SaveEncryptionKey();
 	void SETTINGS_ClearEncryptionKey();
 #endif

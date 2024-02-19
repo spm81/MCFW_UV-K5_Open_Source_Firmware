@@ -740,7 +740,7 @@ for (int i = 0; i < 2; i++) {
 	// 0F30..0F3F
 	//EEPROM_ReadBuffer(0x0F30, gCustomAesKey, sizeof(gCustomAesKey));
 
-	#ifdef ENABLE_ENCRYPTION
+	#ifdef ENABLE_MESSENGER_ENCRYPTION
 		// 0F30..0F3F - load encryption key
 		EEPROM_ReadBuffer(0x0F30, gEeprom.ENC_KEY, sizeof(gEeprom.ENC_KEY));
 	#endif

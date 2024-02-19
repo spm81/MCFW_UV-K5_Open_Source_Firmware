@@ -157,12 +157,20 @@ void Main(void) {
 		gMenuListCount = 38;
 #endif	
 #if defined(ENABLE_LCD_CONTRAST_OPTION)
-  gMenuListCount += 1;
+	gMenuListCount += 1;
 #endif
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
     gMenuListCount++;
 #endif
-
+#ifdef ENABLE_DOCK
+    gMenuListCount++;
+#endif
+#ifdef ENABLE_MESSENGER
+    gMenuListCount += 2;
+#endif
+#ifdef ENABLE_MESSENGER_ENCRYPTION
+    gMenuListCount += 2;
+#endif
     BootMode = BOOT_GetMode();
     if (gEeprom.POWER_ON_PASSWORD < 1000000) {
       bIsInLockScreen = true;

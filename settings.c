@@ -28,7 +28,7 @@
 #include "app/ceccommon.h"
 #endif
 
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 	#include "helper/crypto.h"
 #endif
 
@@ -81,7 +81,7 @@ void SETTINGS_SaveVfoIndices(void)
 	EEPROM_WriteBuffer(0x0E80, State);
 }
 
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 void SETTINGS_SaveEncryptionKey()
 {	
 	EEPROM_WriteBuffer(0x0F30, gEeprom.ENC_KEY);
@@ -223,7 +223,7 @@ void SETTINGS_SaveSettings(void)
 	//END OF KD8CEC WORK ============================		
 #endif	
 	
-#ifdef ENABLE_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 	SETTINGS_SaveEncryptionKey();
 #endif
 

@@ -148,7 +148,15 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
     gMenuListCount++;
 #endif
-
+#ifdef ENABLE_DOCK
+    gMenuListCount++;
+#endif
+#ifdef ENABLE_MESSENGER
+    gMenuListCount += 2;
+#endif
+#ifdef ENABLE_MESSENGER_ENCRYPTION
+    gMenuListCount += 2;
+#endif
 
 		//gMenuListCount = MENU_ITEMS_COUNT;
 		gF_LOCK = true;

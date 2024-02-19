@@ -9,7 +9,7 @@ ENABLE_AIRCOPY 							:= 0
 # 3856 bytes
 ENABLE_FMRADIO							:= 1
 # 84 bytes
-ENABLE_FLASHLIGHT_SOS       			:= 0
+ENABLE_FLASHLIGHT_SOS       			:= 1
 ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 # Bause we can cut more... - 4108 bytes
@@ -54,8 +54,9 @@ ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 # 156 bytes
 ENABLE_MESSENGER_UART					:= 1
 # 3408 bytes
-ENABLE_ENCRYPTION                       := 0
-ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION := 0
+ENABLE_MESSENGER_ENCRYPTION             := 0
+# 140 bytes
+ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION := 1
 
 # ---- EXTRA: SPECTRUM ----
 ENABLE_SPECTRUM             			:= 1
@@ -195,7 +196,7 @@ endif
 ifeq ($(ENABLE_MESSENGER),1)
 	OBJS += ui/messenger.o
 endif
-ifeq ($(ENABLE_ENCRYPTION),1)
+ifeq ($(ENABLE_MESSENGER_ENCRYPTION),1)
 	OBJS += external/chacha/chacha.o
 	OBJS += helper/crypto.o
 endif
@@ -380,8 +381,8 @@ endif
 ifeq ($(ENABLE_MESSENGER_UART),1)
 	CFLAGS += -DENABLE_MESSENGER_UART
 endif
-ifeq ($(ENABLE_ENCRYPTION),1)
-	CFLAGS  += -DENABLE_ENCRYPTION
+ifeq ($(ENABLE_MESSENGER_ENCRYPTION),1)
+	CFLAGS  += -DENABLE_MESSENGER_ENCRYPTION
 endif
 ifeq ($(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION),1)
 	CFLAGS += -DENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
