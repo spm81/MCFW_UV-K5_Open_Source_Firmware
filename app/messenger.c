@@ -738,7 +738,9 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 						SYSTEM_DelayMs(500);
 						BK4819_ExitTxMute();
 					#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION	
+					if(gEeprom.MESSENGER_CONFIG.data.notification) {
 						BK4819_PlayRoger(99);
+					}
 					#endif
 						// Transmit a message to the sender that we have received the message (Unless it's a service message)
 						if (dataPacket.data.payload[2] != 0x1b)
@@ -746,6 +748,24 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 							MSG_Send("\x1b\x1b\x1bRCVD                       ", true);
 						}
 					}
+
+					#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION	
+					
+					if(!gEeprom.MESSENGER_CONFIG.data.ack && gEeprom.MESSENGER_CONFIG.data.notification) {
+						BK4819_DisableDTMF();
+						RADIO_SetTxParameters();
+						SYSTEM_DelayMs(500);
+						BK4819_ExitTxMute();
+						BK4819_PlayRoger(99);
+					}
+					#endif
+					
+					
+					
+					
+					
+					
+
 				}
 
 			}

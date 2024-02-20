@@ -82,6 +82,9 @@ static const char MenuList[][8] = {
 #endif
 #ifdef ENABLE_MESSENGER
 	  "MsgAck",
+			#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+				"MsgRBN",
+			#endif
 	  "MsgMod",
 #endif    
     "Beep",
@@ -431,6 +434,9 @@ void UI_DisplayMenu(void) {
 #endif
 #ifdef ENABLE_MESSENGER
   case MENU_MSG_ACK:
+	#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+		case MENU_MSG_NOTIFICATION:
+	#endif	
 #endif
   case MENU_BCL:
   case MENU_BEEP:

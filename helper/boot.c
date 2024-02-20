@@ -153,6 +153,9 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 #endif
 #ifdef ENABLE_MESSENGER
     gMenuListCount += 2;
+		#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+			    gMenuListCount++;
+		#endif
 #endif
 #ifdef ENABLE_MESSENGER_ENCRYPTION
     gMenuListCount += 2;

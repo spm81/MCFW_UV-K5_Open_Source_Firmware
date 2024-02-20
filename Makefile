@@ -18,7 +18,7 @@ ENABLE_DTMF_CALLING         			:= 0
 ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0
 # Keep this in stock options, and add option in mods for extra rogers
-ENABLE_ROGERBEEP            			:= 1
+ENABLE_ROGERBEEP            			:= 0
 ENABLE_MDC                  			:= 0
 
 #============== MODIFICATIONS =============#
@@ -56,7 +56,7 @@ ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 # 156 bytes
 ENABLE_MESSENGER_UART					:= 1
 # 3408 bytes
-ENABLE_MESSENGER_ENCRYPTION             := 1
+ENABLE_MESSENGER_ENCRYPTION             := 0
 # 140 bytes
 ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION := 1
 
