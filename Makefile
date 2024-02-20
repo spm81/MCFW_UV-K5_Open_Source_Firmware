@@ -43,8 +43,8 @@ ENABLE_VOX_MAX_DELAY					:= 1
 ENABLE_NOSCANTIMEOUT        			:= 1
 ENABLE_KEEPNAMEONSAVE       			:= 1
 ENABLE_FASTER_CHANNEL_SCAN  			:= 1
-# Enable Timeout beep at the end of timeout - 56 bytes
-ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION   := 0
+# Enable Timeout beep at the end of timeout - 44 bytes
+ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION   := 1
 # CW Modulation
 ENABLE_CW                   			:= 0
 
