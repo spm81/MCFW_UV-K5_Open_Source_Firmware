@@ -25,8 +25,8 @@ typedef union {
   struct {
     uint8_t      
 	  unused0    	:1,
-      ack        	:1, // determines whether the radio will automatically respond to messages with ACK
 	  notification	:1, // determines whether the radio will automatically respond to messages with Roger Notification
+      ack        	:1, // determines whether the radio will automatically respond to messages with ACK
       encrypt    	:1, // determines whether outgoing messages will be encrypted
       unused1    	:1,
       modulation 	:2, // determines FSK modulation type

@@ -156,18 +156,19 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
 #ifdef ENABLE_MESSENGER_ENCRYPTION
 		case MENU_MSG_ENC:
 #endif
+#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+		case MENU_MSG_NOTIFICATION:
+#endif	
 #ifdef ENABLE_MESSENGER
 		case MENU_MSG_ACK:
 #endif
-#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
-		case MENU_MSG_NOTIFICATION:
-#endif		
+	
     //*pMin = 0;
     *pMax = 1;
     break;
 #ifdef ENABLE_MESSENGER
 		case MENU_MSG_MODULATION:
-			*pMin = 0;
+			//*pMin = 0;
 			*pMax = ARRAY_SIZE(gSubMenu_MSG_MODULATION) - 1;
 			break;
 #endif    
@@ -942,18 +943,17 @@ void MENU_ShowCurrentSetting(void) {
 		#endif
 
 		#ifdef ENABLE_MESSENGER
-
 			case MENU_MSG_ACK:
 				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.ack;
+				break;
+			case MENU_MSG_MODULATION:
+				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.modulation;
 				break;
 			#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
 				case MENU_MSG_NOTIFICATION:
 				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.notification;
 				break;
-			#endif	
-			case MENU_MSG_MODULATION:
-				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.modulation;
-				break;
+			#endif				
 		#endif
         
 #ifdef ENABLE_STATUS_BATTERY_PERC	

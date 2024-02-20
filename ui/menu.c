@@ -70,22 +70,22 @@ static const char MenuList[][8] = {
     #ifdef ENABLE_LCD_INVERT_OPTION
     "Invert",
     #endif*/
-    #ifdef ENABLE_LCD_CONTRAST_OPTION
+#ifdef ENABLE_LCD_CONTRAST_OPTION
     "Contras",
-    #endif
+#endif
     // 0x10
     "DualRx",
     "XBand",
 #ifdef ENABLE_MESSENGER_ENCRYPTION
-	  "EncKey",
-	  "MsgEnc",
+    "EncKey",
+	"MsgEnc",
 #endif
 #ifdef ENABLE_MESSENGER
-	  "MsgAck",
-			#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
-				"MsgRBN",
-			#endif
-	  "MsgMod",
+	"MsgAck",
+	"MsgMod",
+	#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+	"MsgRBN",
+	#endif	
 #endif    
     "Beep",
     "TxTime",
@@ -251,8 +251,7 @@ const char gSubMenu_ROGER[][4] = {
 #endif
 
 #ifdef ENABLE_MESSENGER
-const char gSubMenu_MSG_MODULATION[3][10] =
-{
+const char gSubMenu_MSG_MODULATION[3][10] = {
     "AFSK 1.2K",
     "FSK 700",
     "FSK 450",
@@ -271,7 +270,7 @@ const char gSubMenuBacklight[8][7] = {"OFF",   "5 sec", "10 sec", "20 sec",
                                       "1 min", "2 min", "ON"};
 
 static const char *defaultEnableDisable[3] = {"DEFAULT", "ENABLE", "DISABLE"};
-static const char *offOn[3] = {"OFF", "ON"};
+static const char *offOn[2] = {"OFF", "ON"};
 static const char *upconverterFreqNames[7] = {"OFF", "50M", "70M", "106M", "125M", "140M", "200M"};
 bool gIsInSubMenu;
 
@@ -427,16 +426,16 @@ void UI_DisplayMenu(void) {
     break;
 
 #ifdef ENABLE_DOCK
-	case MENU_REMOTE_UI:
+  case MENU_REMOTE_UI:
 #endif
 #ifdef ENABLE_MESSENGER_ENCRYPTION
   case MENU_MSG_ENC:
 #endif
 #ifdef ENABLE_MESSENGER
-  case MENU_MSG_ACK:
 	#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
 		case MENU_MSG_NOTIFICATION:
-	#endif	
+	#endif
+  case MENU_MSG_ACK:	
 #endif
   case MENU_BCL:
   case MENU_BEEP:
