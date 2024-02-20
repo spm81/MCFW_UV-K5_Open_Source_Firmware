@@ -19,7 +19,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#ifdef ENABLE_AM_FIX
+#if defined(ENABLE_AM_FIX) || defined(ENABLE_AM_FIX_ON_SPECTRUM)
 	extern int16_t rssi_gain_diff[2];
 
 	void AM_fix_init(void);

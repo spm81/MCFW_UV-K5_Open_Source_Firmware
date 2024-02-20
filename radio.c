@@ -388,6 +388,7 @@ void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo) {
     pInfo->SquelchOpenRSSIThresh = 0x00;
     pInfo->SquelchOpenNoiseThresh = 0x7F;
     pInfo->SquelchCloseGlitchThresh = 0xFF;
+	
     pInfo->SquelchCloseRSSIThresh = 0x00;
     pInfo->SquelchCloseNoiseThresh = 0x7F;
     pInfo->SquelchOpenGlitchThresh = 0xFF;
@@ -400,7 +401,6 @@ void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo) {
     EEPROM_ReadBuffer(Base + 0x40, &pInfo->SquelchCloseGlitchThresh, 1);
     EEPROM_ReadBuffer(Base + 0x50, &pInfo->SquelchOpenGlitchThresh, 1);
 
-		#if ENABLE_SQUELCH_MORE_SENSITIVE
 
 		uint16_t rssi_open    = pInfo->SquelchOpenRSSIThresh;
 		uint16_t rssi_close   = pInfo->SquelchCloseRSSIThresh;
@@ -408,6 +408,8 @@ void RADIO_ConfigureSquelchAndOutputPower(VFO_Info_t *pInfo) {
 		uint16_t noise_close  = pInfo->SquelchCloseNoiseThresh;
 		uint16_t glitch_open  = pInfo->SquelchOpenGlitchThresh;
 		uint16_t glitch_close = pInfo->SquelchCloseGlitchThresh;
+
+		#if ENABLE_SQUELCH_MORE_SENSITIVE
 
 			// make squelch a little more sensitive
 			//

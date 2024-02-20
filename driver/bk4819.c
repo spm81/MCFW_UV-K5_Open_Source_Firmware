@@ -177,6 +177,7 @@ void BK4819_WriteU16(uint16_t Data) {
   }
 }
 
+/* //OLD CONFIG
 void BK4819_SetAGC(uint8_t Value) {
   if (Value == 0) {
     BK4819_WriteRegister(BK4819_REG_13, 0x03BE);
@@ -201,11 +202,96 @@ void BK4819_SetAGC(uint8_t Value) {
     for (i = 0; i < 8; i++) {
       BK4819_WriteRegister(0x06, (i & 7) << 13 | 0x4A << 7 | 0x36);
     }
-    /* for (i = 0; i < 8; i++) {
-      BK4819_WriteRegister(BK4819_REG_06, ((i << 13) | 0x2500U) + 0x36U);
-    } */
+    // for (i = 0; i < 8; i++) {
+    //  BK4819_WriteRegister(BK4819_REG_06, ((i << 13) | 0x2500U) + 0x36U);
+   // } 
   }
 }
+
+
+//////////////////////
+void BK4819_SetAGC(uint8_t Value) {
+  BK4819_WriteRegister(BK4819_REG_13, 0x03BE);
+  BK4819_WriteRegister(BK4819_REG_12, 0x037B + (Value == 1));
+  BK4819_WriteRegister(BK4819_REG_11, 0x027B);
+  BK4819_WriteRegister(BK4819_REG_10, 0x007A);
+  BK4819_WriteRegister(BK4819_REG_14, 0x0019 - (Value == 1));
+  BK4819_WriteRegister(BK4819_REG_49, 0x2A38);
+  BK4819_WriteRegister(BK4819_REG_7B, 0x8420 + (Value == 1) * 0x476C);
+
+  if (Value == 1) {
+    BK4819_WriteRegister(BK4819_REG_7C, 0x595E);
+    BK4819_WriteRegister(BK4819_REG_20, 0x8DEF);
+    for (uint8_t i = 0; i < 8; i++) {
+      BK4819_WriteRegister(0x06, (i << 13) | 0x4A << 7 | 0x36);
+    }
+  }
+}
+
+
+
+void BK4819_SetAGC(uint8_t Value) {
+  uint16_t regVal = BK4819_ReadRegister(BK4819_REG_7E);
+  uint16_t enable = (Value != 0);
+
+  if (!((regVal & (1 << 15)) == enable))
+    return;
+
+  BK4819_WriteRegister(BK4819_REG_7E, (regVal & ~(1 << 15) & ~(0b111 << 12)) 
+                                    | (!enable << 15)   
+                                    | (0b100 << 12) );
+
+  if (Value == 0) {
+    BK4819_WriteRegister(BK4819_REG_7B, 0x318C);
+    BK4819_WriteRegister(BK4819_REG_7C, 0x595E);
+    BK4819_WriteRegister(BK4819_REG_20, 0x8DEF);
+    for (uint8_t i = 0; i < 8; i++) {
+      BK4819_WriteRegister(0x06, (i & 7) << 13 | 0x4A << 7 | 0x36);
+    }
+  }
+}
+
+
+void BK4819_SetAGC(uint8_t Value) {
+  uint16_t regVal = BK4819_ReadRegister(BK4819_REG_7E);
+  uint16_t enable = (Value != 0);
+
+  if (!((regVal & (1 << 15)) == enable))
+    return;
+
+  BK4819_WriteRegister(BK4819_REG_7E, (regVal & ~(1 << 15) & ~(0b111 << 12)) 
+                                    | (!enable << 15)   
+                                    | (0b100 << 12) );
+
+  // if (enable) {
+  //   BK4819_WriteRegister(BK4819_REG_7B, 0x8420);
+  // } else {
+  //   BK4819_WriteRegister(BK4819_REG_7B, 0x318C);
+  //   BK4819_WriteRegister(BK4819_REG_7C, 0x595E);
+  //   BK4819_WriteRegister(BK4819_REG_20, 0x8DEF);
+  //   for (uint8_t i = 0; i < 8; i++) {
+  //     BK4819_WriteRegister(0x06, (i & 7) << 13 | 0x4A << 7 | 0x36);
+  //   }
+  // }
+  }
+*/
+
+void BK4819_SetAGC(uint8_t Value) {
+  uint16_t regVal = BK4819_ReadRegister(BK4819_REG_7E);
+  uint16_t enable = (Value != 0);
+
+  if (enable) {
+    if (!(regVal & (1 << 15))) {
+      BK4819_WriteRegister(BK4819_REG_7E, ((regVal | (1 << 15)) & ~(0b111 << 12))); 
+    }
+  } else {
+    if (regVal & (1 << 15)) {
+      BK4819_WriteRegister(BK4819_REG_7E, (regVal & ~(1 << 15) & ~(0b111 << 12))); 
+    }
+  }
+}
+
+
 
 void BK4819_ToggleGpioOut(BK4819_GPIO_PIN_t Pin, bool bSet) {
   if (bSet) {

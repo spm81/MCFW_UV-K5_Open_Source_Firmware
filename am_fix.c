@@ -30,7 +30,8 @@
 #include "misc.h"
 #include "radio.h"
 
-#ifdef ENABLE_AM_FIX
+#if defined(ENABLE_AM_FIX) || defined(ENABLE_AM_FIX_ON_SPECTRUM)
+
 
 typedef struct {
   uint16_t reg_val;

@@ -18,26 +18,27 @@ ENABLE_DTMF_CALLING         			:= 0
 ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0
 # Keep this in stock options, and add option in mods for extra rogers
-ENABLE_ROGERBEEP            			:= 0
+ENABLE_ROGERBEEP            			:= 1
 ENABLE_MDC                  			:= 0
 
 #============== MODIFICATIONS =============#
 # AM Modulation Fix - 544 bytes
 ENABLE_AM_FIX 							:= 1
 # Apply fix to Spectrum - 40 bytes
-ENABLE_AM_FIX_ON_SPECTRUM				:= 0
-ENABLE_SQUELCH_MORE_SENSITIVE			:= 1
+ENABLE_AM_FIX_ON_SPECTRUM				:= 1
+ENABLE_SQUELCH_MORE_SENSITIVE			:= 0
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 			:= 1
 # Battery percentage - 296 bytes
 ENABLE_STATUS_BATTERY_PERC  			:= 1
 # Show current while charging - 136 bytes Thanks Tunas1337
-ENABLE_BATTERY_CHARGING					:= 0
+ENABLE_BATTERY_CHARGING					:= 1
 # Invert LCD Colors
 ENABLE_LCD_INVERT_OPTION				:= 0 
 #ENABLE_LCD_CONTRAST_OPTION 		 	:= 0 # WIP
 # Mic Gain Bar while TXing - 255 bytes
 ENABLE_MIC_PLUS_GAIN_BAR_TX 			:= 1
+# Enable Vox 1920ms(max) delay - 0 bytes
 ENABLE_VOX_MAX_DELAY					:= 1
 ENABLE_NOSCANTIMEOUT        			:= 1
 ENABLE_KEEPNAMEONSAVE       			:= 1
@@ -55,7 +56,7 @@ ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 # 156 bytes
 ENABLE_MESSENGER_UART					:= 1
 # 3408 bytes
-ENABLE_MESSENGER_ENCRYPTION             := 0
+ENABLE_MESSENGER_ENCRYPTION             := 1
 # 140 bytes
 ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION := 1
 
@@ -147,6 +148,9 @@ endif
 # Main
 OBJS += app/action.o
 ifeq ($(ENABLE_AM_FIX),1)
+OBJS += am_fix.o
+endif
+ifeq ($(ENABLE_AM_FIX_ON_SPECTRUM),1)
 OBJS += am_fix.o
 endif
 ifeq ($(ENABLE_AIRCOPY),1)
