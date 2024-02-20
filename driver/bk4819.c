@@ -1135,6 +1135,16 @@ void BK4819_PlayRoger(int t)
 	
 #endif	
 
+#ifdef ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION
+
+    case 98: // TIMEOUT ROGER BEEP
+      BK4819_PlayBeep(500, 60);  // Frequency and duration can be adjusted
+      BK4819_PlayBeep(0, 30);
+      BK4819_PlayBeep(500, 60);
+      BK4819_PlayBeep(0, 30);
+      BK4819_PlayBeep(500, 60);
+	break;  
+#endif	
 #ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
     case 99: // NOKIA SMS Tone2
       BK4819_PlayBeep(800, 200);  // Frequency and duration can be adjusted

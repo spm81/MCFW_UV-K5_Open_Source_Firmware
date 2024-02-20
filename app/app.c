@@ -706,6 +706,9 @@ void APP_Update(void) {
   if (gCurrentFunction == FUNCTION_TRANSMIT && gTxTimeoutReached) {
     gTxTimeoutReached = false;
     gFlagEndTransmission = true;
+#ifdef ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION	
+	BK4819_PlayRoger(98);
+#endif	
     APP_EndTransmission();
     AUDIO_PlayBeep(BEEP_500HZ_60MS_DOUBLE_BEEP);
     RADIO_SetVfoState(VFO_STATE_TIMEOUT);
