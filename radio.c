@@ -927,11 +927,7 @@ void RADIO_SendEndOfTransmission(void) {
   } else if (gEeprom.ROGER == ROGER_MODE_MDC) {
     BK4819_PlayRogerMDC();
   }
-  
-  
-  
-  	ROGER_MODE_UV5RC,
-	
+
 #elif defined (ENABLE_ROGERBEEP) && !defined (ENABLE_MDC)
   if (gEeprom.ROGER == ROGER_MODE_DEFAULT) {
   BK4819_PlayRoger(0);

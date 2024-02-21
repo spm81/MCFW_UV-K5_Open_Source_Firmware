@@ -22,7 +22,7 @@ ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0
 # Keep this in stock options, and add option in mods for extra rogers
 ENABLE_ROGERBEEP            			:= 1
-ENABLE_MDC                  			:= 0
+ENABLE_MDC                  			:= 1
 
 #============== MODIFICATIONS =============#
 # AM Modulation Fix - 544 bytes
@@ -33,7 +33,7 @@ ENABLE_SQUELCH_MORE_SENSITIVE			:= 0
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 			:= 1
 # Battery percentage - 296 bytes
-ENABLE_STATUS_BATTERY_PERC  			:= 0
+ENABLE_STATUS_BATTERY_PERC  			:= 1
 # Show current while charging - 136 bytes Thanks Tunas1337
 ENABLE_BATTERY_CHARGING					:= 0
 # Invert LCD Colors
