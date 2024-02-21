@@ -4,6 +4,8 @@
 
 TARGET = firmware
 
+ENABLE_LTO                       := 1
+
 #======== STOCK QUANSHENG FERATURES ========#
 ENABLE_AIRCOPY 							:= 0
 # 3856 bytes
@@ -18,7 +20,7 @@ ENABLE_DTMF_CALLING         			:= 0
 ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0
 # Keep this in stock options, and add option in mods for extra rogers
-ENABLE_ROGERBEEP            			:= 0
+ENABLE_ROGERBEEP            			:= 1
 ENABLE_MDC                  			:= 0
 
 #============== MODIFICATIONS =============#
@@ -30,9 +32,9 @@ ENABLE_SQUELCH_MORE_SENSITIVE			:= 0
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 			:= 1
 # Battery percentage - 296 bytes
-ENABLE_STATUS_BATTERY_PERC  			:= 1
+ENABLE_STATUS_BATTERY_PERC  			:= 0
 # Show current while charging - 136 bytes Thanks Tunas1337
-ENABLE_BATTERY_CHARGING					:= 1
+ENABLE_BATTERY_CHARGING					:= 0
 # Invert LCD Colors
 ENABLE_LCD_INVERT_OPTION				:= 0 
 #ENABLE_LCD_CONTRAST_OPTION 		 	:= 0 # WIP
@@ -58,7 +60,7 @@ ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 # 156 bytes
 ENABLE_MESSENGER_UART					:= 1
 # 3408 bytes
-ENABLE_MESSENGER_ENCRYPTION             := 0
+ENABLE_MESSENGER_ENCRYPTION             := 1
 # 140 bytes
 ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION := 1
 
@@ -86,6 +88,7 @@ ENABLE_LIVESEEK_MHZ_KEYPAD				:= 0
 # ---- COMPILER/LINKER OPTIONS ----
 ENABLE_OVERLAY 							:= 0
 ENABLE_SWD 								:= 0
+
 
 
 
@@ -278,6 +281,9 @@ endif
 CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-delete-null-pointer-checks -std=c11 -MMD
 CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
+CFLAGS += --specs=nano.specs
+CFLAGS += -flto
+
 
 ifeq ($(ENABLE_DOCK),1)
 	CFLAGS += -DENABLE_DOCK
@@ -352,6 +358,9 @@ ifeq ($(ENABLE_UART),1)
 	CFLAGS += -DENABLE_UART
 endif
 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld
+##LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld,--gc-sections
+LDFLAGS += --specs=nano.specs
+LDFLAGS += -flto
 ifeq ($(ENABLE_NOSCANTIMEOUT),1)
 	CFLAGS += -DENABLE_NOSCANTIMEOUT
 endif
