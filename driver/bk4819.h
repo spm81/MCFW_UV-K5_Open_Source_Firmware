@@ -150,7 +150,7 @@ void BK4819_PrepareFSKReceive(void);
 void BK4819_PlayBeep(const uint16_t freq, const int delay);
 
 
-#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER)
+#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER) || defined(ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION)
 void BK4819_PlayRoger(int);
 #endif
 #if defined(ENABLE_MDC)

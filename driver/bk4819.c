@@ -1041,7 +1041,7 @@ void BK4819_EnterExitTxMuteSequence3(void) {
 }
 */
 
-#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION)
+#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION) || defined(ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION)
 void BK4819_PlayBeep(const uint16_t freq, const int delay)
 {
 	BK4819_WriteRegister(BK4819_REG_71, scale_freq(freq));

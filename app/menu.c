@@ -156,7 +156,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
 #ifdef ENABLE_MESSENGER_ENCRYPTION
 		case MENU_MSG_ENC:
 #endif
-#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+#if defined (ENABLE_MESSENGER) && defined(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION)
 		case MENU_MSG_NOTIFICATION:
 #endif	
 #ifdef ENABLE_MESSENGER
@@ -573,7 +573,8 @@ void MENU_AcceptSetting(void) {
     gFlagReconfigureVfos = true;
     return;
 
-#ifdef ENABLE_MESSENGER_ENCRYPTION
+#ifdef ENABLE_MESSENGER
+	#ifdef ENABLE_MESSENGER_ENCRYPTION
 			case MENU_ENC_KEY:
 				memset(gEeprom.ENC_KEY, 0, sizeof(gEeprom.ENC_KEY));
 				memmove(gEeprom.ENC_KEY, edit, sizeof(gEeprom.ENC_KEY));
@@ -588,9 +589,9 @@ void MENU_AcceptSetting(void) {
         //  SETTINGS_ClearEncryptionKey();
         //}
 				break;
-		#endif
+	#endif
 
-		#ifdef ENABLE_MESSENGER
+		
 			#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
 				case MENU_MSG_NOTIFICATION:
 				gEeprom.MESSENGER_CONFIG.data.notification = gSubMenuSelection;
@@ -602,9 +603,8 @@ void MENU_AcceptSetting(void) {
 
 			case MENU_MSG_MODULATION:
 				gEeprom.MESSENGER_CONFIG.data.modulation = gSubMenuSelection;
-				break;
-		#endif    
-
+				break;   
+#endif
   default:
     return;
   }
@@ -936,13 +936,14 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_SCREN:
     gSubMenuSelection = gSetting_ScrambleEnable;
     break;
+#ifdef ENABLE_MESSENGER	
 #ifdef ENABLE_MESSENGER_ENCRYPTION
 			case MENU_MSG_ENC:
 				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.encrypt;
 				break;
-		#endif
+#endif
 
-		#ifdef ENABLE_MESSENGER
+		
 			case MENU_MSG_ACK:
 				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.ack;
 				break;
@@ -954,7 +955,7 @@ void MENU_ShowCurrentSetting(void) {
 				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.notification;
 				break;
 			#endif				
-		#endif
+#endif
         
 #ifdef ENABLE_STATUS_BATTERY_PERC	
   case MENU_BATTYP:
