@@ -4,7 +4,8 @@
 
 TARGET = firmware
 
-ENABLE_LTO                       := 1
+#This is not being used anywhere
+#ENABLE_LTO                       := 1
 
 #======== STOCK QUANSHENG FERATURES ========#
 ENABLE_AIRCOPY 							:= 0
