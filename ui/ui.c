@@ -35,8 +35,9 @@
 #include "ui/menu.h"
 #include "ui/scanner.h"
 #include "ui/ui.h"
+#ifdef ENABLE_SCANLIST
 #include "../apps/scanlist.h"
-
+#endif
 GUI_DisplayType_t gScreenToDisplay;
 GUI_DisplayType_t gRequestDisplayScreen = DISPLAY_INVALID;
 
@@ -51,9 +52,11 @@ void UI_DisplayApp(void) {
   	case APP_NONE:
     	// TODO: maybe more vfo info
     	break;
+#ifdef ENABLE_SCANLIST
     case APP_SCANLIST:
     	SCANLIST_render();
 		break;
+#endif		
 #ifdef ENABLE_MESSENGER
 	case APP_MESSENGER:
         UI_DisplayMSG();
@@ -67,10 +70,24 @@ void UI_DisplayApp(void) {
 void GUI_DisplayScreen(void) {
   switch (gScreenToDisplay) {
   case DISPLAY_MAIN:
+#if defined (ENABLE_SCANLIST) && defined (ENABLE_MESSENGER)  
     if (gAppToDisplay != APP_SCANLIST && gAppToDisplay != APP_MESSENGER) {
       UI_DisplayMain();
     }
-
+#endif
+#if !defined (ENABLE_SCANLIST) && defined (ENABLE_MESSENGER)  
+    if (gAppToDisplay != APP_MESSENGER) {
+      UI_DisplayMain();
+    }
+#endif
+#if defined (ENABLE_SCANLIST) && !defined (ENABLE_MESSENGER)  
+    if (gAppToDisplay != APP_SCANLIST && gAppToDisplay) {
+      UI_DisplayMain();
+    }
+#else
+          UI_DisplayMain();
+    
+#endif	
     UI_DisplayApp();
     break;
 #if defined(ENABLE_FMRADIO)

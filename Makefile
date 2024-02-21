@@ -32,6 +32,9 @@ ENABLE_AM_FIX_ON_SPECTRUM				:= 1
 ENABLE_SQUELCH_MORE_SENSITIVE			:= 0
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 			:= 1
+
+ENABLE_SCANLIST							:= 0
+
 # Battery percentage - 296 bytes
 ENABLE_STATUS_BATTERY_PERC  			:= 1
 # Show current while charging - 136 bytes Thanks Tunas1337
@@ -179,10 +182,13 @@ endif
 ifeq ($(ENABLE_SPECTRUM_NUNU), 1)
 OBJS += app/spectrumnunu.o
 endif
-
 ifeq ($(ENABLE_UART),1)
 OBJS += app/uart.o
 endif
+ifeq ($(ENABLE_SCANLIST),1)
+OBJS += apps/scanlist.o
+endif
+
 OBJS += audio.o
 OBJS += bitmaps.o
 OBJS += board.o
@@ -225,7 +231,6 @@ OBJS += ui/scanner.o
 OBJS += ui/status.o
 OBJS += ui/ui.o
 OBJS += ui/welcome.o
-OBJS += apps/scanlist.o
 OBJS += version.o
 OBJS += main.o
 
@@ -358,6 +363,10 @@ endif
 ifeq ($(ENABLE_UART),1)
 	CFLAGS += -DENABLE_UART
 endif
+ifeq ($(ENABLE_SCANLIST),1)
+	CFLAGS += -DENABLE_SCANLIST
+endif
+
 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld
 ##LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld,--gc-sections
 LDFLAGS += --specs=nano.specs

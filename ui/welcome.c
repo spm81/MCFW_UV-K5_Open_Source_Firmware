@@ -52,7 +52,7 @@ void UI_DisplayWelcome(void) {
     }
     UI_PrintString(WelcomeString0, 0, 127, 1, 10, true);
     UI_PrintString(WelcomeString1, 0, 127, 3, 10, true);
-    UI_PrintStringSmall(Version, 0, 140, 5);
+    UI_PrintStringSmall(Version, 0, 127, 5);
     UI_PrintStringSmallest(__DATE__ " " __TIME__, 24, 50, false, true);
 
     ST7565_BlitStatusLine();

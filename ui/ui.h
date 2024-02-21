@@ -41,8 +41,12 @@ typedef enum GUI_DisplayType_t {
 
 typedef enum GUI_AppType_t {
   APP_NONE,
+#ifdef ENABLE_SCANLIST  
   APP_SCANLIST,
+#endif  
+#ifdef ENABLE_MESSENGER
   APP_MESSENGER
+#endif
 //  APP_SPLIT,
 //  APP_OOK,
  

@@ -41,7 +41,9 @@
 #ifdef ENABLE_MESSENGER_ENCRYPTION
 	#include "helper/crypto.h"
 #endif
+#ifdef ENABLE_SCANLIST
 #include "../apps/scanlist.h"
+#endif
 #include "ARMCM0.h"
 #include "audio.h"
 #include "board.h"
@@ -1670,9 +1672,11 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
 
       if (gAppToDisplay) {
         switch (gAppToDisplay) {
+  #ifdef ENABLE_SCANLIST
         case APP_SCANLIST:
           SCANLIST_key(Key, bKeyPressed, bKeyHeld);
           break;
+  #endif		  
   #ifdef ENABLE_MESSENGER
         case APP_MESSENGER:
           MSG_ProcessKeys(Key, bKeyPressed, bKeyHeld);
