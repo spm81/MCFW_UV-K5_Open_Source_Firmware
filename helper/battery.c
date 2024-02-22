@@ -72,7 +72,6 @@ const uint16_t Voltage2PercentageTable[][7][2] = {
 		{729, 6  },
 		{630, 0  },
 		{0,   0  },
-		{0,   0  },
 	},
 
 	[BATTERY_TYPE_2200_MAH] = {
@@ -265,7 +264,7 @@ void BATTERY_GetReadings(bool bDisplayBatteryLevel) {
     }
     gChargingWithTypeC = false;
   } else {
-    if (!gChargingWithTypeC) {
+    if (gChargingWithTypeC) {
       gUpdateStatus = true;
       BACKLIGHT_TurnOn();
     }
@@ -301,7 +300,7 @@ void BATTERY_GetReadings(const bool bDisplayBatteryLevel)
 		gBatteryDisplayLevel = 0; // battery critical
 	else {
 		gBatteryDisplayLevel = 1;
-		const uint8_t levels[] = {5,25,50,75,95};
+		const uint8_t levels[] = {5,30,60,80,100};
 		uint8_t perc = BATTERY_VoltsToPercent(gBatteryVoltageAverage);
 		for(uint8_t i = 6; i >= 1; i--){
 			if (perc > levels[i-2]) {
@@ -315,12 +314,20 @@ void BATTERY_GetReadings(const bool bDisplayBatteryLevel)
 	if (gScreenToDisplay == DISPLAY_MENU && gMenuCursor == MENU_VOL)
         gUpdateDisplay = true;
 
-    if ((gBatteryCurrent < 501) != gChargingWithTypeC) {
-        gUpdateStatus = true;
-        gChargingWithTypeC = (gBatteryCurrent >= 501);
-        if (!gChargingWithTypeC)
-            BACKLIGHT_TurnOn();
-    }
+if (gBatteryCurrent < 501) {
+		if (gChargingWithTypeC) {
+			gUpdateStatus = true;
+		}
+		gChargingWithTypeC = 0;
+	} else {
+		if (!gChargingWithTypeC) {
+			gUpdateStatus = true;
+			BACKLIGHT_TurnOn();
+		}
+		gChargingWithTypeC = 1;
+	}
+
+
 
     if (PreviousBatteryLevel != gBatteryDisplayLevel) {
         gLowBattery = (gBatteryDisplayLevel < 2);
