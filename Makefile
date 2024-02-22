@@ -4,8 +4,6 @@
 
 TARGET = firmware
 
-#This is not being used anywhere
-#ENABLE_LTO                       := 1
 
 #======== STOCK QUANSHENG FERATURES ========#
 ENABLE_AIRCOPY 							:= 0
@@ -32,13 +30,13 @@ ENABLE_AM_FIX_ON_SPECTRUM				:= 1
 ENABLE_SQUELCH_MORE_SENSITIVE			:= 0
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 			:= 1
-
+# Scan List Editor
 ENABLE_SCANLIST							:= 0
 
 # Battery percentage - 296 bytes
 ENABLE_STATUS_BATTERY_PERC  			:= 1
 # Show current while charging - 136 bytes Thanks Tunas1337
-ENABLE_BATTERY_CHARGING					:= 0
+ENABLE_BATTERY_CHARGING					:= 1
 # Invert LCD Colors
 ENABLE_LCD_INVERT_OPTION				:= 0 
 #ENABLE_LCD_CONTRAST_OPTION 		 	:= 0 # WIP

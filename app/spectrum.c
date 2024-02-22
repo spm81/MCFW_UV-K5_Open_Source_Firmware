@@ -15,6 +15,7 @@
  */
 
 #include "../app/spectrum.h"
+#include "../helper/battery.h"
 #include "finput.h"
 #include <string.h>
 #define F_MIN FrequencyBandTable[0].lower
@@ -692,6 +693,7 @@ static void DrawSpectrum() {
   }
 }
 
+/*
 static void UpdateBatteryInfo() {
   for (uint8_t i = 0; i < 4; i++) {
     BOARD_ADC_GetBatteryInfo(&gBatteryVoltages[i], &gBatteryCurrent);
@@ -707,7 +709,7 @@ static void UpdateBatteryInfo() {
     }
   }
 }
-
+*/
 static void DrawStatus() {
 
   if (currentState == SPECTRUM) {
@@ -1202,7 +1204,8 @@ void OnKeyDownStill(KEY_Code_t key) {
   case KEY_PTT:
 #endif
     // start transmit
-    UpdateBatteryInfo();
+    // UpdateBatteryInfo();
+	BATTERY_GetReadings(true);
     if (gBatteryDisplayLevel == 6) {
       txAllowState = VFO_STATE_VOL_HIGH;
     } else if (IsTXAllowed(GetOffsetedF(gCurrentVfo, fMeasure))) {
@@ -1542,7 +1545,8 @@ static void Tick() {
   }
   if (++batteryUpdateTimer > 4096) {
     batteryUpdateTimer = 0;
-    UpdateBatteryInfo();
+    //UpdateBatteryInfo();
+	BATTERY_GetReadings(true);
     redrawStatus = true;
   }
   if (redrawStatus) {
