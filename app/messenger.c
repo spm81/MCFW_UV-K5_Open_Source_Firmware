@@ -711,7 +711,9 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 				if(gEeprom.MESSENGER_CONFIG.data.ack) {
 					if (dataPacket.data.payload[5] == 'R' && dataPacket.data.payload[6] == 'C' && dataPacket.data.payload[7] == 'V' && dataPacket.data.payload[8] == 'D')
 					{
-						UART_printf("SVC<RCPT\r\n");
+						#ifdef ENABLE_MESSENGER_UART
+							UART_printf("SVC<RCPT\r\n");
+						#endif
 						rxMessage[LAST_LINE][0] = '+';
 						gUpdateStatus = true;
 						gUpdateDisplay = true;

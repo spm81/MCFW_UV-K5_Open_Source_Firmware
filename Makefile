@@ -60,7 +60,7 @@ ENABLE_MESSENGER_SHOW_RX_FREQ			:= 1
 # 124 (+20) bytes
 ENABLE_MESSENGER_SHOW_RX_TX_FREQ		:= 1
 # 156 bytes
-ENABLE_MESSENGER_UART					:= 1
+ENABLE_MESSENGER_UART					:= 0
 # 3408 bytes
 ENABLE_MESSENGER_ENCRYPTION             := 1
 # 140 bytes
@@ -83,7 +83,7 @@ ENABLE_DOCK                   			:= 0
 
 #Thanks to KD8CEC for sharing his code / We have to check the code better, i just code & paste it to the right places...
 # 1476 bytes
-ENABLE_LIVESEEK_MHZ_KEYPAD				:= 0
+ENABLE_LIVESEEK_MHZ_KEYPAD				:= 1
 
 
 # ---- DEBUGGING ----
