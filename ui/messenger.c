@@ -22,6 +22,12 @@ void UI_DisplayMSG(void) {
 	static char String[37];
 
 	UI_DisplayClear();
+	if (gEeprom.KEY_LOCK && gKeypadLocked) {
+    UI_PrintString("Long Press #", 0, 127, 1, 8, true);
+    UI_PrintString("To Unlock", 0, 127, 3, 8, true);
+    ST7565_BlitFullScreen();
+    return;
+  }
 	memset(String, 0, sizeof(String));
 #ifndef ENABLE_MESSENGER_MORE_ONE_LINE
 	UI_PrintStringSmallBold("MESSENGER", 0, 127, 0);

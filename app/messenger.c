@@ -12,6 +12,7 @@
 #include "audio.h"
 #include "functions.h"
 #include "driver/system.h"
+#include "app/generic.h"
 #include "app/messenger.h"
 #include "ui/ui.h"
 #include "ui/status.h"
@@ -897,8 +898,14 @@ void MSG_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 		switch (Key)
 		{
 		case KEY_F:
+		if (gEeprom.KEY_LOCK && gKeypadLocked) {
+		 GENERIC_Key_F(bKeyPressed, bKeyHeld);
+		}
+		else
+		{
 			// clear all
 			MSG_Init();
+		}
 			break;
 		default:
 			//gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
