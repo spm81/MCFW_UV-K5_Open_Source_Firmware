@@ -14,7 +14,7 @@ ENABLE_FLASHLIGHT_SOS       			:= 1
 ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 # Bause we can cut more... - 4108 bytes
-ENABLE_DTMF_CALLING         			:= 0
+ENABLE_DTMF_CALLING         			:= 1
 # 1750Hz & 1050Hz FN1 FN2 Tones
 ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0
@@ -53,7 +53,7 @@ ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION   := 1
 ENABLE_CW                   			:= 0
 
 #============ EXTRA: MESSENGER ============# 
-ENABLE_MESSENGER            			:= 1
+ENABLE_MESSENGER            			:= 0
 ENABLE_MESSENGER_MORE_ONE_LINE			:= 1
 # 124 bytes
 ENABLE_MESSENGER_SHOW_RX_FREQ			:= 1

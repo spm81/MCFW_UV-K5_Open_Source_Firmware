@@ -324,7 +324,7 @@ void UI_DisplayMain(void) {
       54, lineSubY, false, true);
 
     if (vfoInfo.FrequencyReverse) {
-      UI_PrintStringSmallest("R", 64, lineSubY, false, true);
+      UI_PrintStringSmallest("R", 16, lineSubY, false, true);
     }
     UI_PrintStringSmallest(bwNames[vfoInfo.CHANNEL_BANDWIDTH], 60, lineSubY,
       false, true);
