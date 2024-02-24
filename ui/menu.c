@@ -636,7 +636,12 @@ case MENU_S_LIST:
 
 			#ifdef ENABLE_MESSENGER
 				case MENU_MSG_MODULATION:
+          //if not in range, reset it to default
+          if(!(gSubMenuSelection>=0 && gSubMenuSelection<ARRAY_SIZE(gSubMenu_MSG_MODULATION))){
+            gSubMenuSelection=0;
+          }
 					strcpy(String, gSubMenu_MSG_MODULATION[gSubMenuSelection]);
+          //sprintf(String,"%x",gSubMenuSelection);
 					break;
 			#endif
   }

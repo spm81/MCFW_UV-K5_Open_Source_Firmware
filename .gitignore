@@ -10,3 +10,4 @@ sram-overlay.bin
 __pycache__/
 .vscode
 
+.DS_Store

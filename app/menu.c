@@ -168,7 +168,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     break;
 #ifdef ENABLE_MESSENGER
 		case MENU_MSG_MODULATION:
-			//*pMin = 0;
+			*pMin = 0;
 			*pMax = ARRAY_SIZE(gSubMenu_MSG_MODULATION) - 1;
 			break;
 #endif    
