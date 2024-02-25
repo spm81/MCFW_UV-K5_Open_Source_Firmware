@@ -158,7 +158,7 @@ void SETTINGS_SaveSettings(void)
 	EEPROM_WriteBuffer(0x0EA0, State);
 
 	State[0] = 0xFF;
-#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
 	State[1] = gEeprom.ROGER;
 #endif
 	State[2] = gEeprom.REPEATER_TAIL_TONE_ELIMINATION;

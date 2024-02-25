@@ -118,7 +118,7 @@ static const char MenuList[][8] = {
     "D List",    
 #endif
     "PonMsg",
-#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
     "Roger",
 #endif	
     "Voltage",
@@ -214,39 +214,51 @@ static const char gSubMenu_PONMSG[3][5] = {
     "VOL",
 };
 
-#if defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
 const char gSubMenu_ROGER[][9] = {
   "OFF",
-  "DEFAULT",
-	"MOTOTRBO",
-  "MOTO TPT",
-	"MOTO T40",
-	"MOTO T80",
-	"C.AM845",
-	"POLIZIA", // Thanks to IU0PUW , Roger Beep Italy Police
-	"B.UV-5RC",
-  "MARIO",
-	"MDC",
-};
 
-#elif defined (ENABLE_ROGERBEEP)
-const char gSubMenu_ROGER[][9] = {
-  "OFF",
-  "DEFAULT",
-  "MOTOTRBO",
-  "MOTO TPT",
-  "MOTO T40",
-  "MOTO T80",
-  "C.AM845",
-  "POLIZIA", // Thanks to IU0PUW , Roger Beep Italy Police
-  "B.UV-5RC",
-  "MARIO",
-};
 
-#elif defined (ENABLE_MDC)
-const char gSubMenu_ROGER[][4] = {
-	"OFF",
+#ifdef ENABLE_ROGER_DEFAULT
+    "DEFAULT",
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBO
+    "MOTOTRBO",
+#endif
+
+#ifdef ENABLE_ROGER_TPT
+    "MOTO TPT",
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBOT40
+    "MOTO T40",
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBOTLKRT80
+    "MOTO T80",
+#endif
+
+#ifdef ENABLE_ROGER_ROGERCOBRAAM845
+    "C.AM845",
+#endif
+
+#ifdef ENABLE_ROGER_POLICE_ITA
+    "POLIZIA",
+#endif
+
+#ifdef ENABLE_ROGER_UV5RC
+    "B.UV-5RC",
+#endif
+
+#ifdef ENABLE_ROGER_MARIO
+    "MARIO",
+#endif
+
+#ifdef ENABLE_ROGER_MDC
     "MDC",
+#endif
+
 };
 #endif
 
@@ -558,7 +570,7 @@ case MENU_S_LIST:
   case MENU_PONMSG:
     strcpy(String, gSubMenu_PONMSG[gSubMenuSelection]);
     break;
-#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
   case MENU_ROGER:
     strcpy(String, gSubMenu_ROGER[gSubMenuSelection]);
     break;

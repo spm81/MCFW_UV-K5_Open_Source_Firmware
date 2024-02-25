@@ -114,7 +114,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     //*pMin = 0;
     *pMax = 2;
     break;
-#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)	
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
   case MENU_ROGER:
     //*pMin = 0;
 	*pMax = ARRAY_SIZE(gSubMenu_ROGER) - 1;
@@ -509,7 +509,7 @@ void MENU_AcceptSetting(void) {
     gEeprom.POWER_ON_DISPLAY_MODE = gSubMenuSelection;
     break;
 
-#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
   case MENU_ROGER:
     gEeprom.ROGER = gSubMenuSelection;
     break;
@@ -889,7 +889,7 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_PONMSG:
     gSubMenuSelection = gEeprom.POWER_ON_DISPLAY_MODE;
     break;
-#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
   case MENU_ROGER:
     gSubMenuSelection = gEeprom.ROGER;
     break;

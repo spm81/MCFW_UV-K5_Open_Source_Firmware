@@ -905,54 +905,66 @@ void RADIO_PrepareCssTX(void) {
 
 void RADIO_SendEndOfTransmission(void) {
 
-#if defined (ENABLE_ROGERBEEP) && defined (ENABLE_MDC)
+#ifdef ENABLE_ROGER_DEFAULT
   if (gEeprom.ROGER == ROGER_MODE_DEFAULT) {
-  BK4819_PlayRoger(0);
-  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBO) { 
-    BK4819_PlayRoger(1);
-  } else if (gEeprom.ROGER == ROGER_MODE_TPT) { 
-    BK4819_PlayRoger(2); 
-  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOT40) { 
-	BK4819_PlayRoger(3); 	
-  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOTLKRT80) { 
-	BK4819_PlayRoger(4); 	
-  } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
-	BK4819_PlayRoger(5);
-  } else if (gEeprom.ROGER == ROGER_MODE_POLICE_ITA) { 
-	BK4819_PlayRoger(6);
-  } else if (gEeprom.ROGER == ROGER_MODE_UV5RC) { 
-	BK4819_PlayRoger(7);	
-  } else if (gEeprom.ROGER == ROGER_MODE_MARIO) { 
-	BK4819_PlayRoger(8);	
-  } else if (gEeprom.ROGER == ROGER_MODE_MDC) {
-    BK4819_PlayRogerMDC();
-  }
+    BK4819_PlayRoger(0);
+}
+#endif
 
-#elif defined (ENABLE_ROGERBEEP) && !defined (ENABLE_MDC)
-  if (gEeprom.ROGER == ROGER_MODE_DEFAULT) {
-  BK4819_PlayRoger(0);
-  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBO) { 
+#ifdef ENABLE_ROGER_MOTOTRBO
+  if (gEeprom.ROGER == ROGER_MODE_MOTOTRBO) { 
     BK4819_PlayRoger(1);
-  } else if (gEeprom.ROGER == ROGER_MODE_TPT) { 
+}
+#endif
+
+#ifdef ENABLE_ROGER_TPT
+  if (gEeprom.ROGER == ROGER_MODE_TPT) { 
     BK4819_PlayRoger(2); 
-  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOT40) { 
-	BK4819_PlayRoger(3); 	
-  } else if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOTLKRT80) { 
-	BK4819_PlayRoger(4); 	
-  } else if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
-	BK4819_PlayRoger(5);
-  } else if (gEeprom.ROGER == ROGER_MODE_POLICE_ITA) { 
-	BK4819_PlayRoger(6);
-  } else if (gEeprom.ROGER == ROGER_MODE_UV5RC) { 
-	BK4819_PlayRoger(7);
-  } else if (gEeprom.ROGER == ROGER_MODE_MARIO) { 
-	BK4819_PlayRoger(8);
-  }  
-#elif !defined (ENABLE_ROGERBEEP) && defined (ENABLE_MDC)
+}
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBOT40
+  if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOT40) { 
+    BK4819_PlayRoger(3); 	
+}
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBOTLKRT80
+  if (gEeprom.ROGER == ROGER_MODE_MOTOTRBOTLKRT80) { 
+    BK4819_PlayRoger(4); 	
+}
+#endif
+
+#ifdef ENABLE_ROGER_ROGERCOBRAAM845
+  if (gEeprom.ROGER == ROGER_MODE_ROGERCOBRAAM845) { 
+    BK4819_PlayRoger(5);
+}
+#endif
+
+#ifdef ENABLE_ROGER_POLICE_ITA
+  if (gEeprom.ROGER == ROGER_MODE_POLICE_ITA) { 
+    BK4819_PlayRoger(6);
+}
+#endif
+
+#ifdef ENABLE_ROGER_UV5RC
+  if (gEeprom.ROGER == ROGER_MODE_UV5RC) { 
+    BK4819_PlayRoger(7);	
+}
+#endif
+
+#ifdef ENABLE_ROGER_MARIO
+  if (gEeprom.ROGER == ROGER_MODE_MARIO) { 
+    BK4819_PlayRoger(8);	
+}
+#endif
+
+#ifdef ENABLE_ROGER_MDC
   if (gEeprom.ROGER == ROGER_MODE_MDC) {
-  BK4819_PlayRogerMDC();
-	}	
-#endif  
+    BK4819_PlayRogerMDC();
+}
+#endif
+
  
   
 #ifdef ENABLE_DTMF_CALLING

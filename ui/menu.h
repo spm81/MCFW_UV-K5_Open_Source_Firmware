@@ -86,7 +86,7 @@ enum {
 	MENU_D_LIST,
 #endif	
 	MENU_PONMSG,
-#if defined (ENABLE_ROGERBEEP) || defined (ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
 	MENU_ROGER,
 #endif
 	MENU_VOL,
@@ -113,13 +113,73 @@ extern bool gIsInSubMenu;
 extern uint8_t gMenuCursor;
 extern int8_t gMenuScrollDirection;
 extern uint32_t gSubMenuSelection;
-#if defined (ENABLE_ROGERBEEP) && defined (ENABLE_MDC)
-extern const char gSubMenu_ROGER[11][9];
-#elif defined (ENABLE_ROGERBEEP) && !defined (ENABLE_MDC)
-extern const char gSubMenu_ROGER[10][9];
-#elif defined (ENABLE_MDC) && !defined (ENABLE_ROGERBEEP)
-extern const char gSubMenu_ROGER[2][4];
+
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
+	#define ROGER_OFF_COUNT 1
+	
+#if defined(ENABLE_ROGER_DEFAULT)
+    #define ROGER_DEFAULT_COUNT 1
+#else
+    #define ROGER_DEFAULT_COUNT 0
 #endif
+
+#if defined(ENABLE_ROGER_MOTOTRBO)
+    #define ROGER_MOTOTRBO_COUNT 1
+#else
+    #define ROGER_MOTOTRBO_COUNT 0
+#endif
+
+#if defined(ENABLE_ROGER_TPT)
+    #define ROGER_TPT_COUNT 1
+#else
+    #define ROGER_TPT_COUNT 0
+#endif
+
+#if defined(ENABLE_ROGER_MOTOTRBOT40)
+    #define ROGER_MOTOTRBOT40_COUNT 1
+#else
+    #define ROGER_MOTOTRBOT40_COUNT 0
+#endif
+
+#if defined(ENABLE_ROGER_MOTOTRBOTLKRT80)
+    #define ROGER_MOTOTRBOTLKRT80_COUNT 1
+#else
+    #define ROGER_MOTOTRBOTLKRT80_COUNT 0
+#endif
+
+#if defined(ENABLE_ROGER_ROGERCOBRAAM845)
+    #define ROGER_ROGERCOBRAAM845_COUNT 1
+#else
+    #define ROGER_ROGERCOBRAAM845_COUNT 0
+#endif
+
+#if defined(ENABLE_ROGER_POLICE_ITA)
+    #define ROGER_POLICE_ITA_COUNT 1
+#else
+    #define ROGER_POLICE_ITA_COUNT 0
+#endif
+
+#if defined(ENABLE_ROGER_UV5RC)
+    #define ROGER_UV5RC_COUNT 1
+#else
+    #define ROGER_UV5RC_COUNT 0
+#endif
+
+#if defined(ENABLE_ROGER_MARIO)
+    #define ROGER_MARIO_COUNT 1
+#else
+    #define ROGER_MARIO_COUNT 0
+#endif
+
+#if defined(ENABLE_MDC)
+    #define MDC_COUNT 1
+#else
+    #define MDC_COUNT 0
+#endif
+
+extern const char gSubMenu_ROGER[ ROGER_OFF_COUNT + ROGER_DEFAULT_COUNT + ROGER_MOTOTRBO_COUNT + ROGER_TPT_COUNT + ROGER_MOTOTRBOT40_COUNT + ROGER_MOTOTRBOTLKRT80_COUNT + ROGER_ROGERCOBRAAM845_COUNT + ROGER_POLICE_ITA_COUNT + ROGER_UV5RC_COUNT + ROGER_MARIO_COUNT + MDC_COUNT][9];
+#endif
+
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
 extern const char gSubMenu_LIVESEEK[3][6];
 #endif

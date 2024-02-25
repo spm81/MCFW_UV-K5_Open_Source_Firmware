@@ -614,13 +614,62 @@ void BOARD_EEPROM_Init(void)
 
 	// 0EA8..0EAF
 	EEPROM_ReadBuffer(0x0EA8, Data, 8);
+#if defined(ENABLE_ROGER_OFF) || defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
+   int NUM_ROGER_MODES;
+    NUM_ROGER_MODES = 1;
 
-#if defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
-	gEeprom.ROGER                          = (Data[1] <  10) ? Data[1] : ROGER_MODE_OFF;
-#elif !defined(ENABLE_MDC) && defined(ENABLE_ROGERBEEP)
-	gEeprom.ROGER                          = (Data[1] <  9) ? Data[1] : ROGER_MODE_OFF;			
-#elif defined (ENABLE_MDC) && !defined(ENABLE_ROGERBEEP)
-	gEeprom.ROGER                          = (Data[1] <  2) ? Data[1] : ROGER_MODE_OFF;	
+#ifdef ENABLE_ROGER_DEFAULT
+    NUM_ROGER_MODES++;
+
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBO
+    NUM_ROGER_MODES++;
+
+#endif
+
+#ifdef ENABLE_ROGER_TPT
+    NUM_ROGER_MODES++;
+
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBOT40
+    NUM_ROGER_MODES++;
+
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBOTLKRT80
+    NUM_ROGER_MODES++;
+
+#endif
+
+#ifdef ENABLE_ROGER_ROGERCOBRAAM845
+    NUM_ROGER_MODES++;
+
+#endif
+
+#ifdef ENABLE_ROGER_POLICE_ITA
+    NUM_ROGER_MODES++;
+
+#endif
+
+#ifdef ENABLE_ROGER_UV5RC
+    NUM_ROGER_MODES++;
+
+#endif
+
+#ifdef ENABLE_ROGER_MARIO
+    NUM_ROGER_MODES++;
+
+#endif
+
+#ifdef ENABLE_MDC
+    NUM_ROGER_MODES++;
+
+#endif
+
+gEeprom.ROGER = (Data[1] < NUM_ROGER_MODES) ? Data[1] : ROGER_MODE_OFF;
+
 #endif
 	gEeprom.REPEATER_TAIL_TONE_ELIMINATION = (Data[2] < 11) ? Data[2] : 0;
 	gEeprom.TX_CHANNEL                     = (Data[3] <  2) ? Data[3] : 0;

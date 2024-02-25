@@ -1041,7 +1041,7 @@ void BK4819_EnterExitTxMuteSequence3(void) {
 }
 */
 
-#if defined(ENABLE_ROGERBEEP) || defined(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION) || defined(ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC) || defined(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION) || defined(ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION)
 void BK4819_PlayBeep(const uint16_t freq, const int delay)
 {
 	BK4819_WriteRegister(BK4819_REG_71, scale_freq(freq));
@@ -1063,77 +1063,96 @@ void BK4819_PlayRoger(int t)
 	// NEED TO HAD IFDEF ON ROGER'S BEEP
   switch (t) {
 
-#if defined(ENABLE_ROGERBEEP) 
+#ifdef ENABLE_ROGER_DEFAULT
     case 0: // DEFAULT
-      BK4819_PlayBeep(500, 50);
-      BK4819_PlayBeep(700, 50);
-	break;  
+        BK4819_PlayBeep(500, 50);
+        BK4819_PlayBeep(700, 50);
+        break;
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBO
     case 1: // MOTOTRBO
-      BK4819_PlayBeep(1540, 50);
-      BK4819_PlayBeep(1310, 50);
-    break;
+        BK4819_PlayBeep(1540, 50);
+        BK4819_PlayBeep(1310, 50);
+        break;
+#endif
+
+#ifdef ENABLE_ROGER_TPT
     case 2: // MOTOROLA APX6000 TPT
-      BK4819_PlayBeep(910, 25);
-      BK4819_PlayBeep(0, 25);
-      BK4819_PlayBeep(910, 25);
-      BK4819_PlayBeep(0, 25);
-      BK4819_PlayBeep(910, 50);
-    break;
+        BK4819_PlayBeep(910, 25);
+        BK4819_PlayBeep(0, 25);
+        BK4819_PlayBeep(910, 25);
+        BK4819_PlayBeep(0, 25);
+        BK4819_PlayBeep(910, 50);
+        break;
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBOT40
     case 3: // MOTOROLA T40
-      BK4819_PlayBeep(2000, 50);
-      BK4819_PlayBeep(2200, 50);
-      BK4819_PlayBeep(2000, 50);
-      BK4819_PlayBeep(2200, 50);
-      BK4819_PlayBeep(2000, 50);
-      BK4819_PlayBeep(2200, 50);	  
-    break;	
+        BK4819_PlayBeep(2000, 50);
+        BK4819_PlayBeep(2200, 50);
+        BK4819_PlayBeep(2000, 50);
+        BK4819_PlayBeep(2200, 50);
+        BK4819_PlayBeep(2000, 50);
+        BK4819_PlayBeep(2200, 50);
+        break;
+#endif
+
+#ifdef ENABLE_ROGER_MOTOTRBOTLKRT80
     case 4: // MOTOROLA TLKRT80
-      BK4819_PlayBeep(1190, 50);
-      BK4819_PlayBeep(992, 50);
-      BK4819_PlayBeep(507, 50);
-      BK4819_PlayBeep(1190, 50);
-      BK4819_PlayBeep(992, 50);
-      BK4819_PlayBeep(507, 50);
-      BK4819_PlayBeep(1190, 50);
-      BK4819_PlayBeep(992, 50);
-      BK4819_PlayBeep(507, 80);	  
-	break; 
-	
+        BK4819_PlayBeep(1190, 50);
+        BK4819_PlayBeep(992, 50);
+        BK4819_PlayBeep(507, 50);
+        BK4819_PlayBeep(1190, 50);
+        BK4819_PlayBeep(992, 50);
+        BK4819_PlayBeep(507, 50);
+        BK4819_PlayBeep(1190, 50);
+        BK4819_PlayBeep(992, 50);
+        BK4819_PlayBeep(507, 80);
+        break;
+#endif
+
+#ifdef ENABLE_ROGER_ROGERCOBRAAM845
     case 5: // MOTOROLA CobraAM845
-      BK4819_PlayBeep(435, 50);
-      BK4819_PlayBeep(872, 50);
-      BK4819_PlayBeep(1742, 50); 	
-	break;
-	
-	case 6: // PlayRoger Police Italy
-      BK4819_PlayBeep(800, 60);
-      BK4819_PlayBeep(2200, 60);
-      BK4819_PlayBeep(885, 60);
-      BK4819_PlayBeep(1540, 60);
-      BK4819_PlayBeep(1300, 60);
-      BK4819_PlayBeep(975, 60);
-      BK4819_PlayBeep(1180, 60);
-      BK4819_PlayBeep(1075, 60);
-	break;
+        BK4819_PlayBeep(435, 50);
+        BK4819_PlayBeep(872, 50);
+        BK4819_PlayBeep(1742, 50);
+        break;
+#endif
 
-	case 7: // Baofeng UV-5RC
-      BK4819_PlayBeep(1120, 135);
-      BK4819_PlayBeep(861, 200);
-	break;
+#ifdef ENABLE_ROGER_POLICE_ITA
+    case 6: // PlayRoger Police Italy
+        BK4819_PlayBeep(800, 60);
+        BK4819_PlayBeep(2200, 60);
+        BK4819_PlayBeep(885, 60);
+        BK4819_PlayBeep(1540, 60);
+        BK4819_PlayBeep(1300, 60);
+        BK4819_PlayBeep(975, 60);
+        BK4819_PlayBeep(1180, 60);
+        BK4819_PlayBeep(1075, 60);
+        break;
+#endif
 
- 	case 8: // Mario Dies
-      BK4819_PlayBeep(494, 286/2);
-      BK4819_PlayBeep(698, 190/2);
-      BK4819_PlayBeep(0, 306/2);
-      BK4819_PlayBeep(698, 258/2);
-      BK4819_PlayBeep(698, 340/2);
-      BK4819_PlayBeep(659, 328/2);
-      BK4819_PlayBeep(587, 344/2);
-      BK4819_PlayBeep(523, 262/2);
-	break;
+#ifdef ENABLE_ROGER_UV5RC
+    case 7: // Baofeng UV-5RC
+        BK4819_PlayBeep(1120, 135);
+        BK4819_PlayBeep(861, 200);
+        break;
+#endif
 
-	
-#endif	
+#ifdef ENABLE_ROGER_MARIO
+    case 8: // Mario Dies
+        BK4819_PlayBeep(494, 286 / 2);
+        BK4819_PlayBeep(698, 190 / 2);
+        BK4819_PlayBeep(0, 306 / 2);
+        BK4819_PlayBeep(698, 258 / 2);
+        BK4819_PlayBeep(698, 340 / 2);
+        BK4819_PlayBeep(659, 328 / 2);
+        BK4819_PlayBeep(587, 344 / 2);
+        BK4819_PlayBeep(523, 262 / 2);
+        break;
+#endif
+
 
 #ifdef ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION
 
