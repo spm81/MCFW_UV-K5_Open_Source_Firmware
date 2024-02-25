@@ -959,7 +959,8 @@ void RADIO_SendEndOfTransmission(void) {
 }
 #endif
 
-#ifdef ENABLE_ROGER_MDC
+#ifdef ENABLE_MDC
+
   if (gEeprom.ROGER == ROGER_MODE_MDC) {
     BK4819_PlayRogerMDC();
 }

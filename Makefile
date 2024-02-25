@@ -24,11 +24,11 @@ ENABLE_ROGER_MOTOTRBO					:= 0
 ENABLE_ROGER_TPT						:= 0
 ENABLE_ROGER_MOTOTRBOT40				:= 0
 ENABLE_ROGER_MOTOTRBOTLKRT80			:= 0
-ENABLE_ROGER_ROGERCOBRAAM845			:= 0
-ENABLE_ROGER_POLICE_ITA					:= 1
+ENABLE_ROGER_ROGERCOBRAAM845			:= 1
+ENABLE_ROGER_POLICE_ITA					:= 0
 ENABLE_ROGER_UV5RC						:= 0
-ENABLE_ROGER_MARIO						:= 1
-ENABLE_MDC                  			:= 1
+ENABLE_ROGER_MARIO						:= 0
+ENABLE_MDC                  			:= 0
 
 #============== MODIFICATIONS =============#
 # AM Modulation Fix - 544 bytes
@@ -39,7 +39,7 @@ ENABLE_SQUELCH_MORE_SENSITIVE				:= 0
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 				:= 1
 # Scan List Editor
-ENABLE_SCANLIST								:= 0
+ENABLE_SCANLIST								:= 1
 
 # Battery percentage at the Welcome Message - 12 bytes
 ENABLE_VOLTAGE_PERCENTAGE_WELCOME_MESSAGE	:= 1
@@ -64,15 +64,15 @@ ENABLE_CW                   				:= 0
 
 #=============== EXTRA: MESSENGER ===============# 
 ENABLE_MESSENGER            				:= 1
-ENABLE_MESSENGER_MORE_ONE_LINE				:= 1
+ENABLE_MESSENGER_MORE_ONE_LINE				:= 0
 # 124 bytes
 ENABLE_MESSENGER_SHOW_RX_FREQ				:= 1
 # 124 (+20) bytes
-ENABLE_MESSENGER_SHOW_RX_TX_FREQ			:= 1
+ENABLE_MESSENGER_SHOW_RX_TX_FREQ			:= 0
 # 156 bytes
 ENABLE_MESSENGER_UART						:= 1
 # 3408 bytes
-ENABLE_MESSENGER_ENCRYPTION             	:= 1
+ENABLE_MESSENGER_ENCRYPTION             	:= 0
 # 140 bytes
 ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION 	:= 0
 
@@ -98,6 +98,7 @@ ENABLE_LIVESEEK_MHZ_KEYPAD					:= 0
 
 # ---- DEBUGGING ----
 # ---- COMPILER/LINKER OPTIONS ----
+ENABLE_COMPRESS								:= 0
 ENABLE_OVERLAY 								:= 0
 ENABLE_SWD 									:= 0
 
@@ -295,9 +296,10 @@ endif
 CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-delete-null-pointer-checks -std=c11 -MMD
 CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
+ifeq ($(ENABLE_COMPRESS),1)
 CFLAGS += --specs=nano.specs
 CFLAGS += -flto
-
+endif
 
 ifeq ($(ENABLE_DOCK),1)
 	CFLAGS += -DENABLE_DOCK
@@ -402,10 +404,18 @@ ifeq ($(ENABLE_SCANLIST),1)
 	CFLAGS += -DENABLE_SCANLIST
 endif
 
+
+
+#LDFLAGS += -z noexecstack -mcpu=cortex-m0 -nostartfiles -Wl,-L,linker -Wl,-T,firmware.ld -Wl,--gc-sections
 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld
-##LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld,--gc-sections
+## 2 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld,--gc-sections
+
+ifeq ($(ENABLE_COMPRESS),1)
 LDFLAGS += --specs=nano.specs
 LDFLAGS += -flto
+endif
+##LDFLAGS += --specs=nosys.specs --specs=nano.specs 
+
 ifeq ($(ENABLE_NOSCANTIMEOUT),1)
 	CFLAGS += -DENABLE_NOSCANTIMEOUT
 endif

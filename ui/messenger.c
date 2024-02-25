@@ -65,11 +65,11 @@ void UI_DisplayMSG(void) {
 
 	// TX Screen
 #if defined (ENABLE_MESSENGER_SHOW_RX_FREQ) && ! defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ)
-	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 42, 126, 40, true, 4);
+	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 42, 126, 42, true, 4);
 #elif defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ) && ! defined (ENABLE_MESSENGER_SHOW_RX_FREQ) || defined (ENABLE_MESSENGER_SHOW_RX_TX_FREQ) && defined (ENABLE_MESSENGER_SHOW_RX_FREQ)
-//	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 42, 126, 40, true, 4);
+//	UI_DrawDottedLineBuffer(gFrameBuffer, 80, 42, 126, 42, true, 4);
 #else
-	UI_DrawDottedLineBuffer(gFrameBuffer, 14, 42, 126, 40, true, 4);
+	UI_DrawDottedLineBuffer(gFrameBuffer, 14, 42, 126, 42, true, 4);
 #endif
 	memset(String, 0, sizeof(String));
 	if ( keyboardType == NUMERIC ) {

@@ -255,7 +255,7 @@ const char gSubMenu_ROGER[][9] = {
     "MARIO",
 #endif
 
-#ifdef ENABLE_ROGER_MDC
+#ifdef ENABLE_MDC
     "MDC",
 #endif
 
