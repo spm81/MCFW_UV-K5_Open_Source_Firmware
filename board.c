@@ -608,8 +608,10 @@ void BOARD_EEPROM_Init(void)
 	EEPROM_ReadBuffer(0x0EA0, Data, 8);
 	gEeprom.VOICE_PROMPT = (Data[0] < 3) ? Data[0] : VOICE_PROMPT_CHINESE;
 
+	// 1BAA..1BAF
+	EEPROM_ReadBuffer(0x1BAA, Data, 5);
 	#ifdef ENABLE_MESSENGER
-	gEeprom.MESSENGER_CONFIG.__val = Data[3];
+	gEeprom.MESSENGER_CONFIG.__val = Data[0];
 	#endif
 
 	// 0EA8..0EAF
@@ -791,7 +793,10 @@ for (int i = 0; i < 2; i++) {
 
 	#ifdef ENABLE_MESSENGER_ENCRYPTION
 		// 0F30..0F3F - load encryption key
-		EEPROM_ReadBuffer(0x0F30, gEeprom.ENC_KEY, sizeof(gEeprom.ENC_KEY));
+		//EEPROM_ReadBuffer(0x0F30, gEeprom.ENC_KEY, sizeof(gEeprom.ENC_KEY));
+      EEPROM_ReadBuffer(0x1BBA, gEeprom.ENC_KEY, 5);
+      EEPROM_ReadBuffer(0x1BCA, gEeprom.ENC_KEY + 5, 5);
+
 	#endif
 
 	/*for (i = 0; i < 4; i++) {
