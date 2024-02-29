@@ -214,7 +214,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     break;
   case MENU_S_LIST:
     //*pMin = 0;
-    *pMax = 2;
+    *pMax = 3;
     break;
 #ifdef ENABLE_DTMF_CALLING
   case MENU_D_RSP:

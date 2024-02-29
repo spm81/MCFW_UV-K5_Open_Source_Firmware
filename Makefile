@@ -15,6 +15,8 @@ ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 # Bause we can cut more... - 4108 bytes
 ENABLE_DTMF_CALLING         			:= 0
+#DTMF REMOTEKILL
+ENABLE_REMOTEKILL						:= 1
 # 1750Hz & 1050Hz FN1 FN2 Tones
 ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0
@@ -312,6 +314,9 @@ ifeq ($(ENABLE_AIRCOPY),1)
 endif
 ifeq ($(ENABLE_DTMF_CALLING),1)
 	CFLAGS += -DENABLE_DTMF_CALLING
+endif
+ifeq ($(ENABLE_REMOTEKILL),1)
+	CFLAGS += -DENABLE_REMOTEKILL
 endif
 ifeq ($(ENABLE_DTMF_SIDETONES),1)
 	CFLAGS += -DENABLE_DTMF_SIDETONES

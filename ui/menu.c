@@ -518,6 +518,8 @@ void UI_DisplayMenu(void) {
     sprintf(String, "LIST%d", gSubMenuSelection);
     break;
 */
+
+/*
 case MENU_S_LIST:
 	//		strcpy(str, "SCAN LIST\n");
 			if (gSubMenuSelection < 2)
@@ -526,6 +528,17 @@ case MENU_S_LIST:
 			else
 				sprintf(String, "ALL");
 			break;
+      */
+     case MENU_S_LIST:
+    if (gSubMenuSelection == 3) {
+        sprintf(String, "LIST1+2");
+    } else if (gSubMenuSelection < 2) {
+        sprintf(String, "LIST%d", 1 + gSubMenuSelection);
+    } else {
+        sprintf(String, "ALL");
+    }
+    break;
+
 #ifdef ENABLE_DTMF_CALLING
 			
   case MENU_ANI_ID:

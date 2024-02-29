@@ -95,6 +95,21 @@ bool RADIO_CheckValidChannel(uint16_t Channel, bool bCheckScanList,
       PriorityCh1 = gEeprom.SCANLIST_PRIORITY_CH1[1];
       PriorityCh2 = gEeprom.SCANLIST_PRIORITY_CH2[1];
       break;
+       case 3:
+        if (((Attributes & MR_CH_SCANLIST1) == 0) && ((Attributes & MR_CH_SCANLIST2) == 0)) {
+            return false;
+        }
+        PriorityCh1 = gEeprom.SCANLIST_PRIORITY_CH1[0];
+        PriorityCh2 = gEeprom.SCANLIST_PRIORITY_CH2[0];
+        if (PriorityCh1 == Channel || PriorityCh2 == Channel) {
+            return false;
+        }
+        PriorityCh1 = gEeprom.SCANLIST_PRIORITY_CH1[1];
+        PriorityCh2 = gEeprom.SCANLIST_PRIORITY_CH2[1];
+        if (PriorityCh1 == Channel || PriorityCh2 == Channel) {
+            return false;
+        }
+        break;
     default:
       return true;
     }

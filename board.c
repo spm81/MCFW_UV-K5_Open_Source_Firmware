@@ -707,7 +707,14 @@ gEeprom.ROGER = (Data[1] < NUM_ROGER_MODES) ? Data[1] : ROGER_MODE_OFF;
 
 	// 0EE8..0EEF
     // Killcode removed
-
+#ifdef ENABLE_REMOTEKILL	
+	EEPROM_ReadBuffer(0x0EE8, Data, 8);
+	if (DTMF_ValidateCodes((char *)Data, 8)) {
+		memcpy(gEeprom.KILL_CODE, Data, 8);
+	} else {
+		memcpy(gEeprom.KILL_CODE, "ABCD9\0\0", 8);
+	}
+#endif
 	// 0EF0..0EF7
 	EEPROM_ReadBuffer(0x0EF0, Data, 8);
 	if (DTMF_ValidateCodes((char *)Data, 8)) {
@@ -749,11 +756,11 @@ gEeprom.ROGER = (Data[1] < NUM_ROGER_MODES) ? Data[1] : ROGER_MODE_OFF;
 // 0F18..0F1F
 EEPROM_ReadBuffer(0x0F18, Data, 8);
 
-gEeprom.SCAN_LIST_DEFAULT = (Data[0] < 3) ? Data[0] : false;
+gEeprom.SCAN_LIST_DEFAULT = (Data[0] < 4) ? Data[0] : false;
 
 for (int i = 0; i < 2; i++) {
     uint8_t j = (i * 3) + 1;
-    gEeprom.SCAN_LIST_ENABLED[i]     = (Data[j] < 3) ? Data[j] : false;
+    gEeprom.SCAN_LIST_ENABLED[i]     = (Data[j] < 4) ? Data[j] : false;
     gEeprom.SCANLIST_PRIORITY_CH1[i] = Data[j + 1];
     gEeprom.SCANLIST_PRIORITY_CH2[i] = Data[j + 2];
 /*

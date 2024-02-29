@@ -485,14 +485,21 @@ static void MR_NextChannel(void) {
       if (RADIO_CheckValidChannel(Ch2, false, 0)) {
         gNextMrChannel = Ch2;
       } else {
-        gCurrentScanList = 2;
+        gCurrentScanList = 3;
       }
     }
     if (gCurrentScanList == 2) {
       gNextMrChannel = gPreviousMrChannel;
     } else {
-      goto Skip;
+              gCurrentScanList = 3;
+
     }
+          if (gCurrentScanList == 3) {
+        gNextMrChannel = Ch1;
+        gNextMrChannel = Ch2;
+      } else {
+      goto Skip;
+      }
   }
 
   Ch = RADIO_FindNextChannel(gNextMrChannel + gScanState, gScanState, true,
@@ -519,7 +526,7 @@ Skip:
   bScanKeepFrequency = false;
   if (bEnabled) {
     gCurrentScanList++;
-    if (gCurrentScanList >= 2) {
+    if (gCurrentScanList >= 3) {
       gCurrentScanList = 0;
     }
   }
