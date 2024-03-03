@@ -754,6 +754,26 @@ void RADIO_SetTxParameters(void) {
   }
 }
 
+
+void RADIO_SetupAGC(bool listeningAM, bool disable)
+{
+	static uint8_t lastSettings;
+	uint8_t newSettings = (listeningAM << 1) | (disable << 1);
+	if(lastSettings == newSettings)
+		return;
+	lastSettings = newSettings;
+
+
+	if(!listeningAM) { // if not actively listening AM we don't need any AM specific regulation
+		BK4819_SetAGC(!disable);
+		BK4819_SetAGC(0);
+	}
+	else {
+		BK4819_SetAGC(!disable);
+		BK4819_SetAGC(0);
+	}
+}
+
 void RADIO_SetVfoState(VfoState_t State) {
   if (State == VFO_STATE_NORMAL) {
     VfoState[0] = VFO_STATE_NORMAL;

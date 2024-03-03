@@ -39,6 +39,7 @@ bool preventKeypress = true;
 
 bool isListening = false;
 bool isTransmitting = false;
+bool lockAGC = false;
 
 State currentState = SPECTRUM, previousState = SPECTRUM;
 
@@ -101,6 +102,12 @@ bool isMovingInitialized = false;
 uint8_t lastStepsCount = 0;
 
 VfoState_t txAllowState;
+
+void LockAGC()
+{
+  RADIO_SetupAGC(settings.modulationType==MOD_AM, lockAGC);
+  lockAGC = true;
+}
 
 static void UpdateRegMenuValue(RegisterSpec s, bool add) {
   uint16_t v = BK4819_GetRegValue(s);
@@ -280,7 +287,7 @@ static void ToggleRX(bool on) {
   if (on) {
     ToggleTX(false);
   }
-
+  RADIO_SetupAGC(on, lockAGC);
   BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28_GREEN, on);
   BK4819_RX_TurnOn();
 
@@ -1243,6 +1250,7 @@ void OnKeyDownStill(KEY_Code_t key) {
     }
 #endif
     SetState(SPECTRUM);
+    lockAGC = false;
     monitorMode = false;
     RelaunchScan();
     break;
@@ -1518,8 +1526,16 @@ static void Tick() {
       AM_fix_10ms(vfo, !lockAGC); //allow AM_Fix to apply its AGC action
   }
   */
+ /*
  if (gRxVfo->ModulationType == MOD_AM)
     AM_fix_10ms(gEeprom.RX_CHANNEL);
+*/
+if (gNextTimeslice) {
+    gNextTimeslice = false;
+    if(settings.modulationType == MOD_AM && !lockAGC) {
+      AM_fix_10ms(gEeprom.RX_CHANNEL); //allow AM_Fix to apply its AGC action
+    }
+  }
 #endif  
 #if defined(ENABLE_UART)
   if (UART_IsCommandAvailable()) {

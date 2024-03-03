@@ -16,7 +16,7 @@ ENABLE_UART_CAT             			:= 0
 # Bause we can cut more... - 4108 bytes
 ENABLE_DTMF_CALLING         			:= 0
 #DTMF REMOTEKILL
-ENABLE_REMOTEKILL						:= 1
+ENABLE_REMOTEKILL						:= 0
 # 1750Hz & 1050Hz FN1 FN2 Tones
 ENABLE_DTMF_SIDETONES				    := 1
 ENABLE_TX1750 							:= 0

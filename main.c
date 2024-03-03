@@ -167,9 +167,9 @@ void Main(void) {
 #endif
 #ifdef ENABLE_MESSENGER
     gMenuListCount += 2;
-		#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
-			    gMenuListCount++;
-		#endif	
+#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+    gMenuListCount++;
+#endif	
 #endif
 #ifdef ENABLE_MESSENGER_ENCRYPTION
     gMenuListCount += 2;
