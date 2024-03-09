@@ -250,7 +250,7 @@ ifeq ($(OS),Windows_NT)
 	RM = del /Q
 	FixPath = $(subst /,\,$1)
 	WHERE = where
-	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com9 -b
+	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com3 -b
 else
 	TOP := $(shell pwd)
 	RM = rm -f
@@ -299,8 +299,9 @@ CFLAGS = -Os -Wall -Werror -mcpu=cortex-m0 -fno-delete-null-pointer-checks -std=
 CFLAGS += -DPRINTF_INCLUDE_CONFIG_H
 CFLAGS += -DGIT_HASH=\"$(GIT_HASH)\"
 ifeq ($(ENABLE_COMPRESS),1)
-CFLAGS += --specs=nano.specs
-CFLAGS += -flto
+CFLAGS += --specs=nosys.specs --specs=nano.specs
+CFLAGS += -flto=auto
+CFLAGS += -ftree-vectorize -funroll-loops
 endif
 
 ifeq ($(ENABLE_DOCK),1)

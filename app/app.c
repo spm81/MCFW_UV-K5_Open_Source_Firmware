@@ -76,6 +76,10 @@
 #include "ui/status.h"
 #include "ui/ui.h"
 
+#if defined(ENABLE_UART)
+#include "driver/uart.h"
+#endif
+
 // original QS front end register settings
 const uint8_t origLnaShort = 3; //   0dB
 const uint8_t origLna = 2;      // -14dB
@@ -816,17 +820,18 @@ void APP_Update(void) {
 #if defined(ENABLE_FMRADIO)
         || gFmRadioMode
 #endif
-        || gPttIsPressed || gScreenToDisplay != DISPLAY_MAIN || gKeyBeingHeld
-//#ifdef ENABLE_DTMF_CALLING		
+        || gPttIsPressed || gScreenToDisplay != DISPLAY_MAIN
+#ifdef ENABLE_DTMF_CALLING		
         || gDTMF_CallState != DTMF_CALL_STATE_NONE) 
-//#else
-//		)
-//#endif
+#else
+		)
+#endif
 		{
       gBatterySaveCountdown = 1000;
     } else {
       if ((IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[0]) &&
            IS_NOT_NOAA_CHANNEL(gEeprom.ScreenChannel[1]))) {
+    
         FUNCTION_Select(FUNCTION_POWER_SAVE);
       } else {
         gBatterySaveCountdown = 1000;

@@ -762,12 +762,6 @@ void MSG_StorePacket(const uint16_t interrupt_bits)
 						BK4819_PlayRoger(99);
 					}
 					#endif
-					
-					
-					
-					
-					
-					
 
 				}
 

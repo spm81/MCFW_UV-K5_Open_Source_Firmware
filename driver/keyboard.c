@@ -130,7 +130,7 @@ KEY_Code_t KEYBOARD_Poll(void)
 	
 
 	// *****************
-    /*for(int j = 0; j < ARRAY_SIZE(keyboard); j++) {
+    for(int j = 0; j < ARRAY_SIZE(keyboard); j++) {
         //Set all high
         GPIOA->DATA |=  1 << GPIOA_PIN_KEYBOARD_4 |
                         1 << GPIOA_PIN_KEYBOARD_5 |
@@ -155,47 +155,7 @@ KEY_Code_t KEYBOARD_Poll(void)
 
         if (Key != KEY_INVALID)
             break;
-    }*/
-
-    for (unsigned int j = 0; j < ARRAY_SIZE(keyboard); j++)
-	{
-		uint16_t reg;
-		unsigned int i;
-		unsigned int k;
-
-		// Set all high
-		GPIOA->DATA |=  1u << GPIOA_PIN_KEYBOARD_4 |
-						1u << GPIOA_PIN_KEYBOARD_5 |
-						1u << GPIOA_PIN_KEYBOARD_6 |
-						1u << GPIOA_PIN_KEYBOARD_7;
-
-		// Clear the pin we are selecting
-		GPIOA->DATA &= keyboard[j].set_to_zero_mask;
-
-		// Read all 4 GPIO pins at once .. with de-noise, max of 8 sample loops
-		for (i = 0, k = 0, reg = 0; i < 3 && k < 8; i++, k++) {
-			SYSTICK_DelayUs(1);
-			uint16_t reg2 = GPIOA->DATA;
-			i *= reg == reg2;
-			reg = reg2;
-		}
-
-		if (i < 3)
-			break;	// noise is too bad
-
-		for (unsigned int i = 0; i < ARRAY_SIZE(keyboard[j].pins); i++)
-		{
-			const uint16_t mask = 1u << keyboard[j].pins[i].pin;
-			if (!(reg & mask))
-			{
-				Key = keyboard[j].pins[i].key;
-				break;
-			}
-		}
-
-		if (Key != KEY_INVALID)
-			break;
-	}
+    }
 
     //Create I2C stop condition. Since we might have toggled I2C pins.
     //This leaves GPIOA_PIN_KEYBOARD_4 and GPIOA_PIN_KEYBOARD_5 high

@@ -38,6 +38,10 @@
 #include "ui/status.h"
 #include "ui/ui.h"
 
+#if defined(ENABLE_UART)
+#include "driver/uart.h"
+#endif
+
 FUNCTION_Type_t gCurrentFunction;
 
 void FUNCTION_Init(void) {
