@@ -35,8 +35,22 @@
 #ifdef ENABLE_DOCK
 	#include "app/uart.h"
 #endif
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+#include <string.h> 
+#endif
+#ifdef ENABLE_MESSENGER
+	#ifdef ENABLE_STATUS_BATTERY_PERC
+		const uint8_t MSG_ICO_POS = 85;
+    const uint8_t BITMAP_MISSED = 85;
 
+	#else
+		const uint8_t MSG_ICO_POS = 105;
+    const uint8_t BITMAP_MISSED = 105;
+	#endif
+  #endif
 void UI_DisplayStatus(void) {
+
+
 
   // memset(gStatusLine, 64, sizeof(gStatusLine));
   memset(gStatusLine, 0, sizeof(gStatusLine));
@@ -53,7 +67,27 @@ void UI_DisplayStatus(void) {
   } else {
     UI_DisplayBattery(gBatteryDisplayLevel);
   }
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
 
+const uint8_t BITMAP_MISSED = 65;
+
+if (gMissedCalls > 0) { // Indicador de chamada perdida
+    gStatusLine[BITMAP_MISSED + 0] |= 0b00000001;
+    gStatusLine[BITMAP_MISSED + 1] |= 0b00000010;
+    gStatusLine[BITMAP_MISSED + 2] |= 0b00000100;
+    gStatusLine[BITMAP_MISSED + 3] |= 0b00001000;
+    gStatusLine[BITMAP_MISSED + 4] |= 0b00010000;
+    gStatusLine[BITMAP_MISSED + 5] |= 0b00100000;
+    gStatusLine[BITMAP_MISSED + 6] |= 0b01000000;
+    gStatusLine[BITMAP_MISSED + 7] |= 0b00100000;
+    gStatusLine[BITMAP_MISSED + 8] |= 0b00010100;
+    gStatusLine[BITMAP_MISSED + 9] |= 0b00001100;
+    gStatusLine[BITMAP_MISSED + 10] |= 0b00001100;
+    gStatusLine[BITMAP_MISSED + 11] |= 0b00001110;
+}
+
+
+#endif
 #ifdef ENABLE_MESSENGER
 	#ifdef ENABLE_STATUS_BATTERY_PERC
 		const uint8_t MSG_ICO_POS = 85;

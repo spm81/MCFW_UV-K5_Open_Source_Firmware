@@ -90,6 +90,9 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
     if (Function != FUNCTION_POWER_SAVE) {
       BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable();
       gRxIdleMode = false;
+      #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+    	gMissedCalls++;
+#endif
       UI_DisplayStatus();
     }
   }
@@ -143,6 +146,9 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
     return;
 
   case FUNCTION_TRANSMIT:
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+  gMissedCalls=0;
+#endif  
 #if defined(ENABLE_FMRADIO)
     if (gFmRadioMode) {
       BK1080_Init(0, false);

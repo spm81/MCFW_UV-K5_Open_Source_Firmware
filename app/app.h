@@ -30,5 +30,9 @@ void APP_Update(void);
 void APP_TimeSlice10ms(void);
 void APP_TimeSlice500ms(void);
 
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+extern volatile uint8_t 	 gFlashLightNotifCounter;
+extern uint8_t 				 gMissedCalls;
+#endif
 #endif
 

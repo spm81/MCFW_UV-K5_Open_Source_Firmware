@@ -11,6 +11,7 @@ ENABLE_AIRCOPY 							:= 0
 ENABLE_FMRADIO							:= 1
 # 84 bytes
 ENABLE_FLASHLIGHT_SOS       			:= 1
+ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED := 1
 ENABLE_UART                 			:= 1
 ENABLE_UART_CAT             			:= 0
 # Bause we can cut more... - 4108 bytes
@@ -36,7 +37,7 @@ ENABLE_MDC                  			:= 0
 # AM Modulation Fix - 544 bytes
 ENABLE_AM_FIX 								:= 1
 # Apply fix to Spectrum - 40 bytes
-ENABLE_AM_FIX_ON_SPECTRUM					:= 1
+ENABLE_AM_FIX_ON_SPECTRUM					:= 0
 ENABLE_SQUELCH_MORE_SENSITIVE				:= 0
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 				:= 1
@@ -304,6 +305,8 @@ CFLAGS += -flto=auto
 CFLAGS += -ftree-vectorize -funroll-loops
 endif
 
+
+
 ifeq ($(ENABLE_DOCK),1)
 	CFLAGS += -DENABLE_DOCK
 endif
@@ -422,6 +425,9 @@ LDFLAGS += -flto
 endif
 ##LDFLAGS += --specs=nosys.specs --specs=nano.specs 
 
+ifeq ($(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED),1)
+	CFLAGS += -DENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED
+endif
 ifeq ($(ENABLE_NOSCANTIMEOUT),1)
 	CFLAGS += -DENABLE_NOSCANTIMEOUT
 endif

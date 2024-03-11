@@ -141,6 +141,11 @@ volatile bool gFlagTteComplete;
 volatile bool gScheduleFM;
 #endif
 
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+uint8_t           gMissedCalls;
+volatile uint8_t  gFlashLightNotifCounter;
+#endif
+
 uint16_t gCurrentRSSI;
 
 uint8_t gIsLocked = 0xFF;

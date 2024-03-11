@@ -200,7 +200,10 @@ extern volatile bool gFlagTteComplete;
 #if defined(ENABLE_FMRADIO)
 extern volatile bool gScheduleFM;
 #endif
-
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+extern uint8_t 				gMissedCalls;
+extern volatile uint8_t 	 gFlashLightNotifCounter;
+#endif
 #ifdef ENABLE_DOCK
 	extern bool		  		 gSetting_Remote_UI;
 #endif

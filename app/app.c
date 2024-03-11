@@ -507,7 +507,8 @@ static void MR_NextChannel(void) {
         }
     } else {
         // Se a lista de varredura não estiver ativada, saímos da função
-        return;
+        //return;
+
     }
 
     Ch = RADIO_FindNextChannel(gNextMrChannel + gScanState, gScanState, true, gEeprom.SCAN_LIST_DEFAULT);
@@ -946,6 +947,9 @@ void APP_CheckKeys(void) {
 }
 
 void APP_TimeSlice10ms(void) {
+  #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+  gFlashLightNotifCounter++;
+  #endif
   gFlashLightBlinkCounter++;
 
 #if defined(ENABLE_UART)
@@ -1027,6 +1031,18 @@ void APP_TimeSlice10ms(void) {
   if (gFlashLightState == FLASHLIGHT_BLINK &&
       (gFlashLightBlinkCounter & 15U) == 0) {
     GPIO_FlipBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);}
+
+      #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+
+  if (gMissedCalls >0) {
+
+		if (gFlashLightNotifCounter  >= 10  &&  gFlashLightNotifCounter <15)
+			GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);
+		else if (gFlashLightNotifCounter  > 15)
+			GPIO_ClearBit(&GPIOC->DATA, GPIOC_PIN_FLASHLIGHT);		
+		//return;
+	}
+  #endif
 #ifdef ENABLE_FLASHLIGHT_SOS
   else if(gFlashLightState == FLASHLIGHT_SOS) {
 	/*	const uint16_t u = 15;
@@ -1500,6 +1516,13 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
       GUI_SelectNextDisplay(DISPLAY_MAIN);
     }
   } else {
+      #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+	if (Key == KEY_F)
+	{
+		gMissedCalls = 0;
+	}
+  #endif
+
     if (Key != KEY_PTT) {
       gVoltageMenuCountdown = 0x10;
     }
