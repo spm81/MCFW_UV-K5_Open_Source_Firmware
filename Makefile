@@ -6,7 +6,7 @@ TARGET = firmware
 
 
 #======== STOCK QUANSHENG FERATURES ========#
-ENABLE_AIRCOPY 							:= 0
+ENABLE_AIRCOPY 							:= 1
 # 3856 bytes
 ENABLE_FMRADIO							:= 1
 # 84 bytes
@@ -37,8 +37,8 @@ ENABLE_MDC                  			:= 0
 # AM Modulation Fix - 544 bytes
 ENABLE_AM_FIX 								:= 1
 # Apply fix to Spectrum - 40 bytes
-ENABLE_AM_FIX_ON_SPECTRUM					:= 0
-ENABLE_SQUELCH_MORE_SENSITIVE				:= 0
+ENABLE_AM_FIX_ON_SPECTRUM					:= 1
+ENABLE_SQUELCH_MORE_SENSITIVE				:= 1
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 				:= 1
 # Scan List Editor
