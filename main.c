@@ -136,25 +136,25 @@ void Main(void) {
     BACKLIGHT_TurnOn();
     SYSTEM_DelayMs(2500);
 #if defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP)	
-		gMenuListCount = 49;
-#elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
-		gMenuListCount = 49;		
-#elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP)		
-		gMenuListCount = 48;		
-#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP)		
 		gMenuListCount = 50;
-#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)		
+#elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
 		gMenuListCount = 50;		
-#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP)		
+#elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP)		
 		gMenuListCount = 49;		
+#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP)		
+		gMenuListCount = 51;
+#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)		
+		gMenuListCount = 51;		
+#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP)		
+		gMenuListCount = 51;		
 #elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP)
-		gMenuListCount = 40;
+		gMenuListCount = 41;
 #elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
-		gMenuListCount = 40;		
+		gMenuListCount = 41;		
 #elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP)
-		gMenuListCount = 39;		
+		gMenuListCount = 40;		
 #else
-		gMenuListCount = 38;
+		gMenuListCount = 39;
 #endif	
 #if defined(ENABLE_LCD_CONTRAST_OPTION)
 	gMenuListCount += 1;
@@ -170,10 +170,11 @@ void Main(void) {
 #ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
     gMenuListCount++;
 #endif	
-#endif
 #ifdef ENABLE_MESSENGER_ENCRYPTION
     gMenuListCount += 2;
 #endif
+#endif
+
     BootMode = BOOT_GetMode();
     if (gEeprom.POWER_ON_PASSWORD < 1000000) {
       bIsInLockScreen = true;

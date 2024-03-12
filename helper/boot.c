@@ -27,6 +27,8 @@
 #include "ui/menu.h"
 #include "ui/ui.h"
 
+#include "../driver/eeprom.h"
+
 BOOT_Mode_t BOOT_GetMode(void)
 {
 	KEY_Code_t Keys[2];
@@ -50,7 +52,21 @@ BOOT_Mode_t BOOT_GetMode(void)
 		if (Keys[0] == KEY_SIDE2) {
 			return BOOT_MODE_AIRCOPY;
 		}
+
 #endif
+/*
+////Erase with FF 512 EEPROM after offset 0x2000
+		if (Keys[0] == KEY_MENU) {
+
+		uint8_t data[16];
+memset(data, 0xff, sizeof(data));
+
+for (int i = 0x2000; i <= 0x10000; i += 16) {
+    EEPROM_WriteBuffer(i, data);
+}
+return BOOT_MODE_NORMAL;
+}
+*/
 	}
 
 	return BOOT_MODE_NORMAL;
@@ -156,9 +172,9 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
 		#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
 			    gMenuListCount++;
 		#endif
-#endif
 #ifdef ENABLE_MESSENGER_ENCRYPTION
     gMenuListCount += 2;
+#endif
 #endif
 
 		//gMenuListCount = MENU_ITEMS_COUNT;
