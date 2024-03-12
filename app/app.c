@@ -1516,15 +1516,18 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
       GUI_SelectNextDisplay(DISPLAY_MAIN);
     }
   } else {
-      #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
-	if (Key == KEY_F)
+	if (Key != KEY_PTT)
 	{
-		gMissedCalls = 0;
+
 	}
-  #endif
+  
 
     if (Key != KEY_PTT) {
       gVoltageMenuCountdown = 0x10;
+      #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+    		gMissedCalls = 0;
+        gUpdateDisplay = true;
+      #endif
     }
     BACKLIGHT_TurnOn();
 //#ifdef ENABLE_DTMF_CALLING

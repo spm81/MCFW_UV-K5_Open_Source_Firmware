@@ -41,11 +41,8 @@
 #ifdef ENABLE_MESSENGER
 	#ifdef ENABLE_STATUS_BATTERY_PERC
 		const uint8_t MSG_ICO_POS = 85;
-    const uint8_t BITMAP_MISSED = 85;
-
 	#else
 		const uint8_t MSG_ICO_POS = 105;
-    const uint8_t BITMAP_MISSED = 105;
 	#endif
   #endif
 void UI_DisplayStatus(void) {

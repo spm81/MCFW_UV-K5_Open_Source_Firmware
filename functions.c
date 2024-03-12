@@ -91,7 +91,9 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
       BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable();
       gRxIdleMode = false;
       #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+      if (Function == FUNCTION_INCOMING) {
     	gMissedCalls++;
+      }
 #endif
       UI_DisplayStatus();
     }
