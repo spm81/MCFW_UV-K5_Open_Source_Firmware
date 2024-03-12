@@ -6,7 +6,7 @@ TARGET = firmware
 
 
 #======== STOCK QUANSHENG FERATURES ========#
-ENABLE_AIRCOPY 							:= 0
+ENABLE_AIRCOPY 							:= 1
 # 3856 bytes
 ENABLE_FMRADIO							:= 1
 # 84 bytes
@@ -38,7 +38,7 @@ ENABLE_MDC                  			:= 0
 ENABLE_AM_FIX 								:= 1
 # Apply fix to Spectrum - 40 bytes
 ENABLE_AM_FIX_ON_SPECTRUM					:= 0
-ENABLE_SQUELCH_MORE_SENSITIVE				:= 0
+ENABLE_SQUELCH_MORE_SENSITIVE				:= 1
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 				:= 1
 # Scan List Editor
@@ -63,11 +63,11 @@ ENABLE_FASTER_CHANNEL_SCAN  				:= 1
 # Enable Timeout beep at the end of timeout - 44 bytes
 ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION		:= 1
 # CW Modulation
-ENABLE_CW                   				:= 0
+ENABLE_CW                   				:= 1
 
 #=============== EXTRA: MESSENGER ===============# 
 ENABLE_MESSENGER            				:= 1
-ENABLE_MESSENGER_MORE_ONE_LINE				:= 0
+ENABLE_MESSENGER_MORE_ONE_LINE				:= 1
 # 124 bytes
 ENABLE_MESSENGER_SHOW_RX_FREQ				:= 1
 # 124 (+20) bytes
