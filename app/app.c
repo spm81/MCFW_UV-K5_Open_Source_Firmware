@@ -948,7 +948,10 @@ void APP_CheckKeys(void) {
 
 void APP_TimeSlice10ms(void) {
   #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+  		if(gSetting_Missed_Call_NBL) 
+		{
   gFlashLightNotifCounter++;
+    }
   #endif
   gFlashLightBlinkCounter++;
 

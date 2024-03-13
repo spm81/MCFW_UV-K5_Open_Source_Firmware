@@ -796,8 +796,15 @@ for (int i = 0; i < 2; i++) {
 	EEPROM_ReadBuffer(0x0D60, gMR_ChannelAttributes, sizeof(gMR_ChannelAttributes));
 
 	// 0F30..0F3F
-	//EEPROM_ReadBuffer(0x0F30, gCustomAesKey, sizeof(gCustomAesKey));
+	EEPROM_ReadBuffer(0x0F30, gCustomAesKey, sizeof(gCustomAesKey));
 
+	for (int i = 0; i < 4; i++) {
+		if (gCustomAesKey[i] != 0xFFFFFFFFU) {
+			bHasCustomAesKey = true;
+			return;
+		}
+	}
+	/*
 	#ifdef ENABLE_MESSENGER_ENCRYPTION
 		// 0F30..0F3F - load encryption key
 		//EEPROM_ReadBuffer(0x0F30, gEeprom.ENC_KEY, sizeof(gEeprom.ENC_KEY));
@@ -805,14 +812,13 @@ for (int i = 0; i < 2; i++) {
       EEPROM_ReadBuffer(0x1BCA, gEeprom.ENC_KEY + 5, 5);
 
 	#endif
+*/
+	#ifdef ENABLE_MESSENGER_ENCRYPTION
+		// 1D20..1D2F - load encryption key
+		EEPROM_ReadBuffer(0x1D20, gEeprom.ENC_KEY, sizeof(gEeprom.ENC_KEY));
+	#endif
 
-	/*for (i = 0; i < 4; i++) {
-		if (gCustomAesKey[i] != 0xFFFFFFFFU) {
-			bHasCustomAesKey = true;
-			return;
-		}
-	}*/
-#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+	#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
 	
 	//KD8CEC WORK ===================================
 	EEPROM_ReadBuffer(CEC_EEPROM_START1 + 0, Data, 8);

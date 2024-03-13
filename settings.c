@@ -86,13 +86,14 @@ void SETTINGS_SaveVfoIndices(void)
 void SETTINGS_SaveEncryptionKey()
 {	
 
-//	EEPROM_WriteBuffer(0x0F30, gEeprom.ENC_KEY);
-//	EEPROM_WriteBuffer(0x0F38, gEeprom.ENC_KEY + 8);
-//	gRecalculateEncKey = true;
-		
-EEPROM_WriteBufferMCFW(0x1BBA, gEeprom.ENC_KEY, 5);
-EEPROM_WriteBufferMCFW(0x1BCA, gEeprom.ENC_KEY + 5, 5);
-gRecalculateEncKey = true;
+	EEPROM_WriteBuffer(0x1D20, gEeprom.ENC_KEY);
+	EEPROM_WriteBuffer(0x1D28, gEeprom.ENC_KEY + 8);
+	gRecalculateEncKey = true;
+
+//Old Config		
+//EEPROM_WriteBufferMCFW(0x1BBA, gEeprom.ENC_KEY, 5);
+//EEPROM_WriteBufferMCFW(0x1BCA, gEeprom.ENC_KEY + 5, 5);
+//gRecalculateEncKey = true;
 
 }
 

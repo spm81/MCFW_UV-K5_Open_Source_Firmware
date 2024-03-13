@@ -839,7 +839,7 @@ static void CMD_0602(const uint8_t *pBuffer)
 
 	void UART_SendUiElement(uint8_t type, uint32_t value1, uint32_t value2, uint32_t value3, uint32_t Length, const void* data)
 	{
-		if(gSetting_Remote_UI)
+		if(gSetting_Remote_UI) 
 		{
 			const uint8_t id = 0xB5;
 			UART_Send(&id, 1);

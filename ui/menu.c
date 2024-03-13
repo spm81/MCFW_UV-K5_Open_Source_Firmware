@@ -132,6 +132,9 @@ static const char MenuList[][8] = {
     "Upconv",
 #ifdef ENABLE_DOCK
     "Remote",
+#endif   
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+    "M Call",
 #endif    
     "Tx 350",
     "F Lock",
@@ -439,6 +442,9 @@ void UI_DisplayMenu(void) {
 
 #ifdef ENABLE_DOCK
   case MENU_REMOTE_UI:
+#endif
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+	case MENU_MISSED_CALL_NBLL:
 #endif
 #ifdef ENABLE_MESSENGER_ENCRYPTION
   case MENU_MSG_ENC:

@@ -65,7 +65,8 @@ void UI_DisplayStatus(void) {
     UI_DisplayBattery(gBatteryDisplayLevel);
   }
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
-
+		if(gSetting_Missed_Call_NBL) 
+		{
 const uint8_t BITMAP_MISSED = 65;
 
 if (gMissedCalls > 0) { // Indicador de chamada perdida
@@ -82,7 +83,7 @@ if (gMissedCalls > 0) { // Indicador de chamada perdida
     gStatusLine[BITMAP_MISSED + 10] |= 0b00001100;
     gStatusLine[BITMAP_MISSED + 11] |= 0b00001110;
 }
-
+    }
 
 #endif
 #ifdef ENABLE_MESSENGER

@@ -137,6 +137,9 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     break;
 #ifdef ENABLE_DOCK
 	case MENU_REMOTE_UI:
+#endif
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+	case MENU_MISSED_CALL_NBLL:
 #endif    
   case MENU_BCL:
   case MENU_BEEP:
@@ -397,6 +400,11 @@ void MENU_AcceptSetting(void) {
 			break;
 #endif
 
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+		case MENU_MISSED_CALL_NBLL:
+			gSetting_Missed_Call_NBL = gSubMenuSelection;
+			break;
+#endif
   case MENU_BEEP:
     gEeprom.BEEP_CONTROL = gSubMenuSelection;
     break;
@@ -787,6 +795,12 @@ void MENU_ShowCurrentSetting(void) {
 #ifdef ENABLE_DOCK
 		case MENU_REMOTE_UI:
 			gSubMenuSelection = gSetting_Remote_UI;
+			break;
+#endif
+
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+		case MENU_MISSED_CALL_NBLL:
+			gSubMenuSelection = gSetting_Missed_Call_NBL;
 			break;
 #endif
 
