@@ -144,7 +144,7 @@ volatile bool gScheduleFM;
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
 uint8_t           gMissedCalls;
 volatile uint8_t  gFlashLightNotifCounter;
-bool	gSetting_Missed_Call_NBL = true;
+bool	gSetting_Missed_Call_NBL = false;
 #endif
 
 uint16_t gCurrentRSSI;
