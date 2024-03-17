@@ -172,9 +172,15 @@ static const char gSubMenu_SFT_D[3][4] = {
     "-",
 };
 
+#if defined(ENABLE_BIGGER_BATTERY_SAVE)
+static const char gSubMenu_SAVE[9][4] = {
+    "OFF", "1:1", "1:2", "1:3", "1:4", "1:5", "1:6", "1:7", "1:8"
+};
+#else
 static const char gSubMenu_SAVE[5][4] = {
     "OFF", "1:1", "1:2", "1:3", "1:4",
 };
+#endif
 
 static const char gSubMenu_CHAN[3][7] = {
     "OFF",

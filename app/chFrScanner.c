@@ -169,7 +169,7 @@ static void NextFreqChannel(void)
 	RADIO_SetupRegisters(true);
 
 #ifdef ENABLE_FASTER_CHANNEL_SCAN
-	gScanPauseDelayIn_10ms = 9;   // 90ms
+	gScanPauseDelayIn_10ms = 6;   // 90ms
 #else
 	gScanPauseDelayIn_10ms = scan_pause_delay_in_6_10ms;
 #endif
@@ -262,7 +262,7 @@ static void NextMemChannel(void)
 	}
 
 #ifdef ENABLE_FASTER_CHANNEL_SCAN
-	gScanPauseDelayIn_10ms = 9;  // 90ms .. <= ~60ms it misses signals (squelch response and/or PLL lock time) ?
+	gScanPauseDelayIn_10ms = 6;  // 90ms .. <= ~60ms it misses signals (squelch response and/or PLL lock time) ?
 #else
 	gScanPauseDelayIn_10ms = scan_pause_delay_in_3_10ms;
 #endif

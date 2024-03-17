@@ -48,7 +48,7 @@
 #endif
 
 /*#ifndef ARRAY_SIZE
-	#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
+        #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 #endif
 */
 void MENU_StartCssScan(int8_t Direction) {
@@ -66,16 +66,16 @@ void MENU_StopCssScan(void) {
 }
 
 int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
-	*pMin = 0;	
+  *pMin = 0;
   switch (Cursor) {
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-//============= KD8CEC WORK ==================
+    //============= KD8CEC WORK ==================
   case MENU_LIVESEEK:
-  //*pMin = 0;
-  *pMax = ARRAY_SIZE(gSubMenu_LIVESEEK) - 1;
-  break;
+    //*pMin = 0;
+    *pMax = ARRAY_SIZE(gSubMenu_LIVESEEK) - 1;
+    break;
 //============= END OF KD8CEC WORK ===========
-#endif		
+#endif
   case MENU_SQL:
     //*pMin = 0;
     *pMax = 9;
@@ -94,9 +94,9 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     break;
 #ifdef ENABLE_LCD_CONTRAST_OPTION
   case MENU_CONTRAST:
-		*pMin = 1;
-		*pMax = 63;
-		break;	
+    *pMin = 1;
+    *pMax = 63;
+    break;
 #endif
 
   case MENU_MDF:
@@ -107,20 +107,25 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
   case MENU_SFT_D:
   case MENU_TDR:
   case MENU_WX:
- // case MENU_VOICE:
+    // case MENU_VOICE:
   case MENU_SC_REV:
   case MENU_PONMSG:
   case MENU_ALL_TX:
     //*pMin = 0;
     *pMax = 2;
     break;
-#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) ||         \
+    defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) ||          \
+    defined(ENABLE_ROGER_MOTOTRBOTLKRT80) ||                                   \
+    defined(ENABLE_ROGER_ROGERCOBRAAM845) ||                                   \
+    defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) ||         \
+    defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
   case MENU_ROGER:
     //*pMin = 0;
-	*pMax = ARRAY_SIZE(gSubMenu_ROGER) - 1;
+    *pMax = ARRAY_SIZE(gSubMenu_ROGER) - 1;
     break;
 #endif
-	
+
   case MENU_UPCONVERTER:
     //*pMin = 0;
     *pMax = 6;
@@ -136,14 +141,14 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     *pMax = 50;
     break;
 #ifdef ENABLE_DOCK
-	case MENU_REMOTE_UI:
+  case MENU_REMOTE_UI:
 #endif
 #if defined(ENABLE_PTT_HOLD)
   case MENU_PTT_HOLD:
-#endif  
+#endif
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
-	case MENU_MISSED_CALL_NBLL:
-#endif    
+  case MENU_MISSED_CALL_NBLL:
+#endif
   case MENU_BCL:
   case MENU_BEEP:
   case MENU_AUTOLK:
@@ -153,41 +158,42 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
 #ifdef ENABLE_DTMF_CALLING
   case MENU_D_ST:
   case MENU_D_DCD:
-#endif  
+#endif
   case MENU_RESET:
   case MENU_350TX:
   case MENU_200TX:
   case MENU_500TX:
   case MENU_SCREN:
 #ifdef ENABLE_MESSENGER_ENCRYPTION
-		case MENU_MSG_ENC:
+  case MENU_MSG_ENC:
 #endif
-#if defined (ENABLE_MESSENGER) && defined(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION)
-		case MENU_MSG_NOTIFICATION:
-#endif	
+#if defined(ENABLE_MESSENGER) &&                                               \
+    defined(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION)
+  case MENU_MSG_NOTIFICATION:
+#endif
 #ifdef ENABLE_MESSENGER
-		case MENU_MSG_ACK:
+  case MENU_MSG_ACK:
 #endif
-	
+
     //*pMin = 0;
     *pMax = 1;
     break;
 #ifdef ENABLE_MESSENGER
-		case MENU_MSG_MODULATION:
-			*pMin = 0;
-			*pMax = ARRAY_SIZE(gSubMenu_MSG_MODULATION) - 1;
-			break;
-#endif    
+  case MENU_MSG_MODULATION:
+    *pMin = 0;
+    *pMax = ARRAY_SIZE(gSubMenu_MSG_MODULATION) - 1;
+    break;
+#endif
   case MENU_W_N:
     //*pMin = 0;
     *pMax = ARRAY_SIZE(bwNames) - 1;
     break;
-#ifdef ENABLE_STATUS_BATTERY_PERC	
+#ifdef ENABLE_STATUS_BATTERY_PERC
   case MENU_BATTYP:
-	//*pMin = 0;
-	*pMax = 1;
-	break;
-#endif	
+    //*pMin = 0;
+    *pMax = 1;
+    break;
+#endif
   case MENU_AM:
     //*pMin = 0;
     *pMax = ARRAY_SIZE(modulationTypeOptions) - 1;
@@ -203,17 +209,22 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
   case MENU_1_CALL:
   case MENU_SLIST1:
   case MENU_SLIST2:
-  /*  *pMin = -1;
-    *pMax = FREQ_CHANNEL_LAST;
-	*/
-	//*pMin = 0;
-    *pMax = 199;
-    break;  
+    /*  *pMin = -1;
+    *oMin = MR_CHANNEL_FIRST;
+     *pMax = MR_CHANNEL_LAST;
+     */
+    //*pMin = 0;
   case MENU_DEL_CH:
     //*pMin = 0;
     *pMax = 199;
     break;
+#if defined(ENABLE_BIGGER_BATTERY_SAVE)
   case MENU_SAVE:
+    *pMax = 8;
+    break;
+#else
+  case MENU_SAVE:
+#endif
   case MENU_MIC:
     //*pMin = 0;
     *pMax = 4;
@@ -398,18 +409,18 @@ void MENU_AcceptSetting(void) {
     return;
 
 #ifdef ENABLE_DOCK
-		case MENU_REMOTE_UI:
-			gSetting_Remote_UI = gSubMenuSelection;
-			break;
+  case MENU_REMOTE_UI:
+    gSetting_Remote_UI = gSubMenuSelection;
+    break;
 #endif
 #if defined(ENABLE_PTT_HOLD)
-    case MENU_PTT_HOLD:
-      gSetting_Ptt_Hold = gSubMenuSelection;
-#endif  
+  case MENU_PTT_HOLD:
+    gSetting_Ptt_Hold = gSubMenuSelection;
+#endif
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
-		case MENU_MISSED_CALL_NBLL:
-			gSetting_Missed_Call_NBL = gSubMenuSelection;
-			break;
+  case MENU_MISSED_CALL_NBLL:
+    gSetting_Missed_Call_NBL = gSubMenuSelection;
+    break;
 #endif
   case MENU_BEEP:
     gEeprom.BEEP_CONTROL = gSubMenuSelection;
@@ -418,13 +429,13 @@ void MENU_AcceptSetting(void) {
   case MENU_TOT:
     gEeprom.TX_TIMEOUT_TIMER = gSubMenuSelection;
     break;
-/*
-  case MENU_VOICE:
-    gEeprom.VOICE_PROMPT = gSubMenuSelection;
-    gRequestSaveSettings = true;
-    gUpdateStatus = true;
-    return;
-*/
+    /*
+      case MENU_VOICE:
+        gEeprom.VOICE_PROMPT = gSubMenuSelection;
+        gRequestSaveSettings = true;
+        gUpdateStatus = true;
+        return;
+    */
   case MENU_SC_REV:
     gEeprom.SCAN_RESUME_MODE = gSubMenuSelection;
     break;
@@ -434,10 +445,10 @@ void MENU_AcceptSetting(void) {
     break;
 
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-	case MENU_LIVESEEK:
-	CEC_LiveSeekMode = gSubMenuSelection;
-	break;
-#endif			
+  case MENU_LIVESEEK:
+    CEC_LiveSeekMode = gSubMenuSelection;
+    break;
+#endif
 
   case MENU_AUTOLK:
     gEeprom.AUTO_KEYPAD_LOCK = gSubMenuSelection;
@@ -478,7 +489,7 @@ void MENU_AcceptSetting(void) {
     break;
 
   case MENU_S_LIST:
-  //  gEeprom.SCAN_LIST_DEFAULT = gSubMenuSelection - 1;
+    //  gEeprom.SCAN_LIST_DEFAULT = gSubMenuSelection - 1;
     gEeprom.SCAN_LIST_DEFAULT = gSubMenuSelection;
     break;
 #ifdef ENABLE_DTMF_CALLING
@@ -523,7 +534,12 @@ void MENU_AcceptSetting(void) {
     gEeprom.POWER_ON_DISPLAY_MODE = gSubMenuSelection;
     break;
 
-#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) ||         \
+    defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) ||          \
+    defined(ENABLE_ROGER_MOTOTRBOTLKRT80) ||                                   \
+    defined(ENABLE_ROGER_ROGERCOBRAAM845) ||                                   \
+    defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) ||         \
+    defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
   case MENU_ROGER:
     gEeprom.ROGER = gSubMenuSelection;
     break;
@@ -531,9 +547,9 @@ void MENU_AcceptSetting(void) {
 
 #ifdef ENABLE_LCD_CONTRAST_OPTION
   case MENU_CONTRAST:
-			gEeprom.LCD_CONTRAST = gSubMenuSelection;
-			ST7565_SetContrast(gEeprom.LCD_CONTRAST);
-			break;  
+    gEeprom.LCD_CONTRAST = gSubMenuSelection;
+    ST7565_SetContrast(gEeprom.LCD_CONTRAST);
+    break;
 #endif
   case MENU_AM:
     gTxVfo->AM_CHANNEL_MODE = gSubMenuSelection;
@@ -549,10 +565,10 @@ void MENU_AcceptSetting(void) {
   case MENU_RESET:
     BOARD_FactoryReset(gSubMenuSelection);
     return;
-	
+
   case MENU_UPCONVERTER:
     gUpconverter = gSubMenuSelection;
-    return;	
+    return;
 
   case MENU_350TX:
     gSetting_350TX = gSubMenuSelection;
@@ -576,10 +592,10 @@ void MENU_AcceptSetting(void) {
     gVfoConfigureMode = VFO_CONFIGURE_RELOAD;
     gFlagResetVfos = true;
     return;
-#ifdef ENABLE_STATUS_BATTERY_PERC	
+#ifdef ENABLE_STATUS_BATTERY_PERC
   case MENU_BATTYP:
-	gEeprom.BATTERY_TYPE = gSubMenuSelection;
-	break;
+    gEeprom.BATTERY_TYPE = gSubMenuSelection;
+    break;
 #endif
   case MENU_SCREN:
     gSetting_ScrambleEnable = gSubMenuSelection;
@@ -588,36 +604,35 @@ void MENU_AcceptSetting(void) {
     return;
 
 #ifdef ENABLE_MESSENGER
-	#ifdef ENABLE_MESSENGER_ENCRYPTION
-			case MENU_ENC_KEY:
-				memset(gEeprom.ENC_KEY, 0, sizeof(gEeprom.ENC_KEY));
-				memmove(gEeprom.ENC_KEY, edit, sizeof(gEeprom.ENC_KEY));
-				memset(edit, 0, sizeof(edit));
-				gUpdateStatus        = true;
-				break;
+#ifdef ENABLE_MESSENGER_ENCRYPTION
+  case MENU_ENC_KEY:
+    memset(gEeprom.ENC_KEY, 0, sizeof(gEeprom.ENC_KEY));
+    memmove(gEeprom.ENC_KEY, edit, sizeof(gEeprom.ENC_KEY));
+    memset(edit, 0, sizeof(edit));
+    gUpdateStatus = true;
+    break;
 
-			case MENU_MSG_ENC:
-				gEeprom.MESSENGER_CONFIG.data.encrypt = gSubMenuSelection;
-        // Clear old KEY ???
-        //if ( gEeprom.MESSENGER_CONFIG.data.encrypt == 0 ) {
-        //  SETTINGS_ClearEncryptionKey();
-        //}
-				break;
-	#endif
+  case MENU_MSG_ENC:
+    gEeprom.MESSENGER_CONFIG.data.encrypt = gSubMenuSelection;
+    // Clear old KEY ???
+    // if ( gEeprom.MESSENGER_CONFIG.data.encrypt == 0 ) {
+    //  SETTINGS_ClearEncryptionKey();
+    //}
+    break;
+#endif
 
-		
-			#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
-				case MENU_MSG_NOTIFICATION:
-				gEeprom.MESSENGER_CONFIG.data.notification = gSubMenuSelection;
-				break;
-			#endif
-			case MENU_MSG_ACK:
-				gEeprom.MESSENGER_CONFIG.data.ack = gSubMenuSelection;
-				break;
+#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+  case MENU_MSG_NOTIFICATION:
+    gEeprom.MESSENGER_CONFIG.data.notification = gSubMenuSelection;
+    break;
+#endif
+  case MENU_MSG_ACK:
+    gEeprom.MESSENGER_CONFIG.data.ack = gSubMenuSelection;
+    break;
 
-			case MENU_MSG_MODULATION:
-				gEeprom.MESSENGER_CONFIG.data.modulation = gSubMenuSelection;
-				break;   
+  case MENU_MSG_MODULATION:
+    gEeprom.MESSENGER_CONFIG.data.modulation = gSubMenuSelection;
+    break;
 #endif
   default:
     return;
@@ -715,7 +730,7 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_UPCONVERTER:
     gSubMenuSelection = gUpconverter;
     break;
-	
+
   case MENU_R_CTCS:
     if (gTxVfo->ConfigRX.CodeType == CODE_TYPE_CONTINUOUS_TONE) {
       gSubMenuSelection = gTxVfo->ConfigRX.Code + 1;
@@ -799,18 +814,18 @@ void MENU_ShowCurrentSetting(void) {
     break;
 
 #ifdef ENABLE_DOCK
-		case MENU_REMOTE_UI:
-			gSubMenuSelection = gSetting_Remote_UI;
-			break;
+  case MENU_REMOTE_UI:
+    gSubMenuSelection = gSetting_Remote_UI;
+    break;
 #endif
 #if defined(ENABLE_PTT_HOLD)
-    case MENU_PTT_HOLD:
-      gSubMenuSelection = gSetting_Ptt_Hold;
-#endif 
+  case MENU_PTT_HOLD:
+    gSubMenuSelection = gSetting_Ptt_Hold;
+#endif
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
-		case MENU_MISSED_CALL_NBLL:
-			gSubMenuSelection = gSetting_Missed_Call_NBL;
-			break;
+  case MENU_MISSED_CALL_NBLL:
+    gSubMenuSelection = gSetting_Missed_Call_NBL;
+    break;
 #endif
 
   case MENU_BEEP:
@@ -820,11 +835,11 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_TOT:
     gSubMenuSelection = gEeprom.TX_TIMEOUT_TIMER;
     break;
-/*
-  case MENU_VOICE:
-    gSubMenuSelection = gEeprom.VOICE_PROMPT;
-    break;
-*/
+    /*
+      case MENU_VOICE:
+        gSubMenuSelection = gEeprom.VOICE_PROMPT;
+        break;
+    */
   case MENU_SC_REV:
     gSubMenuSelection = gEeprom.SCAN_RESUME_MODE;
     break;
@@ -834,11 +849,11 @@ void MENU_ShowCurrentSetting(void) {
     break;
 
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-	case MENU_LIVESEEK:
-	gSubMenuSelection = CEC_LiveSeekMode;
-	break;
+  case MENU_LIVESEEK:
+    gSubMenuSelection = CEC_LiveSeekMode;
+    break;
 #endif
-			
+
   case MENU_AUTOLK:
     gSubMenuSelection = gEeprom.AUTO_KEYPAD_LOCK;
     break;
@@ -868,7 +883,7 @@ void MENU_ShowCurrentSetting(void) {
     break;
 
   case MENU_S_LIST:
-//   gSubMenuSelection = gEeprom.SCAN_LIST_DEFAULT + 1;
+    //   gSubMenuSelection = gEeprom.SCAN_LIST_DEFAULT + 1;
     gSubMenuSelection = gEeprom.SCAN_LIST_DEFAULT;
 
     break;
@@ -912,15 +927,20 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_PONMSG:
     gSubMenuSelection = gEeprom.POWER_ON_DISPLAY_MODE;
     break;
-#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) ||         \
+    defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) ||          \
+    defined(ENABLE_ROGER_MOTOTRBOTLKRT80) ||                                   \
+    defined(ENABLE_ROGER_ROGERCOBRAAM845) ||                                   \
+    defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) ||         \
+    defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
   case MENU_ROGER:
     gSubMenuSelection = gEeprom.ROGER;
     break;
 #endif
 #ifdef ENABLE_LCD_CONTRAST_OPTION
   case MENU_CONTRAST:
-			gSubMenuSelection = gEeprom.LCD_CONTRAST;
-			break;	
+    gSubMenuSelection = gEeprom.LCD_CONTRAST;
+    break;
 #endif
   case MENU_AM:
     gSubMenuSelection = gTxVfo->AM_CHANNEL_MODE;
@@ -959,32 +979,31 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_SCREN:
     gSubMenuSelection = gSetting_ScrambleEnable;
     break;
-#ifdef ENABLE_MESSENGER	
+#ifdef ENABLE_MESSENGER
 #ifdef ENABLE_MESSENGER_ENCRYPTION
-			case MENU_MSG_ENC:
-				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.encrypt;
-				break;
+  case MENU_MSG_ENC:
+    gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.encrypt;
+    break;
 #endif
 
-		
-			case MENU_MSG_ACK:
-				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.ack;
-				break;
-			case MENU_MSG_MODULATION:
-				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.modulation;
-				break;
-			#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
-				case MENU_MSG_NOTIFICATION:
-				gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.notification;
-				break;
-			#endif				
+  case MENU_MSG_ACK:
+    gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.ack;
+    break;
+  case MENU_MSG_MODULATION:
+    gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.modulation;
+    break;
+#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+  case MENU_MSG_NOTIFICATION:
+    gSubMenuSelection = gEeprom.MESSENGER_CONFIG.data.notification;
+    break;
 #endif
-        
-#ifdef ENABLE_STATUS_BATTERY_PERC	
+#endif
+
+#ifdef ENABLE_STATUS_BATTERY_PERC
   case MENU_BATTYP:
-	gSubMenuSelection = gEeprom.BATTERY_TYPE;
-	break;	
-#endif	
+    gSubMenuSelection = gEeprom.BATTERY_TYPE;
+    break;
+#endif
   }
 }
 
@@ -1025,17 +1044,14 @@ static void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     }
     gInputBoxIndex = 0;
   } else {
-	#ifdef ENABLE_MESSENGER_ENCRYPTION	  
+#ifdef ENABLE_MESSENGER_ENCRYPTION
     if (edit_index != -1 && gMenuCursor == MENU_ENC_KEY) {
-      if (edit_index < 10)
-      {
-        if (Key <= KEY_9)
-        {
+      if (edit_index < 10) {
+        if (Key <= KEY_9) {
           edit[edit_index] = '0' + Key - KEY_0;
 
-          if (++edit_index >= 10)
-          {	// exit edit
-            gFlagAcceptSetting  = false;
+          if (++edit_index >= 10) { // exit edit
+            gFlagAcceptSetting = false;
             gAskForConfirmation = 1;
           }
 
@@ -1044,7 +1060,7 @@ static void MENU_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
       }
       return;
     }
-	#endif
+#endif
     if (gMenuCursor == MENU_OFFSET) {
       uint32_t Frequency;
 
@@ -1144,42 +1160,39 @@ static void MENU_Key_MENU(bool bKeyPressed, bool bKeyHeld) {
     if (!gIsInSubMenu) {
       gAskForConfirmation = 0;
       gIsInSubMenu = true;
-      edit_index     = -1;
+      edit_index = -1;
 
     } else {
 
-      #ifdef ENABLE_MESSENGER_ENCRYPTION
-        if (gMenuCursor == MENU_ENC_KEY)
-        {
-          if (edit_index < 0)
-          {	// enter encryption key edit mode
-            // pad the encryption key out with '_'
-            edit_index = strlen(edit);
-            while (edit_index < 10)
-              edit[edit_index++] = '_';
-            edit[edit_index] = 0;
-            edit_index = 0;  // 'edit_index' is going to be used as the cursor position
+#ifdef ENABLE_MESSENGER_ENCRYPTION
+      if (gMenuCursor == MENU_ENC_KEY) {
+        if (edit_index < 0) { // enter encryption key edit mode
+          // pad the encryption key out with '_'
+          edit_index = strlen(edit);
+          while (edit_index < 10)
+            edit[edit_index++] = '_';
+          edit[edit_index] = 0;
+          edit_index =
+              0; // 'edit_index' is going to be used as the cursor position
 
-            return;
-          }
-          else if (edit_index >= 0 && edit_index < 10)
-          {	// editing the encryption key characters
+          return;
+        } else if (edit_index >= 0 &&
+                   edit_index < 10) { // editing the encryption key characters
 
-            if (++edit_index < 10)
-              return;	// next char
+          if (++edit_index < 10)
+            return; // next char
 
-            // exit, save encryption key
-          }
+          // exit, save encryption key
         }
-      #endif
-
+      }
+#endif
 
       if (gMenuCursor == MENU_RESET || gMenuCursor == MENU_MEM_CH ||
           gMenuCursor == MENU_DEL_CH
 #ifdef ENABLE_MESSENGER_ENCRYPTION
           || gMenuCursor == MENU_ENC_KEY
 #endif
-          ) {
+      ) {
         switch (gAskForConfirmation) {
         case 0:
           gAskForConfirmation = 1;
@@ -1237,32 +1250,29 @@ static void MENU_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld,
   uint8_t Channel;
   bool bCheckScanList;
 
-  #ifdef ENABLE_MESSENGER_ENCRYPTION
+#ifdef ENABLE_MESSENGER_ENCRYPTION
 
-  if (gIsInSubMenu && edit_index >= 0 && gMenuCursor == MENU_ENC_KEY )
-	{	// change the character
-		if (bKeyPressed && edit_index < 10 && Direction != 0)
-		{
-			// TODO: Allow special chars when setting encryption key
-			const char   unwanted[] = "$%&!\"':;?^`|{}";
-			char         c          = edit[edit_index] + Direction;
-			unsigned int i          = 0;
-			while (i < sizeof(unwanted) && c >= 32 && c <= 126)
-			{
-				if (c == unwanted[i++])
-				{	// choose next character
-					c += Direction;
-					i = 0;
-				}
-			}
-			edit[edit_index] = (c < 32) ? 126 : (c > 126) ? 32 : c;
+  if (gIsInSubMenu && edit_index >= 0 &&
+      gMenuCursor == MENU_ENC_KEY) { // change the character
+    if (bKeyPressed && edit_index < 10 && Direction != 0) {
+      // TODO: Allow special chars when setting encryption key
+      const char unwanted[] = "$%&!\"':;?^`|{}";
+      char c = edit[edit_index] + Direction;
+      unsigned int i = 0;
+      while (i < sizeof(unwanted) && c >= 32 && c <= 126) {
+        if (c == unwanted[i++]) { // choose next character
+          c += Direction;
+          i = 0;
+        }
+      }
+      edit[edit_index] = (c < 32) ? 126 : (c > 126) ? 32 : c;
 
-			gRequestDisplayScreen = DISPLAY_MENU;
-		}
-		return;
-	}
+      gRequestDisplayScreen = DISPLAY_MENU;
+    }
+    return;
+  }
 
-  #endif
+#endif
 
   if (!bKeyHeld) {
     if (!bKeyPressed) {
@@ -1362,20 +1372,18 @@ void MENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     MENU_Key_STAR(bKeyPressed, bKeyHeld);
     break;
   case KEY_F:
-#ifdef ENABLE_MESSENGER_ENCRYPTION  
-    if (edit_index >= 0 && gMenuCursor == MENU_ENC_KEY ) {
-      if (!bKeyHeld && bKeyPressed)
-      {
+#ifdef ENABLE_MESSENGER_ENCRYPTION
+    if (edit_index >= 0 && gMenuCursor == MENU_ENC_KEY) {
+      if (!bKeyHeld && bKeyPressed) {
         gBeepToPlay = BEEP_1KHZ_60MS_OPTIONAL;
-        if (edit_index >= 0)
-        {
+        if (edit_index >= 0) {
           edit_index--;
           gRequestDisplayScreen = DISPLAY_MENU;
         }
       }
       break;
     }
-#endif    
+#endif
     GENERIC_Key_F(bKeyPressed, bKeyHeld);
     break;
   case KEY_PTT:
