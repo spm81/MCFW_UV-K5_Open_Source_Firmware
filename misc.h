@@ -205,6 +205,10 @@ extern uint8_t 				gMissedCalls;
 extern volatile uint8_t 	 gFlashLightNotifCounter;
 extern bool		  		 gSetting_Missed_Call_NBL;
 #endif
+
+#ifdef ENABLE_PTT_HOLD
+extern bool	gSetting_Ptt_Hold;
+#endif
 #ifdef ENABLE_DOCK
 	extern bool		  		 gSetting_Remote_UI;
 #endif

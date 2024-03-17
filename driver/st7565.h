@@ -26,6 +26,10 @@ extern uint8_t gStatusLine[LCD_WIDTH];
 extern uint8_t gFrameBuffer[7][LCD_WIDTH];
 
 void ST7565_DrawLine(uint8_t Column, uint8_t Line, uint16_t Size, const uint8_t *pBitmap, bool bIsClearMode);
+#if defined(ENABLE_LOGO)
+
+void ST7565_DrawFullScreenBitmap(const uint8_t *pBitmap);
+#endif
 void ST7565_BlitFullScreen(void);
 void ST7565_BlitStatusLine(void);
 void ST7565_FillScreen(uint8_t Value);

@@ -17,6 +17,11 @@
 #include "app/aircopy.h"
 #include "bsp/dp32g030/gpio.h"
 #include "driver/bk4819.h"
+//////////////////////////////////// Erase Passwords
+#include "../driver/st7565.h"
+#include "ARMCM0.h"
+#include "ui/helper.h"
+////////////////////////////////////
 #include "driver/keyboard.h"
 #include "driver/gpio.h"
 #include "driver/system.h"
@@ -67,10 +72,39 @@ for (int i = 0x2000; i <= 0x10000; i += 16) {
 return BOOT_MODE_NORMAL;
 }
 */
-	}
+////Erase Password Lock & Messenger
+    if (Keys[0] == KEY_MENU) {
+      char String[16];
+      memset(String, 0, sizeof(String));
+      UI_DisplayClear();
+      UI_PrintStringSmallBold("ERASING PASSWORDS", 0, 127, 0);
+      UI_PrintStringSmallBold("OF LOCK &", 0, 127, 2);
+      UI_PrintStringSmallBold("MESSENGER", 0, 127, 4);
+      ST7565_BlitFullScreen();
+      i = 0;
+      while (i < 50) // 500ms
+      {
+        i = (GPIO_CheckBit(&GPIOC->DATA, GPIOC_PIN_PTT) &&
+             KEYBOARD_Poll() == KEY_INVALID)
+                ? i + 1
+                : 0;
+        SYSTEM_DelayMs(10);
+      }
 
-	return BOOT_MODE_NORMAL;
-}
+      uint8_t data[16];
+      memset(data, 0xff, sizeof(data));
+
+      // for (int i = 0x2000; i <= 0x10000; i += 16) {
+      for (int i = 0x1D20; i <= 0x1D30; i += 16) {
+        EEPROM_WriteBuffer(i, data);
+      }
+      EEPROM_WriteBuffer(0x0E98, "\xff\xff\xff\xff");
+
+      NVIC_SystemReset();
+    }
+	}
+  return BOOT_MODE_NORMAL;
+	}
 
 void BOOT_ProcessMode(BOOT_Mode_t Mode)
 {
@@ -165,6 +199,9 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode)
     gMenuListCount++;
 #endif
 #ifdef ENABLE_DOCK
+    gMenuListCount++;
+#endif
+#if defined(ENABLE_PTT_HOLD)
     gMenuListCount++;
 #endif
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)

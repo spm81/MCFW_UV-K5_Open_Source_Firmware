@@ -147,6 +147,9 @@ volatile uint8_t  gFlashLightNotifCounter;
 bool	gSetting_Missed_Call_NBL = false;
 #endif
 
+#ifdef ENABLE_PTT_HOLD
+bool	gSetting_Ptt_Hold = false;
+#endif
 uint16_t gCurrentRSSI;
 
 uint8_t gIsLocked = 0xFF;

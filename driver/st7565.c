@@ -58,6 +58,30 @@ void ST7565_DrawLine(uint8_t Column, uint8_t Line, uint16_t Size,
   SPI_ToggleMasterMode(&SPI0->CR, true);
 }
 
+#if defined(ENABLE_LOGO)
+
+void ST7565_DrawFullScreenBitmap(const uint8_t *pBitmap){
+	unsigned int i;
+
+	// reset some of the displays settings to try and overcome the radios hardware problem - RF corrupting the display
+	ST7565_Init();
+	SPI_ToggleMasterMode(&SPI0->CR, false);
+
+	for (i = 0; i < 8; i++){
+		unsigned int j;
+		ST7565_SelectColumnAndLine(0, i);
+		GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_A0);
+		for (j = 0; j < 128; j++){
+			while ((SPI0->FIFOST & SPI_FIFOST_TFF_MASK) != SPI_FIFOST_TFF_BITS_NOT_FULL) {}
+			SPI0->WDR = pBitmap[j * 8 + i];
+		}
+		SPI_WaitForUndocumentedTxFifoStatusBit();
+	}
+
+	SPI_ToggleMasterMode(&SPI0->CR, true);
+}
+#endif
+
 void ST7565_BlitFullScreen(void) {
   uint8_t Line;
   uint8_t Column;

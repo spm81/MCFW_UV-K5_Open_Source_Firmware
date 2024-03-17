@@ -138,6 +138,9 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
 #ifdef ENABLE_DOCK
 	case MENU_REMOTE_UI:
 #endif
+#if defined(ENABLE_PTT_HOLD)
+  case MENU_PTT_HOLD:
+#endif  
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
 	case MENU_MISSED_CALL_NBLL:
 #endif    
@@ -399,7 +402,10 @@ void MENU_AcceptSetting(void) {
 			gSetting_Remote_UI = gSubMenuSelection;
 			break;
 #endif
-
+#if defined(ENABLE_PTT_HOLD)
+    case MENU_PTT_HOLD:
+      gSetting_Ptt_Hold = gSubMenuSelection;
+#endif  
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
 		case MENU_MISSED_CALL_NBLL:
 			gSetting_Missed_Call_NBL = gSubMenuSelection;
@@ -797,7 +803,10 @@ void MENU_ShowCurrentSetting(void) {
 			gSubMenuSelection = gSetting_Remote_UI;
 			break;
 #endif
-
+#if defined(ENABLE_PTT_HOLD)
+    case MENU_PTT_HOLD:
+      gSubMenuSelection = gSetting_Ptt_Hold;
+#endif 
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
 		case MENU_MISSED_CALL_NBLL:
 			gSubMenuSelection = gSetting_Missed_Call_NBL;

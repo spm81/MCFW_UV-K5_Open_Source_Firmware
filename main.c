@@ -165,6 +165,9 @@ void Main(void) {
 #ifdef ENABLE_DOCK
     gMenuListCount++;
 #endif
+#if defined(ENABLE_PTT_HOLD)
+    gMenuListCount++;
+#endif
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
     gMenuListCount++;
 #endif

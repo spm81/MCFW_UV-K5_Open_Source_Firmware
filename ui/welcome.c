@@ -16,26 +16,39 @@
 
 #include "welcome.h"
 #include "../driver/eeprom.h"
+#if defined(ENABLE_LOGO)
+#include "../bitmaps.h"
+#include "../driver/system.h"
+#endif
 #include "../driver/st7565.h"
 #include "../external/printf/printf.h"
 #include "../helper/battery.h"
 #include "../settings.h"
-#include "helper.h"
 #include "../version.h"
+#include "helper.h"
 #include <string.h>
 #ifdef ENABLE_DOCK
-	#include "app/uart.h"
+#include "app/uart.h"
 #endif
-
+#if defined(ENABLE_LOGO)
+void UI_DisplayWelcomeBitmap(void) {
+  ST7565_BlitFullScreen();
+  ST7565_DrawFullScreenBitmap(BITMAP_WELCOME);
+}
+#endif
 void UI_DisplayWelcome(void) {
   memset(gStatusLine, 0, sizeof(gStatusLine));
   UI_DisplayClear();
-	#ifdef ENABLE_DOCK
-		UART_SendUiElement(5, 0, 0, 0, 0, NULL);
-	#endif
-  
+#ifdef ENABLE_DOCK
+  UART_SendUiElement(5, 0, 0, 0, 0, NULL);
+#endif
+
   if (gEeprom.POWER_ON_DISPLAY_MODE == POWER_ON_DISPLAY_MODE_FULL_SCREEN) {
-   // ST7565_FillScreen(0xFF);
+#if defined(ENABLE_LOGO)
+    UI_DisplayWelcomeBitmap();
+#else
+    ST7565_FillScreen(0xFF);
+#endif
   } else {
     char WelcomeString0[16];
     char WelcomeString1[16];
@@ -44,20 +57,21 @@ void UI_DisplayWelcome(void) {
     memset(WelcomeString1, 0, sizeof(WelcomeString1));
     if (gEeprom.POWER_ON_DISPLAY_MODE == POWER_ON_DISPLAY_MODE_VOLTAGE) {
       sprintf(WelcomeString0, "VOLTAGE");
-	  #ifdef ENABLE_VOLTAGE_PERCENTAGE_WELCOME_MESSAGE
-			sprintf(WelcomeString1, "%d.%02dV %d%%", gBatteryVoltageAverage / 100,
-              gBatteryVoltageAverage % 100,	BATTERY_VoltsToPercent(gBatteryVoltageAverage));
-	  #else
-			sprintf(WelcomeString1, "%d.%02dV", gBatteryVoltageAverage / 100,
+#ifdef ENABLE_VOLTAGE_PERCENTAGE_WELCOME_MESSAGE
+      sprintf(WelcomeString1, "%d.%02dV %d%%", gBatteryVoltageAverage / 100,
+              gBatteryVoltageAverage % 100,
+              BATTERY_VoltsToPercent(gBatteryVoltageAverage));
+#else
+      sprintf(WelcomeString1, "%d.%02dV", gBatteryVoltageAverage / 100,
               gBatteryVoltageAverage % 100);
-	  #endif		  
+#endif
     } else {
       EEPROM_ReadBuffer(0x0EB0, WelcomeString0, 16);
       EEPROM_ReadBuffer(0x0EC0, WelcomeString1, 16);
     }
     UI_PrintString(WelcomeString0, 0, 127, 1, 10, true);
     UI_PrintString(WelcomeString1, 0, 127, 3, 10, true);
-          UI_PrintStringSmall(Version, 0, 127, 5);
+    UI_PrintStringSmall(Version, 0, 127, 5);
     UI_PrintStringSmallest(__DATE__ " " __TIME__, 24, 50, false, true);
 
     ST7565_BlitStatusLine();

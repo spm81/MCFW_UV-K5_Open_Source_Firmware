@@ -99,7 +99,10 @@ enum {
 	MENU_UPCONVERTER,
 #ifdef ENABLE_DOCK
 	MENU_REMOTE_UI,
-#endif		
+#endif	
+#if defined(ENABLE_PTT_HOLD)
+    MENU_PTT_HOLD,
+#endif 	
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
 	MENU_MISSED_CALL_NBLL,
 #endif		

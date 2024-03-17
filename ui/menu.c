@@ -35,17 +35,18 @@
 #include "ui.h"
 #include <string.h>
 #ifdef ENABLE_DOCK
-	#include "app/uart.h"
+#include "app/uart.h"
 #endif
 
 #ifdef ENABLE_MESSENGER_ENCRYPTION
-	#include "helper/crypto.h"
+#include "helper/crypto.h"
 #endif
 
-//char               str[64];  // bigger cuz we can now do multi-line in one string (use '\n' char)
+// char               str[64];  // bigger cuz we can now do multi-line in one
+// string (use '\n' char)
 
 static const char MenuList[][8] = {
-        // 0x00
+    // 0x00
     "Squelch",
     "Step",
     "TxPower",
@@ -58,15 +59,15 @@ static const char MenuList[][8] = {
     "TxOffs",
     "Bandwid",
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-	"LIVE.S",
-#endif	
+    "LIVE.S",
+#endif
     "Scrambl",
     "BusyCL",
     "ChSave",
     "BatSave",
     "VOX",
     "Backlit",
-/*	
+/*
     #ifdef ENABLE_LCD_INVERT_OPTION
     "Invert",
     #endif*/
@@ -78,18 +79,18 @@ static const char MenuList[][8] = {
     "XBand",
 #ifdef ENABLE_MESSENGER_ENCRYPTION
     "EncKey",
-	"MsgEnc",
+    "MsgEnc",
 #endif
 #ifdef ENABLE_MESSENGER
-	"MsgAck",
-	"MsgMod",
-	#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
-	"MsgRBN",
-	#endif	
-#endif    
+    "MsgAck",
+    "MsgMod",
+#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+    "MsgRBN",
+#endif
+#endif
     "Beep",
     "TxTime",
-   // "Voice",
+    // "Voice",
     "ScnRev",
     "ChDisp",
     "KeyLock",
@@ -115,27 +116,35 @@ static const char MenuList[][8] = {
     "D Prel",
     "PTT ID",
     "D Decd",
-    "D List",    
+    "D List",
 #endif
     "PonMsg",
-#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) ||         \
+    defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) ||          \
+    defined(ENABLE_ROGER_MOTOTRBOTLKRT80) ||                                   \
+    defined(ENABLE_ROGER_ROGERCOBRAAM845) ||                                   \
+    defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) ||         \
+    defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
     "Roger",
-#endif	
+#endif
     "Voltage",
-#ifdef ENABLE_STATUS_BATTERY_PERC	
+#ifdef ENABLE_STATUS_BATTERY_PERC
     "BatTyp", // battery type 1600/2200mAh
 #endif
     "Modulat",
-// 0x30
+    // 0x30
     "ChDele",
     "Reset",
     "Upconv",
 #ifdef ENABLE_DOCK
     "Remote",
-#endif   
+#endif
+#if defined(ENABLE_PTT_HOLD)
+    "PTTHold",
+#endif
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
     "M Call",
-#endif    
+#endif
     "Tx 350",
     "F Lock",
     "Tx 200",
@@ -146,19 +155,10 @@ static const char MenuList[][8] = {
 };
 
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-const char gSubMenu_LIVESEEK[3][6] =
-{
-	"NONE",
-	"LIVE",
-	"LIVE+"
-};
+const char gSubMenu_LIVESEEK[3][6] = {"NONE", "LIVE", "LIVE+"};
 #endif
-#ifdef ENABLE_STATUS_BATTERY_PERC	
-const char gSubMenu_BATTYP[][9] =
-{
-	"1600mAh",
-	"2200mAh"
-};
+#ifdef ENABLE_STATUS_BATTERY_PERC
+const char gSubMenu_BATTYP[][9] = {"1600mAh", "2200mAh"};
 #endif
 static const char gSubMenu_TXP[3][5] = {
     "LOW",
@@ -212,15 +212,23 @@ static const char gSubMenu_PTT_ID[4][5] = {
 };
 #endif
 static const char gSubMenu_PONMSG[3][5] = {
+#if defined(ENABLE_LOGO)
+    "LOGO",
+#else
     "FULL",
+#endif
     "MSG",
     "VOL",
 };
 
-#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) ||         \
+    defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) ||          \
+    defined(ENABLE_ROGER_MOTOTRBOTLKRT80) ||                                   \
+    defined(ENABLE_ROGER_ROGERCOBRAAM845) ||                                   \
+    defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) ||         \
+    defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
 const char gSubMenu_ROGER[][9] = {
-  "OFF",
-
+    "OFF",
 
 #ifdef ENABLE_ROGER_DEFAULT
     "DEFAULT",
@@ -286,7 +294,8 @@ const char gSubMenuBacklight[8][7] = {"OFF",   "5 sec", "10 sec", "20 sec",
 
 static const char *defaultEnableDisable[3] = {"DEFAULT", "ENABLE", "DISABLE"};
 static const char *offOn[2] = {"OFF", "ON"};
-static const char *upconverterFreqNames[7] = {"OFF", "50M", "70M", "106M", "125M", "140M", "200M"};
+static const char *upconverterFreqNames[7] = {"OFF",  "50M",  "70M", "106M",
+                                              "125M", "140M", "200M"};
 bool gIsInSubMenu;
 
 uint8_t gMenuCursor;
@@ -294,8 +303,8 @@ int8_t gMenuScrollDirection;
 uint32_t gSubMenuSelection;
 
 // edit box
-char    edit[17];
-int     edit_index;
+char edit[17];
+int edit_index;
 
 void UI_DisplayMenu(void) {
   char String[16];
@@ -412,11 +421,11 @@ void UI_DisplayMenu(void) {
     break;
 
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-	case MENU_LIVESEEK:
-	strcpy(String, gSubMenu_LIVESEEK[gSubMenuSelection]);
-	break;
+  case MENU_LIVESEEK:
+    strcpy(String, gSubMenu_LIVESEEK[gSubMenuSelection]);
+    break;
 #endif
-	
+
   case MENU_SCR:
   case MENU_VOX:
     if (gSubMenuSelection == 0) {
@@ -430,12 +439,12 @@ void UI_DisplayMenu(void) {
     strcpy(String, gSubMenuBacklight[gSubMenuSelection]);
     break;
 #ifdef ENABLE_LCD_CONTRAST_OPTION
-  case MENU_CONTRAST:				
-		sprintf(String, "%d", gSubMenuSelection);				
-		ST7565_SetContrast(gSubMenuSelection);
-	  break;
+  case MENU_CONTRAST:
+    sprintf(String, "%d", gSubMenuSelection);
+    ST7565_SetContrast(gSubMenuSelection);
+    break;
 #endif
-  
+
   case MENU_ALL_TX:
     strcpy(String, defaultEnableDisable[gSubMenuSelection]);
     break;
@@ -443,17 +452,20 @@ void UI_DisplayMenu(void) {
 #ifdef ENABLE_DOCK
   case MENU_REMOTE_UI:
 #endif
+#if defined(ENABLE_PTT_HOLD)
+  case MENU_PTT_HOLD:
+#endif
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
-	case MENU_MISSED_CALL_NBLL:
+  case MENU_MISSED_CALL_NBLL:
 #endif
 #ifdef ENABLE_MESSENGER_ENCRYPTION
   case MENU_MSG_ENC:
 #endif
 #ifdef ENABLE_MESSENGER
-	#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
-		case MENU_MSG_NOTIFICATION:
-	#endif
-  case MENU_MSG_ACK:	
+#ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
+  case MENU_MSG_NOTIFICATION:
+#endif
+  case MENU_MSG_ACK:
 #endif
   case MENU_BCL:
   case MENU_BEEP:
@@ -463,7 +475,7 @@ void UI_DisplayMenu(void) {
 #ifdef ENABLE_DTMF_CALLING
   case MENU_D_ST:
   case MENU_D_DCD:
-#endif  
+#endif
   case MENU_350TX:
   case MENU_200TX:
   case MENU_500TX:
@@ -499,11 +511,11 @@ void UI_DisplayMenu(void) {
       sprintf(String, "%dmin", gSubMenuSelection);
     }
     break;
-/*
-  case MENU_VOICE:
-    strcpy(String, gSubMenu_VOICE[gSubMenuSelection]);
-    break;
-*/
+    /*
+      case MENU_VOICE:
+        strcpy(String, gSubMenu_VOICE[gSubMenuSelection]);
+        break;
+    */
   case MENU_SC_REV:
     strcpy(String, gSubMenu_SC_REV[gSubMenuSelection]);
     break;
@@ -520,33 +532,34 @@ void UI_DisplayMenu(void) {
     }
     break;
 
- /* case MENU_S_LIST:
-    sprintf(String, "LIST%d", gSubMenuSelection);
-    break;
-*/
+    /* case MENU_S_LIST:
+       sprintf(String, "LIST%d", gSubMenuSelection);
+       break;
+   */
 
-/*
-case MENU_S_LIST:
-	//		strcpy(str, "SCAN LIST\n");
-			if (gSubMenuSelection < 2)
-				sprintf(String, "LIST%d", 1 + gSubMenuSelection);
-			//	sprintf(String, "LIST%u", gSubMenuSelection);
-			else
-				sprintf(String, "ALL");
-			break;
-      */
-     case MENU_S_LIST:
+    /*
+    case MENU_S_LIST:
+            //		strcpy(str, "SCAN LIST\n");
+                            if (gSubMenuSelection < 2)
+                                    sprintf(String, "LIST%d", 1 +
+    gSubMenuSelection);
+                            //	sprintf(String, "LIST%u", gSubMenuSelection);
+                            else
+                                    sprintf(String, "ALL");
+                            break;
+          */
+  case MENU_S_LIST:
     if (gSubMenuSelection == 3) {
-        sprintf(String, "LIST1+2");
+      sprintf(String, "LIST1+2");
     } else if (gSubMenuSelection < 2) {
-        sprintf(String, "LIST%d", 1 + gSubMenuSelection);
+      sprintf(String, "LIST%d", 1 + gSubMenuSelection);
     } else {
-        sprintf(String, "ALL");
+      sprintf(String, "ALL");
     }
     break;
 
 #ifdef ENABLE_DTMF_CALLING
-			
+
   case MENU_ANI_ID:
     strcpy(String, gEeprom.ANI_DTMF_ID);
     break;
@@ -589,21 +602,27 @@ case MENU_S_LIST:
   case MENU_PONMSG:
     strcpy(String, gSubMenu_PONMSG[gSubMenuSelection]);
     break;
-#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) ||         \
+    defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) ||          \
+    defined(ENABLE_ROGER_MOTOTRBOTLKRT80) ||                                   \
+    defined(ENABLE_ROGER_ROGERCOBRAAM845) ||                                   \
+    defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) ||         \
+    defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
   case MENU_ROGER:
     strcpy(String, gSubMenu_ROGER[gSubMenuSelection]);
     break;
 #endif
   case MENU_VOL:
-#ifdef ENABLE_BATTERY_CHARGING  
-        // Draw the charging indicator over the battery if we're charging
-		// The charging indicator is 13x16, so we need 2 lines of 8 pixels to draw it.
-		//By Tunas1337
-		if (gChargingWithTypeC) {
-			memcpy(gFrameBuffer[2]+113, BITMAP_SettingsBattCharging, 13);
-			memcpy(gFrameBuffer[3]+113, BITMAP_SettingsBattCharging+13, 13);
-		}
-#endif		
+#ifdef ENABLE_BATTERY_CHARGING
+    // Draw the charging indicator over the battery if we're charging
+    // The charging indicator is 13x16, so we need 2 lines of 8 pixels to draw
+    // it.
+    // By Tunas1337
+    if (gChargingWithTypeC) {
+      memcpy(gFrameBuffer[2] + 113, BITMAP_SettingsBattCharging, 13);
+      memcpy(gFrameBuffer[3] + 113, BITMAP_SettingsBattCharging + 13, 13);
+    }
+#endif
     sprintf(String, "%d.%02dV", gBatteryVoltageAverage / 100,
             gBatteryVoltageAverage % 100);
     break;
@@ -611,70 +630,68 @@ case MENU_S_LIST:
   case MENU_RESET:
     strcpy(String, gSubMenu_RESET[gSubMenuSelection]);
     break;
-#ifdef ENABLE_STATUS_BATTERY_PERC	
+#ifdef ENABLE_STATUS_BATTERY_PERC
   case MENU_BATTYP:
-		strcpy(String, gSubMenu_BATTYP[gSubMenuSelection]);
-		break;	
+    strcpy(String, gSubMenu_BATTYP[gSubMenuSelection]);
+    break;
 #endif
   case MENU_UPCONVERTER:
     strcpy(String, upconverterFreqNames[gSubMenuSelection]);
     break;
-	
+
   case MENU_F_LOCK:
     strcpy(String, gSubMenu_F_LOCK[gSubMenuSelection]);
     break;
 
 #ifdef ENABLE_MESSENGER_ENCRYPTION
-				case MENU_ENC_KEY:
-				{
-          //const unsigned int menu_item_x1    =  50;
-          //const unsigned int menu_item_x2    = LCD_WIDTH - 1;
-					if (!gIsInSubMenu)
-					{	// show placeholder in main menu
-						strcpy(String, "****");
-						//UI_PrintString(String, menu_item_x1, menu_item_x2, 2, 8, true);
-					}
-					else
-					{	// show the key being edited
-						/*if (edit_index != -1 || gAskForConfirmation) {
-							UI_PrintString(edit, (menu_item_x1 -2), 0, 2, 8, true);
-							// show the cursor
-							if(edit_index < 10)
-								UI_PrintString(     "^", (menu_item_x1 -2) + (8 * edit_index), 0, 4, 8, true);  
-						}
-						else{*/            
+  case MENU_ENC_KEY: {
+    // const unsigned int menu_item_x1    =  50;
+    // const unsigned int menu_item_x2    = LCD_WIDTH - 1;
+    if (!gIsInSubMenu) { // show placeholder in main menu
+      strcpy(String, "****");
+      // UI_PrintString(String, menu_item_x1, menu_item_x2, 2, 8, true);
+    } else { // show the key being edited
+             /*if (edit_index != -1 || gAskForConfirmation) {
+                     UI_PrintString(edit, (menu_item_x1 -2), 0, 2, 8, true);
+                     // show the cursor
+                     if(edit_index < 10)
+                             UI_PrintString(     "^", (menu_item_x1 -2) + (8 *
+             edit_index), 0, 4, 8, true);
+             }
+             else{*/
 
-            if (edit_index != -1 || gAskForConfirmation) {
-              strcpy(String, edit); 
-              UI_PrintStringSmall(String, 55, 0, 2);
-              if(edit_index < 10)
-							  UI_PrintStringSmall("^", 55 + (7 * edit_index), 0, 3);
-              already_printed = true;
-            } else {							
+      if (edit_index != -1 || gAskForConfirmation) {
+        strcpy(String, edit);
+        UI_PrintStringSmall(String, 55, 0, 2);
+        if (edit_index < 10)
+          UI_PrintStringSmall("^", 55 + (7 * edit_index), 0, 3);
+        already_printed = true;
+      } else {
 
-              UI_PrintStringSmall("hashed", 55, 127, 1);
-							memset(String, 0, sizeof(String));
-							
-							CRYPTO_DisplayHash(gEeprom.ENC_KEY, String, sizeof(gEeprom.ENC_KEY));
-							UI_PrintStringSmall(String, 55, 127, 3);
-              already_printed = true;
-						}			
-					}
-					
-					break;
-				}
-			#endif
+        UI_PrintStringSmall("hashed", 55, 127, 1);
+        memset(String, 0, sizeof(String));
 
-			#ifdef ENABLE_MESSENGER
-				case MENU_MSG_MODULATION:
-          //if not in range, reset it to default
-          if(!(gSubMenuSelection>=0 && gSubMenuSelection<ARRAY_SIZE(gSubMenu_MSG_MODULATION))){
-            gSubMenuSelection=0;
-          }
-					strcpy(String, gSubMenu_MSG_MODULATION[gSubMenuSelection]);
-          //sprintf(String,"%x",gSubMenuSelection);
-					break;
-			#endif
+        CRYPTO_DisplayHash(gEeprom.ENC_KEY, String, sizeof(gEeprom.ENC_KEY));
+        UI_PrintStringSmall(String, 55, 127, 3);
+        already_printed = true;
+      }
+    }
+
+    break;
+  }
+#endif
+
+#ifdef ENABLE_MESSENGER
+  case MENU_MSG_MODULATION:
+    // if not in range, reset it to default
+    if (!(gSubMenuSelection >= 0 &&
+          gSubMenuSelection < ARRAY_SIZE(gSubMenu_MSG_MODULATION))) {
+      gSubMenuSelection = 0;
+    }
+    strcpy(String, gSubMenu_MSG_MODULATION[gSubMenuSelection]);
+    // sprintf(String,"%x",gSubMenuSelection);
+    break;
+#endif
   }
 
   if (!already_printed)
@@ -686,9 +703,9 @@ case MENU_S_LIST:
 
   if ((gMenuCursor == MENU_RESET || gMenuCursor == MENU_MEM_CH ||
        gMenuCursor == MENU_DEL_CH
-        #ifdef ENABLE_MESSENGER_ENCRYPTION
-          || gMenuCursor == MENU_ENC_KEY
-        #endif
+#ifdef ENABLE_MESSENGER_ENCRYPTION
+       || gMenuCursor == MENU_ENC_KEY
+#endif
        ) &&
       gAskForConfirmation) {
     if (gAskForConfirmation == 1) {
@@ -725,65 +742,65 @@ case MENU_S_LIST:
   if (gMenuCursor == MENU_R_CTCS || gMenuCursor == MENU_T_CTCS ||
       gMenuCursor == MENU_R_DCS || gMenuCursor == MENU_T_DCS
 #ifdef ENABLE_DTMF_CALLING
-	  || gMenuCursor == MENU_D_LIST) {
+      || gMenuCursor == MENU_D_LIST) {
 #else
-) {
-#endif	
-		  /*
-    uint8_t Offset;
+  ) {
+#endif
+    /*
+uint8_t Offset;
 
-    NUMBER_ToDigits((uint8_t)gSubMenuSelection, String);
-    Offset = (gMenuCursor == MENU_D_LIST) ? 2 : 3;
-    UI_DisplaySmallDigits(Offset, String + (8 - Offset), 105, 0);
-  }
+NUMBER_ToDigits((uint8_t)gSubMenuSelection, String);
+Offset = (gMenuCursor == MENU_D_LIST) ? 2 : 3;
+UI_DisplaySmallDigits(Offset, String + (8 - Offset), 105, 0);
+}
 
-  if (gMenuCursor == MENU_SLIST1 || gMenuCursor == MENU_SLIST2) {
-    i = gMenuCursor - MENU_SLIST1;
-		i = (gMenuCursor == MENU_SLIST1) ? 0 : 1;
+if (gMenuCursor == MENU_SLIST1 || gMenuCursor == MENU_SLIST2) {
+i = gMenuCursor - MENU_SLIST1;
+  i = (gMenuCursor == MENU_SLIST1) ? 0 : 1;
 
-    if (gSubMenuSelection == 0xFF)
-		if (gSubMenuSelection < 0)
-		{
-      sprintf(String, "NULL");
-    } else {
-      UI_GenerateChannelStringEx(String, true, (uint8_t)gSubMenuSelection);
-    }
+if (gSubMenuSelection == 0xFF)
+  if (gSubMenuSelection < 0)
+  {
+sprintf(String, "NULL");
+} else {
+UI_GenerateChannelStringEx(String, true, (uint8_t)gSubMenuSelection);
+}
 
-    if (gSubMenuSelection == 0xFF || !gEeprom.SCAN_LIST_ENABLED[i]) {
-    if (gSubMenuSelection < 0 || !gEeprom.SCAN_LIST_ENABLED[i]) {
-      UI_PrintString(String, 50, 127, 2, 8, true);
-    } else {
-      UI_PrintString(String, 50, 127, 0, 8, true);
-      if (IS_MR_CHANNEL(gEeprom.SCANLIST_PRIORITY_CH1[i])) {
-        sprintf(String, "PRI1:%d", gEeprom.SCANLIST_PRIORITY_CH1[i] + 1);
-        UI_PrintString(String, 50, 127, 2, 8, true);
-      }
-      if (IS_MR_CHANNEL(gEeprom.SCANLIST_PRIORITY_CH2[i])) {
-        sprintf(String, "PRI2:%d", gEeprom.SCANLIST_PRIORITY_CH2[i] + 1);
-        UI_PrintString(String, 50, 127, 4, 8, true);
-      }
-    }
-  }
+if (gSubMenuSelection == 0xFF || !gEeprom.SCAN_LIST_ENABLED[i]) {
+if (gSubMenuSelection < 0 || !gEeprom.SCAN_LIST_ENABLED[i]) {
+UI_PrintString(String, 50, 127, 2, 8, true);
+} else {
+UI_PrintString(String, 50, 127, 0, 8, true);
+if (IS_MR_CHANNEL(gEeprom.SCANLIST_PRIORITY_CH1[i])) {
+sprintf(String, "PRI1:%d", gEeprom.SCANLIST_PRIORITY_CH1[i] + 1);
+UI_PrintString(String, 50, 127, 2, 8, true);
+}
+if (IS_MR_CHANNEL(gEeprom.SCANLIST_PRIORITY_CH2[i])) {
+sprintf(String, "PRI2:%d", gEeprom.SCANLIST_PRIORITY_CH2[i] + 1);
+UI_PrintString(String, 50, 127, 4, 8, true);
+}
+}
+}
 
-  ST7565_BlitFullScreen();
+ST7565_BlitFullScreen();
 }
 */
 #ifdef ENABLE_DTMF_CALLING
 
- uint8_t Offset;
+    uint8_t Offset;
 
     NUMBER_ToDigits((uint8_t)gSubMenuSelection, String);
     Offset = (gMenuCursor == MENU_D_LIST) ? 2 : 3;
     UI_DisplaySmallDigits(Offset, String + (9 - Offset), 105, 0);
-#endif	
+#endif
   }
 #ifdef ENABLE_BATTERY_CHARGING
-	// If we're in the voltage menu option, also print the current
-	if (gMenuCursor == MENU_VOL) {
-		sprintf(String, "%dmA", gBatteryCurrent);
-		UI_PrintString(String, 50, 127, 5, 8, true);
-	}
-#endif	
+  // If we're in the voltage menu option, also print the current
+  if (gMenuCursor == MENU_VOL) {
+    sprintf(String, "%dmA", gBatteryCurrent);
+    UI_PrintString(String, 50, 127, 5, 8, true);
+  }
+#endif
   if (gMenuCursor == MENU_SLIST1 || gMenuCursor == MENU_SLIST2) {
     i = gMenuCursor - MENU_SLIST1;
 

@@ -13,14 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
- 
+
 #include "app/dtmf.h"
 #include <string.h>
 #if defined(ENABLE_FMRADIO)
 #include "app/fm.h"
 #endif
 #ifdef ENABLE_MESSENGER
-	#include "app/messenger.h"
+#include "app/messenger.h"
 #endif
 #include "bsp/dp32g030/gpio.h"
 #include "dcs.h"
@@ -30,6 +30,10 @@
 #include "driver/bk4819.h"
 #include "driver/gpio.h"
 #include "driver/system.h"
+#if defined(ENABLE_CW)
+#include "app/app.h"
+#include "driver/keyboard.h"
+#endif
 #include "functions.h"
 #include "helper/battery.h"
 #include "misc.h"
@@ -58,11 +62,11 @@ void FUNCTION_Init(void) {
     gCurrentCodeType = CODE_TYPE_CONTINUOUS_TONE;
   }
 #ifdef ENABLE_DTMF_CALLING
-  
+
   gDTMF_RequestPending = false;
   gDTMF_WriteIndex = 0;
   memset(gDTMF_Received, 0, sizeof(gDTMF_Received));
-#endif  
+#endif
   g_CxCSS_TAIL_Found = false;
   g_CDCSS_Lost = false;
   g_CTCSS_Lost = false;
@@ -90,13 +94,12 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
     if (Function != FUNCTION_POWER_SAVE) {
       BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable();
       gRxIdleMode = false;
-      #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
-      		if(gSetting_Missed_Call_NBL) 
-		{
-      if (Function == FUNCTION_INCOMING) {
-    	gMissedCalls++;
+#if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
+      if (gSetting_Missed_Call_NBL) {
+        if (Function == FUNCTION_INCOMING) {
+          gMissedCalls++;
+        }
       }
-    }
 #endif
       UI_DisplayStatus();
     }
@@ -109,7 +112,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
     if (gDTMF_ReplyState != DTMF_REPLY_NONE) {
       RADIO_PrepareCssTX();
     }
-#endif	
+#endif
     if (PreviousFunction == FUNCTION_TRANSMIT) {
       gVFO_RSSI_Level[0] = 0;
       gVFO_RSSI_Level[1] = 0;
@@ -118,11 +121,11 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
     }
 #if defined(ENABLE_FMRADIO)
     if (gFmRadioMode) {
-		#if defined(ENABLE_FMRADIO_FAST_RESTORE)
-			gFM_RestoreCountdown = 100;
-		#else
-			gFM_RestoreCountdown = 500;
-		#endif
+#if defined(ENABLE_FMRADIO_FAST_RESTORE)
+      gFM_RestoreCountdown = 100;
+#else
+      gFM_RestoreCountdown = 500;
+#endif
     }
 #endif
 #ifdef ENABLE_DTMF_CALLING
@@ -131,7 +134,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
         gDTMF_CallState == DTMF_CALL_STATE_RECEIVED) {
       gDTMF_AUTO_RESET_TIME = 1 + (gEeprom.DTMF_AUTO_RESET_TIME * 2);
     }
-#endif	
+#endif
     return;
 
   case FUNCTION_MONITOR:
@@ -152,8 +155,8 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
 
   case FUNCTION_TRANSMIT:
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
-  gMissedCalls=0;
-#endif  
+    gMissedCalls = 0;
+#endif
 #if defined(ENABLE_FMRADIO)
     if (gFmRadioMode) {
       BK1080_Init(0, false);
@@ -161,13 +164,31 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
 #endif
 
 #ifdef ENABLE_MESSENGER
-	MSG_EnableRX(false);	
-#endif	
+    MSG_EnableRX(false);
+#endif
 
     GUI_DisplayScreen();
     RADIO_SetTxParameters();
     BK4819_ToggleGpioOut(BK4819_GPIO1_PIN29_RED, true);
 
+#ifdef ENABLE_PTT_HOLD
+if (gSetting_Ptt_Hold) {
+#ifdef ENABLE_CW	
+    if (gRxVfo->ModulationType != MOD_CW && gRxVfo->ModulationType != MOD_AM) {
+#else      
+    if (gRxVfo->ModulationType != MOD_AM) {
+#endif      
+      void countdown() {
+    for (int i = 1; i > 0; i--) {
+      gPttWasPressed = true;
+    }
+  }
+ 
+     countdown();
+     //SYSTEM_DelayMs(2);
+    }
+    }
+#endif
 #ifdef ENABLE_CW	
     if (gRxVfo->ModulationType == MOD_CW) {
       GPIO_SetBit(&GPIOC->DATA, GPIOC_PIN_AUDIO_PATH);
@@ -190,7 +211,7 @@ void FUNCTION_Select(FUNCTION_Type_t Function) {
         gEnableSpeaker = true;
         break;
       }
-#endif    
+#endif
       if (gCurrentVfo->SCRAMBLING_TYPE && gSetting_ScrambleEnable) {
         BK4819_EnableScramble(gCurrentVfo->SCRAMBLING_TYPE - 1U);
       } else {
