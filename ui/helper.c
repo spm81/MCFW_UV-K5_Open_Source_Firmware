@@ -193,10 +193,10 @@ void UI_DisplayFrequency(const char *pDigits, uint8_t X, uint8_t Y,
 #else
 void UI_DisplayFrequency(const char *pDigits, uint8_t X, uint8_t Y,
                          bool bDisplayLeadingZero, bool bFlag) {
-  char String[8];
+  char String[7];
   char baseDigit = '0';
   uint8_t d;
-  sprintf(String, "---.---");
+  sprintf(String, "-.---");
   for (int i = 0; i < 3; i++) {
     d = pDigits[i];
     if (d < 10) {
@@ -209,7 +209,7 @@ void UI_DisplayFrequency(const char *pDigits, uint8_t X, uint8_t Y,
       String[i + 4] = d + baseDigit;
     }
   }
-  UI_PrintString(String, 8, 127, Y, 8, 1);
+  UI_PrintString(String, 9, 127, Y, 8, 1);
 }
 #endif
 

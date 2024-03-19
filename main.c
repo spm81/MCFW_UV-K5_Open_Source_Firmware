@@ -165,6 +165,9 @@ void Main(void) {
 #ifdef ENABLE_DOCK
     gMenuListCount++;
 #endif
+#if defined(ENABLE_SATCOM_AMP)
+    gMenuListCount++;
+#endif
 #if defined(ENABLE_PTT_HOLD)
     gMenuListCount++;
 #endif

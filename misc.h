@@ -209,6 +209,9 @@ extern bool		  		 gSetting_Missed_Call_NBL;
 #ifdef ENABLE_PTT_HOLD
 extern bool	gSetting_Ptt_Hold;
 #endif
+#ifdef ENABLE_SATCOM_AMP
+extern bool	gSetting_Satcom_Amp;
+#endif
 #ifdef ENABLE_DOCK
 	extern bool		  		 gSetting_Remote_UI;
 #endif
