@@ -146,9 +146,6 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
 #if defined(ENABLE_PTT_HOLD)
   case MENU_PTT_HOLD:
 #endif
-#if defined(ENABLE_SATCOM_AMP)
-  case MENU_SATCOM_AMP:
-#endif
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
   case MENU_MISSED_CALL_NBLL:
 #endif
@@ -223,7 +220,7 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
     break;
 #if defined(ENABLE_BIGGER_BATTERY_SAVE)
   case MENU_SAVE:
-    *pMax = 9;
+    *pMax = 8;
     break;
 #else
   case MENU_SAVE:
@@ -416,15 +413,9 @@ void MENU_AcceptSetting(void) {
     gSetting_Remote_UI = gSubMenuSelection;
     break;
 #endif
-#if defined(ENABLE_SATCOM_AMP)
-  case MENU_SATCOM_AMP:
-  gSetting_Satcom_Amp = gSubMenuSelection;
-  break;
-#endif
 #if defined(ENABLE_PTT_HOLD)
   case MENU_PTT_HOLD:
     gSetting_Ptt_Hold = gSubMenuSelection;
-    break;
 #endif
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
   case MENU_MISSED_CALL_NBLL:
@@ -827,15 +818,9 @@ void MENU_ShowCurrentSetting(void) {
     gSubMenuSelection = gSetting_Remote_UI;
     break;
 #endif
-#if defined(ENABLE_SATCOM_AMP)
-  case MENU_SATCOM_AMP:
-  gSubMenuSelection = gSetting_Satcom_Amp;
-  break;
-#endif
 #if defined(ENABLE_PTT_HOLD)
   case MENU_PTT_HOLD:
     gSubMenuSelection = gSetting_Ptt_Hold;
-    break;
 #endif
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
   case MENU_MISSED_CALL_NBLL:

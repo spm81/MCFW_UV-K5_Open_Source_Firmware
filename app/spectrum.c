@@ -15,15 +15,14 @@
  */
 
 #include "../app/spectrum.h"
-#include "../app/main.h"
 #include "../helper/battery.h"
 #include "finput.h"
 #include <string.h>
 #define F_MIN FrequencyBandTable[0].lower
 #define F_MAX FrequencyBandTable[ARRAY_SIZE(FrequencyBandTable) - 1].upper
 #ifdef ENABLE_AM_FIX_ON_SPECTRUM
-#include "../am_fix.h"
-#endif
+	#include "../am_fix.h"
+#endif	
 #include "../driver/eeprom.h"
 
 const uint16_t RSSI_MAX_VALUE = 65535;
@@ -48,7 +47,7 @@ PeakInfo peak;
 ScanInfo scanInfo;
 KeyboardState kbd = {KEY_INVALID, KEY_INVALID, 0};
 
-// const char *bwOptions[] = {"  25k", "12.5k", "6.25k", "5k"};
+//const char *bwOptions[] = {"  25k", "12.5k", "6.25k", "5k"};
 const uint8_t modulationTypeTuneSteps[] = {100, 50, 10};
 
 SpectrumSettings settings = {
@@ -104,8 +103,9 @@ uint8_t lastStepsCount = 0;
 
 VfoState_t txAllowState;
 
-void LockAGC() {
-  RADIO_SetupAGC(settings.modulationType == MOD_AM, lockAGC);
+void LockAGC()
+{
+  RADIO_SetupAGC(settings.modulationType==MOD_AM, lockAGC);
   lockAGC = true;
 }
 
@@ -399,84 +399,88 @@ static void RelaunchScan() {
   redrawStatus = true;
 }
 
-void SETTINGS_FetchChannelName(char *s, const int channel) {
-  if (s == NULL)
-    return;
 
-  memset(s, 0, 11); // 's' had better be large enough !
+void SETTINGS_FetchChannelName(char *s, const int channel)
+{
+	if (s == NULL)
+		return;
+	
+	memset(s, 0, 11);  // 's' had better be large enough !
+	
+	if (channel < 0)
+		return;
 
-  if (channel < 0)
-    return;
+	if (!RADIO_CheckValidChannel(channel, false, 0))
+		return;
 
-  if (!RADIO_CheckValidChannel(channel, false, 0))
-    return;
+	EEPROM_ReadBuffer(0x0F50 + (channel * 16), s + 0, 8);
+	EEPROM_ReadBuffer(0x0F58 + (channel * 16), s + 8, 2);
 
-  EEPROM_ReadBuffer(0x0F50 + (channel * 16), s + 0, 8);
-  EEPROM_ReadBuffer(0x0F58 + (channel * 16), s + 8, 2);
+	int i;
+	for (i = 0; i < 10; i++)
+		if (s[i] < 32 || s[i] > 127)
+			break;                // invalid char
 
-  int i;
-  for (i = 0; i < 10; i++)
-    if (s[i] < 32 || s[i] > 127)
-      break; // invalid char
+	s[i--] = 0;                   // null term
 
-  s[i--] = 0; // null term
-
-  while (i >= 0 && s[i] == 32) // trim trailing spaces
-    s[i--] = 0;                // null term
+	while (i >= 0 && s[i] == 32)  // trim trailing spaces
+		s[i--] = 0;               // null term
 }
 
-uint32_t SETTINGS_FetchChannelFrequency(const int channel) {
-  struct {
-    uint32_t frequency;
-    uint32_t offset;
-  } __attribute__((packed)) info;
+uint32_t SETTINGS_FetchChannelFrequency(const int channel)
+{
+	struct
+	{
+		uint32_t frequency;
+		uint32_t offset;
+	} __attribute__((packed)) info;
 
-  EEPROM_ReadBuffer(channel * 16, &info, sizeof(info));
-
-  return info.frequency;
+	EEPROM_ReadBuffer(channel * 16, &info, sizeof(info));
+	
+	return info.frequency;
 }
 static void ShowChannelName(uint32_t f) {
   if (currentState == SPECTRUM) {
 
-    unsigned int i;
-    char s[12];
-    memset(String, 0, sizeof(String));
+  unsigned int i;
+  char s[12];
+  memset(String, 0, sizeof(String));
 
-    if (isListening) {
-      for (i = 0; IS_MR_CHANNEL(i); i++) {
+  if ( isListening ) { 
+    for (i = 0; IS_MR_CHANNEL(i); i++) {
         if (RADIO_CheckValidChannel(i, false, 0)) {
           if (SETTINGS_FetchChannelFrequency(i) == f) {
             memset(s, 0, sizeof(s));
             SETTINGS_FetchChannelName(s, i);
             if (s[0] != 0) {
-              if (strlen(String) != 0)
-                strcat(String, "/"); // Add a space to result
+              if ( strlen(String) != 0 )
+                strcat(String, "/");   // Add a space to result
               strcat(String, s);
             }
           }
         }
-      }
-    }
-#ifdef ENABLE_ALL_REGISTERS
-    if (String[0] != 0) {
-      if (strlen(String) > 31) {
-        String[31] = 0;
-      }
-#else
-    if (String[0] != 0) {
-      if (strlen(String) > 19) {
-        String[19] = 0;
-      }
-#endif
-      //	UI_PrintStringSmallest(String, 34, 8, false, true);
-#ifdef ENABLE_ALL_REGISTERS
-      UI_PrintStringSmallest(String, 0, 14, false, true);
-#else
-      UI_PrintStringSmallest(String, 30, 8, false, true);
-#endif
     }
   }
+  	#ifdef ENABLE_ALL_REGISTERS
+	if (String[0] != 0) {
+    if ( strlen(String) > 31 ) {
+      String[31] = 0;
+    }
+	#else
+	if (String[0] != 0) {
+    if ( strlen(String) > 19 ) {
+      String[19] = 0;
+    }
+	#endif 
+//	UI_PrintStringSmallest(String, 34, 8, false, true);
+	#ifdef ENABLE_ALL_REGISTERS
+		UI_PrintStringSmallest(String, 0, 14, false, true);
+	#else
+		UI_PrintStringSmallest(String, 30, 8, false, true);
+	#endif
+  }
 }
+  }
 
 static void UpdateScanInfo() {
   if (scanInfo.rssi > scanInfo.rssiMax) {
@@ -619,20 +623,19 @@ static void UpdateFreqChangeStep(bool inc) {
 }
 
 static void ToggleModulation() {
-  BK4819_SetModulation(settings.modulationType);
-
   if (settings.modulationType == MOD_RAW) {
     settings.modulationType = MOD_FM;
   } else {
     settings.modulationType++;
   }
+  BK4819_SetModulation(settings.modulationType);
 #ifdef ENABLE_AM_FIX_ON_SPECTRUM
-  if (settings.modulationType == MOD_AM) {
-    // BK4819_InitAGC(false);
-    AM_fix_init();
+  if(settings.modulationType != MOD_AM) {
+    //BK4819_InitAGC(false);
+	AM_fix_init();
+    BK4819_SetAGC(1);
   }
 #endif
-  BK4819_SetModulation(settings.modulationType);
 
   RelaunchScan();
   redrawScreen = true;
@@ -774,14 +777,16 @@ static void DrawF(uint32_t f) {
       sprintf(String, "TX %u.%05u", f / 100000, f % 100000);
     }
   }
-                                                           ShowChannelName(f);
+  							   ShowChannelName(f);
 
   UI_PrintStringSmall(String, 8, 127, 0);
 }
 */
 
+
+
 static void DrawF(uint32_t f) {
-#ifdef ENABLE_ALL_REGISTERS
+	#ifdef ENABLE_ALL_REGISTERS
   if (currentState == SPECTRUM) {
     sprintf(String, "R%03u S%03u A%03u", scanInfo.rssi,
             BK4819_GetRegValue((RegisterSpec){"snr_out", 0x61, 8, 0xFF, 1}),
@@ -798,6 +803,7 @@ static void DrawF(uint32_t f) {
   UI_PrintStringSmallest(String, 108, 8, false, true);
 
   ShowChannelName(f);
+  
 }
 static void DrawNums() {
   if (currentState == SPECTRUM) {
@@ -897,7 +903,7 @@ static void OnKeyDown(uint8_t key) {
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_7:
-#else
+#else  
   case KEY_9:
 #endif
     if (0)
@@ -908,14 +914,14 @@ static void OnKeyDown(uint8_t key) {
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_3:
-#else
+#else  
   case KEY_1:
 #endif
     UpdateScanStep(true);
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_9:
-#else
+#else  
   case KEY_7:
 #endif
     UpdateScanStep(false);
@@ -970,7 +976,7 @@ static void OnKeyDown(uint8_t key) {
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_0:
-#else
+#else  
   case KEY_SIDE1:
 #endif
 #ifdef ENABLE_ALL_REGISTERS
@@ -992,7 +998,7 @@ static void OnKeyDown(uint8_t key) {
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_MENU:
-#else
+#else  
   case KEY_5:
 #endif
     FreqInput();
@@ -1000,35 +1006,35 @@ static void OnKeyDown(uint8_t key) {
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_4:
-#else
+#else  
   case KEY_0:
 #endif
     ToggleModulation();
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_SIDE2:
-#else
+#else  
   case KEY_6:
 #endif
     ToggleListeningBW();
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_SIDE1:
-#else
+#else  
   case KEY_4:
 #endif
     ToggleStepsCount();
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_5:
-#else
+#else  
   case KEY_SIDE2:
 #endif
     ToggleBacklight();
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_6:
-#else
+#else  
   case KEY_PTT:
 #endif
     SetState(STILL);
@@ -1037,7 +1043,7 @@ static void OnKeyDown(uint8_t key) {
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_PTT:
-#else
+#else  
   case KEY_MENU:
 #endif
 #ifdef ENABLE_ALL_REGISTERS
@@ -1168,7 +1174,7 @@ void OnKeyDownStill(KEY_Code_t key) {
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_MENU:
-#else
+#else  
   case KEY_5:
 #endif
     FreqInput();
@@ -1176,449 +1182,443 @@ void OnKeyDownStill(KEY_Code_t key) {
     break;
 #ifdef ENABLE_MATOZ_KEYS
   case KEY_4:
-#else
+#else  
   case KEY_0:
 #endif
-
-#if defined ENABLE_AM_FIX_ON_SPECTRUM
-//Have to fix 
-    break;
-#else
     ToggleModulation();
     break;
-#endif
 #ifdef ENABLE_MATOZ_KEYS
-    case KEY_SIDE2:
-#else
+  case KEY_SIDE2:
+#else  
   case KEY_6:
 #endif
-      ToggleListeningBW();
-      break;
-    case KEY_SIDE1:
-      monitorMode = !monitorMode;
-      redrawScreen = true;
-      break;
+    ToggleListeningBW();
+    break;
+  case KEY_SIDE1:
+    monitorMode = !monitorMode;
+    redrawScreen = true;
+    break;
 #ifdef ENABLE_MATOZ_KEYS
-    case KEY_5:
-#else
+  case KEY_5:
+#else  
   case KEY_SIDE2:
 #endif
-      ToggleBacklight();
-      break;
+    ToggleBacklight();
+    break;
 #ifdef ENABLE_MATOZ_KEYS
-    case KEY_0:
-#else
+  case KEY_0:
+#else  
   case KEY_PTT:
 #endif
-      // start transmit
-      // UpdateBatteryInfo();
-      BATTERY_GetReadings(true);
-      if (gBatteryDisplayLevel == 6) {
-        txAllowState = VFO_STATE_VOL_HIGH;
-      } else if (IsTXAllowed(GetOffsetedF(gCurrentVfo, fMeasure))) {
-        txAllowState = VFO_STATE_NORMAL;
-        ToggleTX(true);
-      } else {
-        txAllowState = VFO_STATE_TX_DISABLE;
-      }
-      redrawScreen = true;
-      break;
+    // start transmit
+    // UpdateBatteryInfo();
+	BATTERY_GetReadings(true);
+    if (gBatteryDisplayLevel == 6) {
+      txAllowState = VFO_STATE_VOL_HIGH;
+    } else if (IsTXAllowed(GetOffsetedF(gCurrentVfo, fMeasure))) {
+      txAllowState = VFO_STATE_NORMAL;
+      ToggleTX(true);
+    } else {
+      txAllowState = VFO_STATE_TX_DISABLE;
+    }
+    redrawScreen = true;
+    break;
 #ifdef ENABLE_MATOZ_KEYS
-    case KEY_PTT:
-#else
+  case KEY_PTT:
+#else  
   case KEY_MENU:
 #endif
-      if (menuState == ARRAY_SIZE(registerSpecs) - 1) {
-        menuState = 1;
-      } else {
-        menuState++;
-      }
-      SYSTEM_DelayMs(100);
+    if (menuState == ARRAY_SIZE(registerSpecs) - 1) {
+      menuState = 1;
+    } else {
+      menuState++;
+    }
+    SYSTEM_DelayMs(100);
+    redrawScreen = true;
+    break;
+  case KEY_EXIT:
+    if (menuState) {
+      menuState = 0;
       redrawScreen = true;
       break;
-    case KEY_EXIT:
-      if (menuState) {
-        menuState = 0;
-        redrawScreen = true;
-        break;
-      }
-#ifdef ENABLE_ALL_REGISTERS
-      if (hiddenMenuState) {
-        hiddenMenuState = 0;
-        redrawScreen = true;
-        break;
-      }
-#endif
-      SetState(SPECTRUM);
-      lockAGC = false;
-      monitorMode = false;
-      RelaunchScan();
-      break;
-    default:
-      break;
     }
-    redrawStatus = true;
-  }
-
-  static void OnKeysReleased() {
-    if (isTransmitting) {
-      ToggleTX(false);
-    }
-  }
-
-  static void RenderFreqInput() {
-    UI_PrintString(freqInputString, 2, 127, 0, 8, true);
-  }
-
-  static void RenderStatus() {
-    memset(gStatusLine, 0, sizeof(gStatusLine));
-    DrawStatus();
-    ST7565_BlitStatusLine();
-  }
-
-  static void RenderSpectrum() {
-    DrawTicks();
-    DrawArrow(peak.i << settings.stepsCount);
-    DrawSpectrum();
-    DrawRssiTriggerLevel();
-    DrawF(peak.f);
-    DrawNums();
-  }
-
-  static void RenderStill() {
-    DrawF(fMeasure);
-
-    const uint8_t METER_PAD_LEFT = 3;
-    uint8_t *ln = gFrameBuffer[2];
-
-    for (uint8_t i = 0; i < 121; i++) {
-      ln[i + METER_PAD_LEFT] = i % 10 ? 0b01000000 : 0b11000000;
-    }
-
-    uint8_t rssiX = Rssi2PX(scanInfo.rssi, 0, 121);
-    for (uint8_t i = 0; i < rssiX; ++i) {
-      if (i % 5 && i / 5 < rssiX / 5) {
-        ln[i + METER_PAD_LEFT] |= 0b00011100;
-      }
-    }
-
-    int dbm = Rssi2DBm(scanInfo.rssi);
-    uint8_t s = DBm2S(dbm);
-    if (s < 10) {
-      sprintf(String, "S%u", s);
-    } else {
-      sprintf(String, "S9+%u0", s - 9);
-    }
-    UI_PrintStringSmallest(String, 4, 10, false, true);
-    sprintf(String, "%d dBm", dbm);
-    UI_PrintStringSmallest(String, 32, 10, false, true);
-
-    if (isTransmitting) {
-      uint8_t afDB = BK4819_ReadRegister(0x6F) & 0b1111111;
-      uint8_t afPX = ConvertDomain(afDB, 26, 194, 0, 121);
-      for (uint8_t i = 0; i < afPX; ++i) {
-        gFrameBuffer[3][i + METER_PAD_LEFT] |= 0b00000011;
-      }
-    }
-
-    if (!monitorMode) {
-      uint8_t rssiTriggerX = Rssi2PX(settings.rssiTriggerLevel, METER_PAD_LEFT,
-                                     121 + METER_PAD_LEFT);
-      ln[rssiTriggerX - 1] |= 0b01000001;
-      ln[rssiTriggerX] = 0b01111111;
-      ln[rssiTriggerX + 1] |= 0b01000001;
-    }
-
 #ifdef ENABLE_ALL_REGISTERS
     if (hiddenMenuState) {
-      uint8_t hiddenMenuLen = ARRAY_SIZE(hiddenRegisterSpecs);
-      uint8_t offset = Clamp(hiddenMenuState - 2, 1, hiddenMenuLen - 5);
-      for (int i = 0; i < 5; ++i) {
-        RegisterSpec s = hiddenRegisterSpecs[i + offset];
-        bool isCurrent = hiddenMenuState == i + offset;
-        sprintf(String, "%s%x %s: %u", isCurrent ? ">" : " ", s.num, s.name,
-                BK4819_GetRegValue(s));
-        UI_PrintStringSmallest(String, 0, i * 6 + 26, false, true);
-      }
-    } else {
+      hiddenMenuState = 0;
+      redrawScreen = true;
+      break;
+    }
 #endif
-      const uint8_t PAD_LEFT = 4;
-      const uint8_t CELL_WIDTH = 30;
-      uint8_t row = 3;
+    SetState(SPECTRUM);
+    lockAGC = false;
+    monitorMode = false;
+    RelaunchScan();
+    break;
+  default:
+    break;
+  }
+  redrawStatus = true;
+}
 
-      for (int i = 0, idx = 1; idx < ARRAY_SIZE(registerSpecs); ++i, ++idx) {
-        if (idx == 5) {
-          row += 2;
-          i = 0;
-        }
-        const uint8_t offset = PAD_LEFT + i * CELL_WIDTH;
-        if (menuState == idx) {
-          for (int j = 0; j < CELL_WIDTH; ++j) {
-            gFrameBuffer[row][j + offset] = 0xFF;
-            gFrameBuffer[row + 1][j + offset] = 0xFF;
-          }
-        }
-        RegisterSpec s = registerSpecs[idx];
-        sprintf(String, "%s", s.name);
-        UI_PrintStringSmallest(String, offset + 2, row * 8 + 2, false,
-                               menuState != idx);
-        sprintf(String, "%u", BK4819_GetRegValue(s));
-        UI_PrintStringSmallest(String, offset + 2, (row + 1) * 8 + 1, false,
-                               menuState != idx);
-      }
+static void OnKeysReleased() {
+  if (isTransmitting) {
+    ToggleTX(false);
+  }
+}
+
+static void RenderFreqInput() {
+  UI_PrintString(freqInputString, 2, 127, 0, 8, true);
+}
+
+static void RenderStatus() {
+  memset(gStatusLine, 0, sizeof(gStatusLine));
+  DrawStatus();
+  ST7565_BlitStatusLine();
+}
+
+static void RenderSpectrum() {
+  DrawTicks();
+  DrawArrow(peak.i << settings.stepsCount);
+  DrawSpectrum();
+  DrawRssiTriggerLevel();
+  DrawF(peak.f);
+  DrawNums();
+}
+
+static void RenderStill() {
+  DrawF(fMeasure);
+
+  const uint8_t METER_PAD_LEFT = 3;
+  uint8_t *ln = gFrameBuffer[2];
+
+  for (uint8_t i = 0; i < 121; i++) {
+    ln[i + METER_PAD_LEFT] = i % 10 ? 0b01000000 : 0b11000000;
+  }
+
+  uint8_t rssiX = Rssi2PX(scanInfo.rssi, 0, 121);
+  for (uint8_t i = 0; i < rssiX; ++i) {
+    if (i % 5 && i / 5 < rssiX / 5) {
+      ln[i + METER_PAD_LEFT] |= 0b00011100;
+    }
+  }
+
+  int dbm = Rssi2DBm(scanInfo.rssi);
+  uint8_t s = DBm2S(dbm);
+  if (s < 10) {
+    sprintf(String, "S%u", s);
+  } else {
+    sprintf(String, "S9+%u0", s - 9);
+  }
+  UI_PrintStringSmallest(String, 4, 10, false, true);
+  sprintf(String, "%d dBm", dbm);
+  UI_PrintStringSmallest(String, 32, 10, false, true);
+
+  if (isTransmitting) {
+    uint8_t afDB = BK4819_ReadRegister(0x6F) & 0b1111111;
+    uint8_t afPX = ConvertDomain(afDB, 26, 194, 0, 121);
+    for (uint8_t i = 0; i < afPX; ++i) {
+      gFrameBuffer[3][i + METER_PAD_LEFT] |= 0b00000011;
+    }
+  }
+
+  if (!monitorMode) {
+    uint8_t rssiTriggerX = Rssi2PX(settings.rssiTriggerLevel, METER_PAD_LEFT,
+                                   121 + METER_PAD_LEFT);
+    ln[rssiTriggerX - 1] |= 0b01000001;
+    ln[rssiTriggerX] = 0b01111111;
+    ln[rssiTriggerX + 1] |= 0b01000001;
+  }
+
 #ifdef ENABLE_ALL_REGISTERS
+  if (hiddenMenuState) {
+    uint8_t hiddenMenuLen = ARRAY_SIZE(hiddenRegisterSpecs);
+    uint8_t offset = Clamp(hiddenMenuState - 2, 1, hiddenMenuLen - 5);
+    for (int i = 0; i < 5; ++i) {
+      RegisterSpec s = hiddenRegisterSpecs[i + offset];
+      bool isCurrent = hiddenMenuState == i + offset;
+      sprintf(String, "%s%x %s: %u", isCurrent ? ">" : " ", s.num, s.name,
+              BK4819_GetRegValue(s));
+      UI_PrintStringSmallest(String, 0, i * 6 + 26, false, true);
     }
+  } else {
 #endif
-  }
+    const uint8_t PAD_LEFT = 4;
+    const uint8_t CELL_WIDTH = 30;
+    uint8_t row = 3;
 
-  static void Render() {
-    UI_DisplayClear();
-
-    switch (currentState) {
-    case SPECTRUM:
-      RenderSpectrum();
-      break;
-    case FREQ_INPUT:
-      RenderFreqInput();
-      break;
-    case STILL:
-      RenderStill();
-      break;
-    }
-
-    ST7565_BlitFullScreen();
-  }
-
-  bool HandleUserInput() {
-    kbd.prev = kbd.current;
-    kbd.current = GetKey();
-
-    if (kbd.current == KEY_INVALID) {
-      kbd.counter = 0;
-      OnKeysReleased();
-      return true;
-    }
-
-    if (kbd.current == kbd.prev && kbd.counter <= 40) {
-      kbd.counter++;
-      SYSTEM_DelayMs(10);
-    }
-
-    if (kbd.counter == 5 || kbd.counter > 40) {
-      switch (currentState) {
-      case SPECTRUM:
-        OnKeyDown(kbd.current);
-        break;
-      case FREQ_INPUT:
-        OnKeyDownFreqInput(kbd.current);
-        break;
-      case STILL:
-        OnKeyDownStill(kbd.current);
-        break;
+    for (int i = 0, idx = 1; idx < ARRAY_SIZE(registerSpecs); ++i, ++idx) {
+      if (idx == 5) {
+        row += 2;
+        i = 0;
       }
+      const uint8_t offset = PAD_LEFT + i * CELL_WIDTH;
+      if (menuState == idx) {
+        for (int j = 0; j < CELL_WIDTH; ++j) {
+          gFrameBuffer[row][j + offset] = 0xFF;
+          gFrameBuffer[row + 1][j + offset] = 0xFF;
+        }
+      }
+      RegisterSpec s = registerSpecs[idx];
+      sprintf(String, "%s", s.name);
+      UI_PrintStringSmallest(String, offset + 2, row * 8 + 2, false,
+                             menuState != idx);
+      sprintf(String, "%u", BK4819_GetRegValue(s));
+      UI_PrintStringSmallest(String, offset + 2, (row + 1) * 8 + 1, false,
+                             menuState != idx);
+							 
     }
+#ifdef ENABLE_ALL_REGISTERS
+  }
+#endif
+}
 
+static void Render() {
+  UI_DisplayClear();
+
+  switch (currentState) {
+  case SPECTRUM:
+    RenderSpectrum();
+    break;
+  case FREQ_INPUT:
+    RenderFreqInput();
+    break;
+  case STILL:
+    RenderStill();
+    break;
+  }
+
+  ST7565_BlitFullScreen();
+}
+
+bool HandleUserInput() {
+  kbd.prev = kbd.current;
+  kbd.current = GetKey();
+
+  if (kbd.current == KEY_INVALID) {
+    kbd.counter = 0;
+    OnKeysReleased();
     return true;
   }
 
-  static void Scan() {
-    if (blacklist[scanInfo.i]) {
-      return;
-    }
-    SetF(scanInfo.f, true);
-    Measure();
-    UpdateScanInfo();
+  if (kbd.current == kbd.prev && kbd.counter <= 40) {
+    kbd.counter++;
+    SYSTEM_DelayMs(10);
   }
 
-  static void NextScanStep() {
-    ++peak.t;
-    ++scanInfo.i;
-    scanInfo.f += scanInfo.scanStep;
+  if (kbd.counter == 5 || kbd.counter > 40) {
+    switch (currentState) {
+    case SPECTRUM:
+      OnKeyDown(kbd.current);
+      break;
+    case FREQ_INPUT:
+      OnKeyDownFreqInput(kbd.current);
+      break;
+    case STILL:
+      OnKeyDownStill(kbd.current);
+      break;
+    }
   }
 
-  static void UpdateScan() {
-    Scan();
+  return true;
+}
 
-    if (scanInfo.i < scanInfo.measurementsCount) {
-      NextScanStep();
-      return;
-    }
+static void Scan() {
+  if (blacklist[scanInfo.i]) {
+    return;
+  }
+  SetF(scanInfo.f, true);
+  Measure();
+  UpdateScanInfo();
+}
 
-    MoveHistory();
+static void NextScanStep() {
+  ++peak.t;
+  ++scanInfo.i;
+  scanInfo.f += scanInfo.scanStep;
+}
 
+static void UpdateScan() {
+  Scan();
+
+  if (scanInfo.i < scanInfo.measurementsCount) {
+    NextScanStep();
+    return;
+  }
+
+  MoveHistory();
+
+  redrawScreen = true;
+  preventKeypress = false;
+
+  UpdatePeakInfo();
+  if (IsPeakOverLevel()) {
+    ToggleRX(true);
+    TuneToPeak();
+    return;
+  }
+
+  newScanStart = true;
+}
+uint16_t screenRedrawT = 0;
+static void UpdateStill() {
+  Measure();
+
+  peak.rssi = scanInfo.rssi;
+  AutoTriggerLevel();
+
+  if (++screenRedrawT >= 1000) {
+    screenRedrawT = 0;
     redrawScreen = true;
-    preventKeypress = false;
-
-    UpdatePeakInfo();
-    if (IsPeakOverLevel()) {
-      ToggleRX(true);
-      TuneToPeak();
-      return;
-    }
-
-    newScanStart = true;
   }
-  uint16_t screenRedrawT = 0;
-  static void UpdateStill() {
+
+  ToggleRX(IsPeakOverLevel() || monitorMode);
+}
+
+static void UpdateListening() {
+  if (!isListening) {
+    ToggleRX(true);
+  }
+  /* if (listenT % 10 == 0) {
+    AM_fix_10ms(0);
+  } */
+  if (listenT) {
+    listenT--;
+    SYSTEM_DelayMs(1);
+    return;
+  }
+
+  redrawScreen = true;
+
+  if (currentState == SPECTRUM) {
+#ifndef ENABLE_ALL_REGISTERS
+    BK4819_WriteRegister(0x43, GetBWRegValueForScan());
+#endif
     Measure();
-
-    peak.rssi = scanInfo.rssi;
-    AutoTriggerLevel();
-
-    if (++screenRedrawT >= 1000) {
-      screenRedrawT = 0;
-      redrawScreen = true;
-    }
-
-    ToggleRX(IsPeakOverLevel() || monitorMode);
+#ifndef ENABLE_ALL_REGISTERS
+    BK4819_WriteRegister(0x43, GetBWRegValueForListen());
+#endif
+  } else {
+    Measure();
+#ifndef ENABLE_ALL_REGISTERS
+    BK4819_WriteRegister(0x43, GetBWRegValueForListen());
+#endif
   }
 
-  static void UpdateListening() {
-    if (!isListening) {
-      ToggleRX(true);
-    }
-    if (listenT % 10 == 0) {
-      AM_fix_10ms(0);
-    }
-    if (listenT) {
-      listenT--;
-      SYSTEM_DelayMs(1);
-      return;
-    }
+  peak.rssi = scanInfo.rssi;
+  // AM_fix_reset(0);
 
-    redrawScreen = true;
+  MoveHistory();
 
-    if (currentState == SPECTRUM) {
-#ifndef ENABLE_ALL_REGISTERS
-      BK4819_WriteRegister(0x43, GetBWRegValueForScan());
-#endif
-      Measure();
-#ifndef ENABLE_ALL_REGISTERS
-      BK4819_WriteRegister(0x43, GetBWRegValueForListen());
-#endif
-    } else {
-      Measure();
-#ifndef ENABLE_ALL_REGISTERS
-      BK4819_WriteRegister(0x43, GetBWRegValueForListen());
-#endif
-    }
-
-    peak.rssi = scanInfo.rssi;
-    AM_fix_reset(0);
-
-    MoveHistory();
-
-    if (IsPeakOverLevel() || monitorMode) {
-      listenT = currentState == SPECTRUM ? 1000 : 10;
-      return;
-    }
-
-    ToggleRX(false);
-    newScanStart = true;
+  if (IsPeakOverLevel() || monitorMode) {
+    listenT = currentState == SPECTRUM ? 1000 : 10;
+    return;
   }
 
-  static void UpdateTransmitting() {}
+  ToggleRX(false);
+  newScanStart = true;
+}
 
-  static void Tick() {
-     #ifdef ENABLE_AM_FIX_ON_SPECTRUM
-    /*if(settings.modulationType == MOD_AM) {
-        AM_fix_10ms(vfo, !lockAGC); //allow AM_Fix to apply its AGC action
-    }
-    */
-    /*
-    if (gRxVfo->ModulationType == MOD_AM)
-       AM_fix_10ms(gEeprom.RX_CHANNEL);
-   */
+static void UpdateTransmitting() {}
 
-    if (gNextTimeslice500ms) {
-      gNextTimeslice500ms = true;
-      if (gRxVfo->ModulationType == MOD_AM && !lockAGC) {
-        AM_fix_10ms(gEeprom.RX_CHANNEL); // allow AM_Fix to apply its AGC action
-      }
+static void Tick() {
+#ifdef ENABLE_AM_FIX_ON_SPECTRUM
+  /*if(settings.modulationType == MOD_AM) {
+      AM_fix_10ms(vfo, !lockAGC); //allow AM_Fix to apply its AGC action
+  }
+  */
+ /*
+ if (gRxVfo->ModulationType == MOD_AM)
+    AM_fix_10ms(gEeprom.RX_CHANNEL);
+*/
+if (gNextTimeslice) {
+    gNextTimeslice = false;
+    if(settings.modulationType == MOD_AM && !lockAGC) {
+      AM_fix_10ms(gEeprom.RX_CHANNEL); //allow AM_Fix to apply its AGC action
     }
-#endif
+  }
+#endif  
 #if defined(ENABLE_UART)
-    if (UART_IsCommandAvailable()) {
-      __disable_irq();
-      UART_HandleCommand();
-      __enable_irq();
-    }
+  if (UART_IsCommandAvailable()) {
+    __disable_irq();
+    UART_HandleCommand();
+    __enable_irq();
+  }
 #endif
-    if (newScanStart) {
-      InitScan();
-      newScanStart = false;
-    }
-    if (isTransmitting) {
-      UpdateTransmitting();
-    } else if (isListening && currentState != FREQ_INPUT) {
-      UpdateListening();
-    } else {
-      if (currentState == SPECTRUM) {
-        UpdateScan();
-      } else if (currentState == STILL) {
-        UpdateStill();
-      }
-    }
-    if (++batteryUpdateTimer > 4096) {
-      batteryUpdateTimer = 0;
-      // UpdateBatteryInfo();
-      BATTERY_GetReadings(true);
-      redrawStatus = true;
-    }
-    if (redrawStatus) {
-      RenderStatus();
-      redrawStatus = false;
-    }
-    if (redrawScreen) {
-      Render();
-      redrawScreen = false;
-    }
-    if (!preventKeypress) {
-      HandleUserInput();
+  if (newScanStart) {
+    InitScan();
+    newScanStart = false;
+  }
+  if (isTransmitting) {
+    UpdateTransmitting();
+  } else if (isListening && currentState != FREQ_INPUT) {
+    UpdateListening();
+  } else {
+    if (currentState == SPECTRUM) {
+      UpdateScan();
+    } else if (currentState == STILL) {
+      UpdateStill();
     }
   }
-
-  static void AutomaticPresetChoose(uint32_t f) {
-    for (uint8_t i = 0; i < ARRAY_SIZE(freqPresets); ++i) {
-      const FreqPreset *p = &freqPresets[i];
-      if (f >= p->fStart && f <= p->fEnd) {
-        ApplyPreset(*p);
-      }
-    }
-  }
-
-  void APP_RunSpectrum() {
-    BackupRegisters();
-
-    // AM_fix_init();
-
-    // TX here coz it always? set to active VFO
-    VFO_Info_t vfo = gEeprom.VfoInfo[gEeprom.TX_CHANNEL];
-    initialFreq = vfo.pRX->Frequency;
-    currentFreq = initialFreq;
-    settings.scanStepIndex = gStepSettingToIndex[vfo.STEP_SETTING];
-    settings.listenBw = vfo.CHANNEL_BANDWIDTH == BANDWIDTH_WIDE
-                            ? BANDWIDTH_WIDE
-                            : BANDWIDTH_NARROWER;
-    settings.modulationType = vfo.ModulationType;
-
-    AutomaticPresetChoose(currentFreq);
-
+  if (++batteryUpdateTimer > 4096) {
+    batteryUpdateTimer = 0;
+    //UpdateBatteryInfo();
+	BATTERY_GetReadings(true);
     redrawStatus = true;
-    redrawScreen = true;
-    newScanStart = true;
+  }
+  if (redrawStatus) {
+    RenderStatus();
+    redrawStatus = false;
+  }
+  if (redrawScreen) {
+    Render();
+    redrawScreen = false;
+  }
+  if (!preventKeypress) {
+    HandleUserInput();
+  }
+}
 
-    ToggleRX(true), ToggleRX(false); // hack to prevent noise when squelch off
-    BK4819_SetModulation(settings.modulationType);
-
-    RelaunchScan();
-
-    // memset(rssiHistory, 0, 128);
-    memset(rssiHistory, 0, 128 * sizeof(*rssiHistory));
-
-    isInitialized = true;
-
-    while (isInitialized) {
-      Tick();
+static void AutomaticPresetChoose(uint32_t f) {
+  for (uint8_t i = 0; i < ARRAY_SIZE(freqPresets); ++i) {
+    const FreqPreset *p = &freqPresets[i];
+    if (f >= p->fStart && f <= p->fEnd) {
+      ApplyPreset(*p);
     }
   }
+}
+
+void APP_RunSpectrum() {
+  BackupRegisters();
+
+  // AM_fix_init();
+
+  // TX here coz it always? set to active VFO
+  VFO_Info_t vfo = gEeprom.VfoInfo[gEeprom.TX_CHANNEL];
+  initialFreq = vfo.pRX->Frequency;
+  currentFreq = initialFreq;
+  settings.scanStepIndex = gStepSettingToIndex[vfo.STEP_SETTING];
+  settings.listenBw = vfo.CHANNEL_BANDWIDTH == BANDWIDTH_WIDE
+                          ? BANDWIDTH_WIDE
+                          : BANDWIDTH_NARROWER;
+  settings.modulationType = vfo.ModulationType;
+
+  AutomaticPresetChoose(currentFreq);
+
+  redrawStatus = true;
+  redrawScreen = true;
+  newScanStart = true;
+
+  ToggleRX(true), ToggleRX(false); // hack to prevent noise when squelch off
+  BK4819_SetModulation(settings.modulationType);
+
+  RelaunchScan();
+
+  //memset(rssiHistory, 0, 128);
+  memset(rssiHistory, 0, 128 * sizeof(*rssiHistory));
+
+  isInitialized = true;
+
+  while (isInitialized) {
+    Tick();
+  }
+}

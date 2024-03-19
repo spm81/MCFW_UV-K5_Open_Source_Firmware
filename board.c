@@ -540,7 +540,7 @@ void BOARD_EEPROM_Init(void)
 	gEeprom.CHANNEL_DISPLAY_MODE  = (Data[1] < 4) ? Data[1] : MDF_FREQUENCY;
 	gEeprom.CROSS_BAND_RX_TX      = (Data[2] < 3) ? Data[2] : CROSS_BAND_OFF;
 	#if defined(ENABLE_BIGGER_BATTERY_SAVE)
-	gEeprom.BATTERY_SAVE          = (Data[3] < 10) ? Data[3] : 9;
+	gEeprom.BATTERY_SAVE          = (Data[3] < 9) ? Data[3] : 8;
 	#else
 	gEeprom.BATTERY_SAVE          = (Data[3] < 5) ? Data[3] : 4;
 	#endif
@@ -784,6 +784,7 @@ for (int i = 0; i < 2; i++) {
 	// 0F40..0F47
 	EEPROM_ReadBuffer(0x0F40, Data, 8);
 	gSetting_F_LOCK         = (Data[0] < 6) ? Data[0] : F_LOCK_OFF;
+
 	gSetting_350TX          = (Data[1] < 2) ? Data[1] : true;
 	gSetting_200TX          = (Data[3] < 2) ? Data[3] : false;
 	gSetting_500TX          = (Data[4] < 2) ? Data[4] : false;

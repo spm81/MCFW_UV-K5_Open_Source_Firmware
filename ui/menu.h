@@ -100,9 +100,6 @@ enum {
 #ifdef ENABLE_DOCK
 	MENU_REMOTE_UI,
 #endif	
-#if defined(ENABLE_SATCOM_AMP)
-	MENU_SATCOM_AMP,
-  #endif
 #if defined(ENABLE_PTT_HOLD)
     MENU_PTT_HOLD,
 #endif 	

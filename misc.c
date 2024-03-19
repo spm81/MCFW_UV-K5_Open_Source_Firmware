@@ -14,8 +14,8 @@
  *     limitations under the License.
  */
 
-#include "misc.h"
 #include <string.h>
+#include "misc.h"
 
 const uint32_t *gUpperLimitFrequencyBandTable;
 const uint32_t *gLowerLimitFrequencyBandTable;
@@ -28,10 +28,10 @@ uint8_t gSetting_F_LOCK;
 bool gSetting_ScrambleEnable;
 
 const uint32_t gDefaultAesKey[4] = {
-    0x4AA5CC60,
-    0x0312CC5F,
-    0xFFD2DABB,
-    0x6BBA7F92,
+	0x4AA5CC60,
+	0x0312CC5F,
+	0xFFD2DABB,
+	0x6BBA7F92,
 };
 
 uint32_t gCustomAesKey[4];
@@ -142,67 +142,65 @@ volatile bool gScheduleFM;
 #endif
 
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
-uint8_t gMissedCalls;
-volatile uint8_t gFlashLightNotifCounter;
-bool gSetting_Missed_Call_NBL = false;
+uint8_t           gMissedCalls;
+volatile uint8_t  gFlashLightNotifCounter;
+bool	gSetting_Missed_Call_NBL = false;
 #endif
 
-#if defined(ENABLE_PTT_HOLD)
-bool gSetting_Ptt_Hold = false;
+#ifdef ENABLE_PTT_HOLD
+bool	gSetting_Ptt_Hold = false;
 #endif
-
-#if defined(ENABLE_SATCOM_AMP)
-bool gSetting_Satcom_Amp = false;
-#endif
-
 uint16_t gCurrentRSSI;
 
 uint8_t gIsLocked = 0xFF;
 
 #ifdef ENABLE_DOCK
-bool gSetting_Remote_UI = true;
+	bool		  gSetting_Remote_UI = true;
 #endif
 
 // --------
 
-void NUMBER_Get(char *pDigits, uint32_t *pInteger) {
-  uint32_t Value;
-  uint32_t Multiplier;
-  uint8_t i;
+void NUMBER_Get(char *pDigits, uint32_t *pInteger)
+{
+	uint32_t Value;
+	uint32_t Multiplier;
+	uint8_t i;
 
-  Multiplier = 10000000;
-  Value = 0;
-  for (i = 0; i < 8; i++) {
-    if (pDigits[i] > 9) {
-      break;
-    }
-    Value += pDigits[i] * Multiplier;
-    Multiplier /= 10U;
-  }
-  *pInteger = Value;
+	Multiplier = 10000000;
+	Value = 0;
+	for (i = 0; i < 8; i++) {
+		if (pDigits[i] > 9) {
+			break;
+		}
+		Value += pDigits[i] * Multiplier;
+		Multiplier /= 10U;
+	}
+	*pInteger = Value;
 }
 
-void NUMBER_ToDigits(uint32_t Value, char *pDigits) {
-  uint8_t i;
+void NUMBER_ToDigits(uint32_t Value, char *pDigits)
+{
+	uint8_t i;
 
-  for (i = 0; i < 9; i++) {
-    uint32_t Result = Value / 10U;
+	for (i = 0; i < 9; i++) {
+		uint32_t Result = Value / 10U;
 
-    pDigits[8 - i] = Value - (Result * 10U);
-    Value = Result;
-  }
+		pDigits[8 - i] = Value - (Result * 10U);
+		Value = Result;
+	}
 }
 
-uint8_t NUMBER_AddWithWraparound(uint8_t Base, int8_t Add, uint8_t LowerLimit,
-                                 uint8_t UpperLimit) {
-  Base += Add;
-  if (Base == 0xFF || Base < LowerLimit) {
-    return UpperLimit;
-  }
+uint8_t NUMBER_AddWithWraparound(uint8_t Base, int8_t Add, uint8_t LowerLimit, uint8_t UpperLimit)
+{
+	Base += Add;
+	if (Base == 0xFF || Base < LowerLimit) {
+		return UpperLimit;
+	}
 
-  if (Base > UpperLimit) {
-    return LowerLimit;
-  }
+	if (Base > UpperLimit) {
+		return LowerLimit;
+	}
 
-  return Base;
+	return Base;
 }
+

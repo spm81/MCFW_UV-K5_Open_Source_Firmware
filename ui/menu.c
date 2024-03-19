@@ -139,9 +139,6 @@ static const char MenuList[][8] = {
 #ifdef ENABLE_DOCK
     "Remote",
 #endif
-#if defined(ENABLE_SATCOM_AMP)
-    "Satcom",
-#endif
 #if defined(ENABLE_PTT_HOLD)
     "PTTHold",
 #endif
@@ -176,8 +173,8 @@ static const char gSubMenu_SFT_D[3][4] = {
 };
 
 #if defined(ENABLE_BIGGER_BATTERY_SAVE)
-static const char gSubMenu_SAVE[10][4] = {
-    "OFF", "1:1", "1:2", "1:3", "1:4", "1:5", "1:6", "1:7", "1:8", "1:9"
+static const char gSubMenu_SAVE[9][4] = {
+    "OFF", "1:1", "1:2", "1:3", "1:4", "1:5", "1:6", "1:7", "1:8"
 };
 #else
 static const char gSubMenu_SAVE[5][4] = {
@@ -461,9 +458,6 @@ void UI_DisplayMenu(void) {
 #ifdef ENABLE_DOCK
   case MENU_REMOTE_UI:
 #endif
-#if defined(ENABLE_SATCOM_AMP)
-  case MENU_SATCOM_AMP:
-#endif  
 #if defined(ENABLE_PTT_HOLD)
   case MENU_PTT_HOLD:
 #endif
