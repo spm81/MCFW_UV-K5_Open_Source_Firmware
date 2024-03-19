@@ -20,7 +20,6 @@ ENABLE_REMOTEKILL									:= 0
 # 1750Hz & 1050Hz FN1 FN2 Tones
 ENABLE_DTMF_SIDETONES				    			:= 1
 ENABLE_TX1750 										:= 0
-
 # Keep this in stock options, and add option in mods for extra rogers
 ENABLE_ROGER_DEFAULT					:= 0
 ENABLE_ROGER_MOTOTRBO					:= 0
@@ -30,44 +29,42 @@ ENABLE_ROGER_MOTOTRBOTLKRT80			:= 0
 ENABLE_ROGER_ROGERCOBRAAM845			:= 1
 ENABLE_ROGER_POLICE_ITA					:= 0
 ENABLE_ROGER_UV5RC						:= 0
-ENABLE_ROGER_MARIO						:= 1
+ENABLE_ROGER_MARIO						:= 0
 ENABLE_MDC                  			:= 0
 
 #============== MODIFICATIONS =============#
 # AM Modulation Fix - 544 bytes
-ENABLE_AM_FIX 										:= 0
+ENABLE_AM_FIX 								:= 0
 # Apply fix to Spectrum - 40 bytes
-ENABLE_AM_FIX_ON_SPECTRUM							:= 0
-ENABLE_SQUELCH_MORE_SENSITIVE						:= 0
-ENABLE_SHOW_SQUELCH_LEVEL							:= 1
+ENABLE_AM_FIX_ON_SPECTRUM					:= 0
+ENABLE_SQUELCH_MORE_SENSITIVE				:= 0
+ENABLE_SHOW_SQUELCH_LEVEL					:= 1
 # Restore FM in 1 second after RX - 0 bytes
-ENABLE_FMRADIO_FAST_RESTORE 						:= 1
+ENABLE_FMRADIO_FAST_RESTORE 				:= 1
 # Scan List Editor
-ENABLE_SCANLIST										:= 1
+ENABLE_SCANLIST								:= 1
 ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED 	:= 1
 ENABLE_PTT_HOLD										:= 1
-# Enable Bigger Battery Save
-ENABLE_BIGGER_BATTERY_SAVE									:= 1
 # Battery percentage at the Welcome Message - 12 bytes
-ENABLE_VOLTAGE_PERCENTAGE_WELCOME_MESSAGE			:= 1
+ENABLE_VOLTAGE_PERCENTAGE_WELCOME_MESSAGE	:= 1
 # Battery percentage - 296 bytes
-ENABLE_STATUS_BATTERY_PERC 				 			:= 1
+ENABLE_STATUS_BATTERY_PERC 		 			:= 1
 # Show current while charging - 136 bytes Thanks Tunas1337
-ENABLE_BATTERY_CHARGING								:= 1
+ENABLE_BATTERY_CHARGING						:= 1
 # Invert LCD Colors
-ENABLE_LCD_INVERT_OPTION							:= 0 
-#ENABLE_LCD_CONTRAST_OPTION 			 			:= 0 # WIP
+ENABLE_LCD_INVERT_OPTION					:= 0 
+#ENABLE_LCD_CONTRAST_OPTION 			 	:= 0 # WIP
 # Mic Gain Bar while TXing - 255 bytes
-ENABLE_MIC_PLUS_GAIN_BAR_TX 						:= 1
+ENABLE_MIC_PLUS_GAIN_BAR_TX 				:= 1
 # Enable Vox 1920ms(max) delay - 0 bytes
-ENABLE_VOX_MAX_DELAY								:= 1
-ENABLE_NOSCANTIMEOUT    	    					:= 1
-ENABLE_KEEPNAMEONSAVE 			      				:= 1
-ENABLE_FASTER_CHANNEL_SCAN  						:= 1
+ENABLE_VOX_MAX_DELAY						:= 1
+ENABLE_NOSCANTIMEOUT    	    			:= 1
+ENABLE_KEEPNAMEONSAVE       				:= 1
+ENABLE_FASTER_CHANNEL_SCAN  				:= 1
 # Enable Timeout beep at the end of timeout - 44 bytes
-ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION				:= 1
+ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION		:= 1
 # CW Modulation
-ENABLE_CW                   						:= 1
+ENABLE_CW                   				:= 1
 
 #=============== EXTRA: MESSENGER ===============# 
 ENABLE_MESSENGER            				:= 1
@@ -257,7 +254,7 @@ ifeq ($(OS),Windows_NT)
 	RM = del /Q
 	FixPath = $(subst /,\,$1)
 	WHERE = where
-	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com5 -b
+	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com3 -b
 else
 	TOP := $(shell pwd)
 	RM = rm -f
@@ -421,6 +418,7 @@ endif
 ifeq ($(ENABLE_LOGO),1)
 	CFLAGS += -DENABLE_LOGO
 endif
+
 #LDFLAGS += -z noexecstack -mcpu=cortex-m0 -nostartfiles -Wl,-L,linker -Wl,-T,firmware.ld -Wl,--gc-sections
 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld
 ## 2 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld,--gc-sections
@@ -439,9 +437,6 @@ ifeq ($(ENABLE_PTT_HOLD),1)
 endif
 ifeq ($(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED),1)
 	CFLAGS += -DENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED
-endif
-ifeq ($(ENABLE_BIGGER_BATTERY_SAVE),1)
-	CFLAGS += -DENABLE_BIGGER_BATTERY_SAVE
 endif
 ifeq ($(ENABLE_NOSCANTIMEOUT),1)
 	CFLAGS += -DENABLE_NOSCANTIMEOUT
@@ -526,7 +521,7 @@ all: $(TARGET)
 	@echo Create $(notdir $<.bin)
 	@$(OBJCOPY) -O binary $< $<.bin
 	@echo Create $(notdir $<.packed.bin)
-	@-$(MY_PYTHON) utils/fw-pack.py $<.bin MCFW $(GIT_HASH) $<.packed.bin
+	@-$(MY_PYTHON) utils/fw-pack.py $<.bin MATOZ $(GIT_HASH) $<.packed.bin
 
 debug:
 	/opt/openocd/bin/openocd -c "bindto 0.0.0.0" -f interface/jlink.cfg -f dp32g030.cfg

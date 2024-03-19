@@ -461,7 +461,7 @@ static void FREQ_NextChannel(void) {
   RADIO_SetupRegisters(true);
   gUpdateDisplay = true;
 #ifdef ENABLE_FASTER_CHANNEL_SCAN
-  ScanPauseDelayIn10msec = 6; // 6 = 60ms
+  ScanPauseDelayIn10msec = 2; // 6 = 60ms
 #else
   ScanPauseDelayIn10msec = 10;
 #endif

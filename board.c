@@ -539,11 +539,7 @@ void BOARD_EEPROM_Init(void)
 	EEPROM_ReadBuffer(0x0E78, Data, 8);
 	gEeprom.CHANNEL_DISPLAY_MODE  = (Data[1] < 4) ? Data[1] : MDF_FREQUENCY;
 	gEeprom.CROSS_BAND_RX_TX      = (Data[2] < 3) ? Data[2] : CROSS_BAND_OFF;
-	#if defined(ENABLE_BIGGER_BATTERY_SAVE)
-	gEeprom.BATTERY_SAVE          = (Data[3] < 9) ? Data[3] : 8;
-	#else
 	gEeprom.BATTERY_SAVE          = (Data[3] < 5) ? Data[3] : 4;
-	#endif
 	gEeprom.DUAL_WATCH            = (Data[4] < 3) ? Data[4] : DUAL_WATCH_CHAN_A;
 	gEeprom.BACKLIGHT             = (Data[5] < 7) ? Data[5] : 6;
 	#ifdef ENABLE_LCD_CONTRAST_OPTION
