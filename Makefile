@@ -20,51 +20,57 @@ ENABLE_REMOTEKILL									:= 0
 # 1750Hz & 1050Hz FN1 FN2 Tones
 ENABLE_DTMF_SIDETONES				    			:= 1
 ENABLE_TX1750 										:= 0
+
 # Keep this in stock options, and add option in mods for extra rogers
-ENABLE_ROGER_DEFAULT					:= 0
-ENABLE_ROGER_MOTOTRBO					:= 0
-ENABLE_ROGER_TPT						:= 0
-ENABLE_ROGER_MOTOTRBOT40				:= 0
-ENABLE_ROGER_MOTOTRBOTLKRT80			:= 0
+ENABLE_ROGER_DEFAULT					:= 1
+ENABLE_ROGER_MOTOTRBO					:= 1
+ENABLE_ROGER_TPT						:= 1
+ENABLE_ROGER_MOTOTRBOT40				:= 1
+ENABLE_ROGER_MOTOTRBOTLKRT80			:= 1
 ENABLE_ROGER_ROGERCOBRAAM845			:= 1
 ENABLE_ROGER_POLICE_ITA					:= 0
-ENABLE_ROGER_UV5RC						:= 0
-ENABLE_ROGER_MARIO						:= 0
+ENABLE_ROGER_UV5RC						:= 1
+ENABLE_ROGER_MARIO						:= 1
 ENABLE_MDC                  			:= 0
 
-#============== MODIFICATIONS =============#
+#======================= MODIFICATIONS ======================#
 # AM Modulation Fix - 544 bytes
-ENABLE_AM_FIX 								:= 0
-# Apply fix to Spectrum - 40 bytes
-ENABLE_AM_FIX_ON_SPECTRUM					:= 0
-ENABLE_SQUELCH_MORE_SENSITIVE				:= 0
-ENABLE_SHOW_SQUELCH_LEVEL					:= 1
+ENABLE_AM_FIX 										:= 1
+
+ENABLE_SQUELCH_MORE_SENSITIVE						:= 0
+# Show Squelch Level at Memory channel
+ENABLE_SHOW_SQUELCH_LEVEL							:= 1
 # Restore FM in 1 second after RX - 0 bytes
-ENABLE_FMRADIO_FAST_RESTORE 				:= 1
+ENABLE_FMRADIO_FAST_RESTORE 						:= 1
 # Scan List Editor
-ENABLE_SCANLIST								:= 1
+ENABLE_SCANLIST										:= 1
 ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED 	:= 1
+# PTT-Hold - Press PTT to Start Transmit and Press again to STOP it
 ENABLE_PTT_HOLD										:= 1
 # Battery percentage at the Welcome Message - 12 bytes
-ENABLE_VOLTAGE_PERCENTAGE_WELCOME_MESSAGE	:= 1
+ENABLE_VOLTAGE_PERCENTAGE_WELCOME_MESSAGE			:= 1
 # Battery percentage - 296 bytes
-ENABLE_STATUS_BATTERY_PERC 		 			:= 1
+ENABLE_STATUS_BATTERY_PERC 				 			:= 1
 # Show current while charging - 136 bytes Thanks Tunas1337
-ENABLE_BATTERY_CHARGING						:= 1
+ENABLE_BATTERY_CHARGING								:= 0
+# Enable Bigger Battery Save - 20 bytes
+ENABLE_BIGGER_BATTERY_SAVE							:= 1
 # Invert LCD Colors
-ENABLE_LCD_INVERT_OPTION					:= 0 
-#ENABLE_LCD_CONTRAST_OPTION 			 	:= 0 # WIP
+ENABLE_LCD_INVERT_OPTION							:= 0 
+#ENABLE_LCD_CONTRAST_OPTION 			 			:= 0 # WIP
 # Mic Gain Bar while TXing - 255 bytes
-ENABLE_MIC_PLUS_GAIN_BAR_TX 				:= 1
+ENABLE_MIC_PLUS_GAIN_BAR_TX 						:= 1
 # Enable Vox 1920ms(max) delay - 0 bytes
-ENABLE_VOX_MAX_DELAY						:= 1
-ENABLE_NOSCANTIMEOUT    	    			:= 1
-ENABLE_KEEPNAMEONSAVE       				:= 1
-ENABLE_FASTER_CHANNEL_SCAN  				:= 1
-# Enable Timeout beep at the end of timeout - 44 bytes
-ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION		:= 1
+ENABLE_VOX_MAX_DELAY								:= 1
+ENABLE_NOSCANTIMEOUT    	    					:= 1
+ENABLE_KEEPNAMEONSAVE 			      				:= 1
+ENABLE_FASTER_CHANNEL_SCAN  						:= 1
+# Enable Timeout beep at the end of timeout (TOT) - 44 bytes
+ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION				:= 1
+# Enable Amplifier for SATCOM
+#ENABLE_SATCOM_AMP									:= 1
 # CW Modulation
-ENABLE_CW                   				:= 1
+ENABLE_CW                   						:= 1
 
 #=============== EXTRA: MESSENGER ===============# 
 ENABLE_MESSENGER            				:= 1
@@ -72,7 +78,7 @@ ENABLE_MESSENGER_MORE_ONE_LINE				:= 0
 # 124 bytes
 ENABLE_MESSENGER_SHOW_RX_FREQ				:= 1
 # 124 (+20) bytes
-ENABLE_MESSENGER_SHOW_RX_TX_FREQ			:= 0
+ENABLE_MESSENGER_SHOW_RX_TX_FREQ			:= 1
 # 156 bytes
 ENABLE_MESSENGER_UART						:= 1
 # 3408 bytes
@@ -85,6 +91,8 @@ ENABLE_SPECTRUM            		 			:= 1
 ENABLE_SPECTRUM_NUNU           				:= 0
 SPECTRUM_AUTOMATIC_SQUELCH  				:= 1
 SPECTRUM_EXTRA_VALUES       				:= 1
+# Apply fix to Spectrum - 40 bytes
+ENABLE_AM_FIX_ON_SPECTRUM					:= 1
 # 3568 bytes
 ENABLE_ALL_REGISTERS        				:= 0
 # 0 bytes
@@ -96,7 +104,9 @@ ENABLE_MATOZ_KEYS           				:= 1
 ENABLE_DOCK 	                  			:= 0
 
 # ----- LOGO: ON/OFF Thanks to PixelGirl
-ENABLE_LOGO									:= 1
+# 1348 bytes
+ENABLE_LOGO									:= 0
+
 #Thanks to KD8CEC for sharing his code / We have to check the code better, i just code & paste it to the right places...
 # 1476 bytes
 ENABLE_LIVESEEK_MHZ_KEYPAD					:= 0
@@ -254,7 +264,7 @@ ifeq ($(OS),Windows_NT)
 	RM = del /Q
 	FixPath = $(subst /,\,$1)
 	WHERE = where
-	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com3 -b
+	K5PROG = utils/k5prog/k5prog.exe -F -YYYYY -p /dev/com5 -b
 else
 	TOP := $(shell pwd)
 	RM = rm -f
@@ -355,6 +365,9 @@ endif
 ifeq ($(ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION),1)
 	CFLAGS += -DENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION
 endif
+ifeq ($(ENABLE_SATCOM_AMP),1)
+	CFLAGS += -DENABLE_SATCOM_AMP
+endif
 ifeq ($(ENABLE_ROGER_DEFAULT),1)
 	CFLAGS += -DENABLE_ROGER_DEFAULT
 endif
@@ -418,7 +431,6 @@ endif
 ifeq ($(ENABLE_LOGO),1)
 	CFLAGS += -DENABLE_LOGO
 endif
-
 #LDFLAGS += -z noexecstack -mcpu=cortex-m0 -nostartfiles -Wl,-L,linker -Wl,-T,firmware.ld -Wl,--gc-sections
 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld
 ## 2 LDFLAGS = -mcpu=cortex-m0 -nostartfiles -Wl,-T,firmware.ld,--gc-sections
@@ -437,6 +449,9 @@ ifeq ($(ENABLE_PTT_HOLD),1)
 endif
 ifeq ($(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED),1)
 	CFLAGS += -DENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED
+endif
+ifeq ($(ENABLE_BIGGER_BATTERY_SAVE),1)
+	CFLAGS += -DENABLE_BIGGER_BATTERY_SAVE
 endif
 ifeq ($(ENABLE_NOSCANTIMEOUT),1)
 	CFLAGS += -DENABLE_NOSCANTIMEOUT
@@ -521,7 +536,7 @@ all: $(TARGET)
 	@echo Create $(notdir $<.bin)
 	@$(OBJCOPY) -O binary $< $<.bin
 	@echo Create $(notdir $<.packed.bin)
-	@-$(MY_PYTHON) utils/fw-pack.py $<.bin MATOZ $(GIT_HASH) $<.packed.bin
+	@-$(MY_PYTHON) utils/fw-pack.py $<.bin MCFW $(GIT_HASH) $<.packed.bin
 
 debug:
 	/opt/openocd/bin/openocd -c "bindto 0.0.0.0" -f interface/jlink.cfg -f dp32g030.cfg

@@ -21,6 +21,9 @@
 #include "../driver/system.h"
 #include "../driver/systick.h"
 #include "../driver/uart.h"
+#if defined(ENABLE_SATCOM_AMP)
+#include "misc.h"
+#endif
 
 #ifdef ENABLE_MDC
 static const uint16_t FSK_RogerTable[7] = {
@@ -32,14 +35,14 @@ static uint16_t gBK4819_GpioOutState;
 
 bool gRxIdleMode;
 
-__inline uint16_t scale_freq(const uint16_t freq)
-{
-//	return (((uint32_t)freq * 1032444u) + 50000u) / 100000u;   // with rounding
-//	return (((uint32_t)freq * 1353245u) + (1u << 16)) >> 17;   // with rounding
-	return (((uint32_t)freq * 1353245u) + (1u << 16)) >> 17;   // with rounding
+__inline uint16_t scale_freq(const uint16_t freq) {
+  //	return (((uint32_t)freq * 1032444u) + 50000u) / 100000u;   // with
+  //rounding 	return (((uint32_t)freq * 1353245u) + (1u << 16)) >> 17;   // with
+  //rounding
+  return (((uint32_t)freq * 1353245u) + (1u << 16)) >> 17; // with rounding
 
-//	return (((uint32_t)freq * 338311u) + (1u << 14)) >> 15;    // max freq = 12695 TESTE 1of11
-
+  //	return (((uint32_t)freq * 338311u) + (1u << 14)) >> 15;    // max freq =
+  //12695 TESTE 1of11
 }
 
 void BK4819_Init(void) {
@@ -204,7 +207,7 @@ void BK4819_SetAGC(uint8_t Value) {
     }
     // for (i = 0; i < 8; i++) {
     //  BK4819_WriteRegister(BK4819_REG_06, ((i << 13) | 0x2500U) + 0x36U);
-   // } 
+   // }
   }
 }
 
@@ -237,8 +240,8 @@ void BK4819_SetAGC(uint8_t Value) {
   if (!((regVal & (1 << 15)) == enable))
     return;
 
-  BK4819_WriteRegister(BK4819_REG_7E, (regVal & ~(1 << 15) & ~(0b111 << 12)) 
-                                    | (!enable << 15)   
+  BK4819_WriteRegister(BK4819_REG_7E, (regVal & ~(1 << 15) & ~(0b111 << 12))
+                                    | (!enable << 15)
                                     | (0b100 << 12) );
 
   if (Value == 0) {
@@ -259,8 +262,8 @@ void BK4819_SetAGC(uint8_t Value) {
   if (!((regVal & (1 << 15)) == enable))
     return;
 
-  BK4819_WriteRegister(BK4819_REG_7E, (regVal & ~(1 << 15) & ~(0b111 << 12)) 
-                                    | (!enable << 15)   
+  BK4819_WriteRegister(BK4819_REG_7E, (regVal & ~(1 << 15) & ~(0b111 << 12))
+                                    | (!enable << 15)
                                     | (0b100 << 12) );
 
   // if (enable) {
@@ -282,16 +285,16 @@ void BK4819_SetAGC(uint8_t Value) {
 
   if (enable) {
     if (!(regVal & (1 << 15))) {
-      BK4819_WriteRegister(BK4819_REG_7E, ((regVal | (1 << 15)) & ~(0b111 << 12))); 
+      BK4819_WriteRegister(BK4819_REG_7E,
+                           ((regVal | (1 << 15)) & ~(0b111 << 12)));
     }
   } else {
     if (regVal & (1 << 15)) {
-      BK4819_WriteRegister(BK4819_REG_7E, (regVal & ~(1 << 15) & ~(0b111 << 12))); 
+      BK4819_WriteRegister(BK4819_REG_7E,
+                           (regVal & ~(1 << 15) & ~(0b111 << 12)));
     }
   }
 }
-
-
 
 void BK4819_ToggleGpioOut(BK4819_GPIO_PIN_t Pin, bool bSet) {
   if (bSet) {
@@ -373,36 +376,37 @@ void BK4819_EnableVox(uint16_t VoxEnableThreshold,
   BK4819_WriteRegister(BK4819_REG_46, 0xA000 | (VoxEnableThreshold & 0x07FF));
   // 0x1800 is undocumented?
   BK4819_WriteRegister(BK4819_REG_79, 0x1800 | (VoxDisableThreshold & 0x07FF));
-  
+
 #ifdef ENABLE_VOX_MAX_DELAY
- // Set VOX delay
-	// Bottom 12 bits are undocumented, 15:12 vox disable delay *128ms
-	// BK4819_WriteRegister(BK4819_REG_7A, 0x289A); // vox disable delay = 128*5 = 640ms
-	// max delay = F89A = 1920ms
-	// min delay = 089A = 0ms
-const uint16_t vox_delay_max = 0xF89A;
-BK4819_WriteRegister(BK4819_REG_7A, (0x289A & ~(0xF << 12)) | ((uint16_t)(vox_delay_max << 12)));
-#else  
+  // Set VOX delay
   // Bottom 12 bits are undocumented, 15:12 vox disable delay *128ms
-  BK4819_WriteRegister(BK4819_REG_7A, 0x289A); // vox disable delay = 128*5 = 640ms
-#endif 
+  // BK4819_WriteRegister(BK4819_REG_7A, 0x289A); // vox disable delay = 128*5 =
+  // 640ms max delay = F89A = 1920ms min delay = 089A = 0ms
+  const uint16_t vox_delay_max = 0xF89A;
+  BK4819_WriteRegister(BK4819_REG_7A, (0x289A & ~(0xF << 12)) |
+                                          ((uint16_t)(vox_delay_max << 12)));
+#else
+  // Bottom 12 bits are undocumented, 15:12 vox disable delay *128ms
+  BK4819_WriteRegister(BK4819_REG_7A,
+                       0x289A); // vox disable delay = 128*5 = 640ms
+#endif
 
-
- // Enable VOX
+  // Enable VOX
   BK4819_WriteRegister(BK4819_REG_31, REG_31_Value | 4); // bit 2 - VOX Enable
 }
 
 const uint16_t listenBWRegValues[4] = {
     0x3028, // 25
     0x4048, // 12.5
-    0x0349,	// 8.33
+    0x0349, // 8.33
     0x205C, // 6.25
-//	0x01F4  // 5
+    //	0x01F4  // 5
 };
 
 void BK4819_SetFilterBandwidth(BK4819_FilterBandwidth_t Bandwidth) {
   BK4819_WriteRegister(BK4819_REG_43, listenBWRegValues[Bandwidth]);
-  //UART_printf("\n Bandwidth : %i | %04x", Bandwidth, listenBWRegValues[Bandwidth]);
+  // UART_printf("\n Bandwidth : %i | %04x", Bandwidth,
+  // listenBWRegValues[Bandwidth]);
 }
 
 void BK4819_SetupPowerAmplifier(uint16_t Bias, uint32_t Frequency) {
@@ -411,7 +415,9 @@ void BK4819_SetupPowerAmplifier(uint16_t Bias, uint32_t Frequency) {
   if (Bias > 255) {
     Bias = 255;
   }
-  if (Frequency < 28000000) {
+
+
+ if (Frequency < 28000000) {
     // Gain 1 = 1
     // Gain 2 = 0
     Gain = 0x08U;
@@ -420,6 +426,7 @@ void BK4819_SetupPowerAmplifier(uint16_t Bias, uint32_t Frequency) {
     // Gain 2 = 2
     Gain = 0x22U;
   }
+
   // Enable PACTLoutput
   BK4819_WriteRegister(BK4819_REG_36, (Bias << 8) | 0x80U | Gain);
 }
@@ -446,47 +453,47 @@ void BK4819_SetupSquelch(uint8_t SquelchOpenRSSIThresh,
   // (101 and 111)
   BK4819_WriteRegister(BK4819_REG_4E, // 01 101 11 1 00000000
 
-/* //OLD CONFIG
-#ifdef ENABLE_FASTER_CHANNEL_SCAN
-                                      // faster (but twitchier)
-		(1u << 14) |                  // 1 ???
-		(2u << 11) |                  // 5  squelch = open  delay .. 0 ~ 7
-		(3u <<  9) |                  // 3  squelch = close delay .. 0 ~ 3
-                           SquelchOpenGlitchThresh); //  0 ~ 255
-#else
-                                      // original (*)
-		(1u << 14) |                  // 1 ???
-		(5u << 11) |                  // 5  squelch = open  delay .. 0 ~ 7
-		(3u <<  9) |                  // 3  squelch = close delay .. 0 ~ 3
-                           SquelchOpenGlitchThresh); //  0 ~ 255
-#endif
-*/
+  /* //OLD CONFIG
+  #ifdef ENABLE_FASTER_CHANNEL_SCAN
+                                        // faster (but twitchier)
+                  (1u << 14) |                  // 1 ???
+                  (2u << 11) |                  // 5  squelch = open  delay .. 0
+  ~ 7 (3u <<  9) |                  // 3  squelch = close delay .. 0 ~ 3
+                             SquelchOpenGlitchThresh); //  0 ~ 255
+  #else
+                                        // original (*)
+                  (1u << 14) |                  // 1 ???
+                  (5u << 11) |                  // 5  squelch = open  delay .. 0
+  ~ 7 (3u <<  9) |                  // 3  squelch = close delay .. 0 ~ 3
+                             SquelchOpenGlitchThresh); //  0 ~ 255
+  #endif
+  */
 
 #ifndef ENABLE_FASTER_CHANNEL_SCAN
-		// original
-		(1u << 14) |                  // 1 ???
-		(5u << 11) |                  // 5  squelch = open  delay .. 0 ~ 7
-		(3u <<  9) |                  // 3  squelch = close delay .. 0 ~ 3
-		SquelchOpenGlitchThresh);  // 0 ~ 255
-	#else
-		// faster (but twitchier)
-		(1u << 14) |                  // 1 ???
-		(2u << 11) |                  // 5  squelch = open  delay .. 0 ~ 7
-		(3u <<  9) |                  // 3  squelch = close delay .. 0 ~ 3
-		SquelchOpenGlitchThresh);  // 0 ~ 255
-	#endif
-	
+                                      // original
+                       (1u << 14) |     // 1 ???
+                           (5u << 11) | // 5  squelch = open  delay .. 0 ~ 7
+                           (3u << 9) |  // 3  squelch = close delay .. 0 ~ 3
+                           SquelchOpenGlitchThresh); // 0 ~ 255
+#else
+                                      // faster (but twitchier)
+                       (1u << 14) |     // 1 ???
+                           (2u << 11) | // 5  squelch = open  delay .. 0 ~ 7
+                           (3u << 9) |  // 3  squelch = close delay .. 0 ~ 3
+                           SquelchOpenGlitchThresh); // 0 ~ 255
+#endif
+
   BK4819_WriteRegister(BK4819_REG_4F,
                        (SquelchCloseNoiseThresh << 8) | SquelchOpenNoiseThresh);
   BK4819_WriteRegister(BK4819_REG_78,
                        (SquelchOpenRSSIThresh << 8) | SquelchCloseRSSIThresh);
   BK4819_SetAF(BK4819_AF_MUTE);
   //	BK4819_WriteRegister(BK4819_REG_78, 0x1212);
-  
-  #if ENABLE_SQUELCH_MORE_SENSITIVE
-  #else
-//	BK4819_WriteRegister(BK4819_REG_78, 0x4848);
-  #endif
+
+#if ENABLE_SQUELCH_MORE_SENSITIVE
+#else
+  //	BK4819_WriteRegister(BK4819_REG_78, 0x4848);
+#endif
   BK4819_RX_TurnOn();
 }
 
@@ -494,8 +501,8 @@ void BK4819_SetAF(BK4819_AF_Type_t AF) {
   // AF Output Inverse Mode = Inverse
   // Undocumented bits 0x2040
   // BK4819_WriteRegister(BK4819_REG_47, 0x6040 | (AF << 8)); //fagci
-  	BK4819_WriteRegister(BK4819_REG_47, (6u << 12) | (AF << 8) | (1u << 6)); //eg / 1of11
-
+  BK4819_WriteRegister(BK4819_REG_47,
+                       (6u << 12) | (AF << 8) | (1u << 6)); // eg / 1of11
 }
 
 uint16_t BK4819_GetRegValue(RegisterSpec s) {
@@ -508,10 +515,11 @@ void BK4819_SetRegValue(RegisterSpec s, uint16_t v) {
   BK4819_WriteRegister(s.num, reg | (v << s.offset));
 }
 
-#ifdef ENABLE_CW  
+#ifdef ENABLE_CW
 
 void BK4819_SetModulation(ModulationType type) {
-  const uint8_t modTypeReg47Values[] = {1, 7, 5, 9, 4, 8};  // Added value for MOD_CW
+  const uint8_t modTypeReg47Values[] = {1, 7, 5,
+                                        9, 4, 8}; // Added value for MOD_CW
 
   BK4819_SetAF(modTypeReg47Values[type]);
   BK4819_SetRegValue(afDacGainRegSpec, 0xF);
@@ -519,7 +527,7 @@ void BK4819_SetModulation(ModulationType type) {
   BK4819_SetRegValue(afcDisableRegSpec, type != MOD_FM);
 
   // Set AFC Disable based on modulation type
-  //BK4819_SetRegValue(afcDisableRegSpec, type != MOD_FM);
+  // BK4819_SetRegValue(afcDisableRegSpec, type != MOD_FM);
   BK4819_SetRegValue(afcDisableRegSpec, (type != MOD_FM) && (type != MOD_CW));
 }
 #else
@@ -531,7 +539,7 @@ void BK4819_SetModulation(ModulationType type) {
   BK4819_WriteRegister(0x3D, type == MOD_USB ? 0 : 0x2AAB);
   BK4819_SetRegValue(afcDisableRegSpec, type != MOD_FM);
 }
-#endif	
+#endif
 void BK4819_RX_TurnOn(void) {
   // DSP Voltage Setting = 1
   // ANA LDO = 2.7v
@@ -563,6 +571,20 @@ void BK4819_RX_TurnOn(void) {
 }
 
 void BK4819_PickRXFilterPathBasedOnFrequency(uint32_t Frequency) {
+#if defined(ENABLE_SATCOM_AMP)
+  if (gSetting_Satcom_Amp) {
+  if (Frequency < 24000000) {
+    BK4819_ToggleGpioOut(BK4819_GPIO2_PIN30, true);
+    BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, false);
+  } else if (Frequency == 0xFFFFFFFF) {
+    BK4819_ToggleGpioOut(BK4819_GPIO2_PIN30, false);
+    BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, false);
+  } else {
+    BK4819_ToggleGpioOut(BK4819_GPIO2_PIN30, false);
+    BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, true);
+  }
+  }
+  else
   if (Frequency < 28000000) {
     BK4819_ToggleGpioOut(BK4819_GPIO2_PIN30, true);
     BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, false);
@@ -573,8 +595,20 @@ void BK4819_PickRXFilterPathBasedOnFrequency(uint32_t Frequency) {
     BK4819_ToggleGpioOut(BK4819_GPIO2_PIN30, false);
     BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, true);
   }
-}
 
+#else
+if (Frequency < 28000000) {
+    BK4819_ToggleGpioOut(BK4819_GPIO2_PIN30, true);
+    BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, false);
+  } else if (Frequency == 0xFFFFFFFF) {
+    BK4819_ToggleGpioOut(BK4819_GPIO2_PIN30, false);
+    BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, false);
+  } else {
+    BK4819_ToggleGpioOut(BK4819_GPIO2_PIN30, false);
+    BK4819_ToggleGpioOut(BK4819_GPIO3_PIN31, true);
+  }
+#endif
+}
 void BK4819_DisableScramble(void) {
   uint16_t Value;
 
@@ -709,7 +743,7 @@ void BK4819_Conditional_RX_TurnOn_and_GPIO6_Enable(void) {
   }
 }
 
-//#ifdef ENABLE_DTMF_CALLING
+// #ifdef ENABLE_DTMF_CALLING
 
 void BK4819_EnterDTMF_TX(bool bLocalLoopback) {
   BK4819_EnableDTMF();
@@ -738,7 +772,7 @@ void BK4819_ExitDTMF_TX(bool bKeep) {
     BK4819_ExitTxMute();
   }
 }
-//#endif
+// #endif
 void BK4819_EnableTXLink(void) {
   BK4819_WriteRegister(
       BK4819_REG_30,
@@ -818,7 +852,7 @@ void BK4819_PlayDTMF(char Code) {
     break;
   }
 }
-//#endif
+// #endif
 void BK4819_PlayDTMFString(const char *pString, bool bDelayFirst,
                            uint16_t FirstCodePersistTime,
                            uint16_t HashCodePersistTime,
@@ -1041,140 +1075,145 @@ void BK4819_EnterExitTxMuteSequence3(void) {
 }
 */
 
-#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC) || defined(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION) || defined(ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION)
-void BK4819_PlayBeep(const uint16_t freq, const int delay)
-{
-	BK4819_WriteRegister(BK4819_REG_71, scale_freq(freq));
-	BK4819_ExitTxMute();
-	SYSTEM_DelayMs(delay);
+#if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) ||         \
+    defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) ||          \
+    defined(ENABLE_ROGER_MOTOTRBOTLKRT80) ||                                   \
+    defined(ENABLE_ROGER_ROGERCOBRAAM845) ||                                   \
+    defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) ||         \
+    defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC) ||                      \
+    defined(ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION) ||                        \
+    defined(ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION)
+void BK4819_PlayBeep(const uint16_t freq, const int delay) {
+  BK4819_WriteRegister(BK4819_REG_71, scale_freq(freq));
+  BK4819_ExitTxMute();
+  SYSTEM_DelayMs(delay);
   BK4819_EnterTxMute();
 }
 
-
-void BK4819_PlayRoger(int t)
-{
+void BK4819_PlayRoger(int t) {
   BK4819_EnterTxMute();
   BK4819_SetAF(BK4819_AF_MUTE);
 
-  //	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (96u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
-	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (28u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
-	BK4819_EnableTXLink();
-	SYSTEM_DelayMs(50);
-	// NEED TO HAD IFDEF ON ROGER'S BEEP
+  //	BK4819_WriteRegister(BK4819_REG_70, BK4819_REG_70_ENABLE_TONE1 | (96u <<
+  //BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
+  BK4819_WriteRegister(BK4819_REG_70,
+                       BK4819_REG_70_ENABLE_TONE1 |
+                           (28u << BK4819_REG_70_SHIFT_TONE1_TUNING_GAIN));
+  BK4819_EnableTXLink();
+  SYSTEM_DelayMs(50);
+  // NEED TO HAD IFDEF ON ROGER'S BEEP
   switch (t) {
 
 #ifdef ENABLE_ROGER_DEFAULT
-    case 0: // DEFAULT
-        BK4819_PlayBeep(500, 50);
-        BK4819_PlayBeep(700, 50);
-        break;
+  case 0: // DEFAULT
+    BK4819_PlayBeep(500, 50);
+    BK4819_PlayBeep(700, 50);
+    break;
 #endif
 
 #ifdef ENABLE_ROGER_MOTOTRBO
-    case 1: // MOTOTRBO
-        BK4819_PlayBeep(1540, 50);
-        BK4819_PlayBeep(1310, 50);
-        break;
+  case 1: // MOTOTRBO
+    BK4819_PlayBeep(1540, 50);
+    BK4819_PlayBeep(1310, 50);
+    break;
 #endif
 
 #ifdef ENABLE_ROGER_TPT
-    case 2: // MOTOROLA APX6000 TPT
-        BK4819_PlayBeep(910, 25);
-        BK4819_PlayBeep(0, 25);
-        BK4819_PlayBeep(910, 25);
-        BK4819_PlayBeep(0, 25);
-        BK4819_PlayBeep(910, 50);
-        break;
+  case 2: // MOTOROLA APX6000 TPT
+    BK4819_PlayBeep(910, 25);
+    BK4819_PlayBeep(0, 25);
+    BK4819_PlayBeep(910, 25);
+    BK4819_PlayBeep(0, 25);
+    BK4819_PlayBeep(910, 50);
+    break;
 #endif
 
 #ifdef ENABLE_ROGER_MOTOTRBOT40
-    case 3: // MOTOROLA T40
-        BK4819_PlayBeep(2000, 50);
-        BK4819_PlayBeep(2200, 50);
-        BK4819_PlayBeep(2000, 50);
-        BK4819_PlayBeep(2200, 50);
-        BK4819_PlayBeep(2000, 50);
-        BK4819_PlayBeep(2200, 50);
-        break;
+  case 3: // MOTOROLA T40
+    BK4819_PlayBeep(2000, 50);
+    BK4819_PlayBeep(2200, 50);
+    BK4819_PlayBeep(2000, 50);
+    BK4819_PlayBeep(2200, 50);
+    BK4819_PlayBeep(2000, 50);
+    BK4819_PlayBeep(2200, 50);
+    break;
 #endif
 
 #ifdef ENABLE_ROGER_MOTOTRBOTLKRT80
-    case 4: // MOTOROLA TLKRT80
-        BK4819_PlayBeep(1190, 50);
-        BK4819_PlayBeep(992, 50);
-        BK4819_PlayBeep(507, 50);
-        BK4819_PlayBeep(1190, 50);
-        BK4819_PlayBeep(992, 50);
-        BK4819_PlayBeep(507, 50);
-        BK4819_PlayBeep(1190, 50);
-        BK4819_PlayBeep(992, 50);
-        BK4819_PlayBeep(507, 80);
-        break;
+  case 4: // MOTOROLA TLKRT80
+    BK4819_PlayBeep(1190, 50);
+    BK4819_PlayBeep(992, 50);
+    BK4819_PlayBeep(507, 50);
+    BK4819_PlayBeep(1190, 50);
+    BK4819_PlayBeep(992, 50);
+    BK4819_PlayBeep(507, 50);
+    BK4819_PlayBeep(1190, 50);
+    BK4819_PlayBeep(992, 50);
+    BK4819_PlayBeep(507, 80);
+    break;
 #endif
 
 #ifdef ENABLE_ROGER_ROGERCOBRAAM845
-    case 5: // MOTOROLA CobraAM845
-        BK4819_PlayBeep(435, 50);
-        BK4819_PlayBeep(872, 50);
-        BK4819_PlayBeep(1742, 50);
-        break;
+  case 5: // MOTOROLA CobraAM845
+    BK4819_PlayBeep(435, 50);
+    BK4819_PlayBeep(872, 50);
+    BK4819_PlayBeep(1742, 50);
+    break;
 #endif
 
 #ifdef ENABLE_ROGER_POLICE_ITA
-    case 6: // PlayRoger Police Italy
-        BK4819_PlayBeep(800, 60);
-        BK4819_PlayBeep(2200, 60);
-        BK4819_PlayBeep(885, 60);
-        BK4819_PlayBeep(1540, 60);
-        BK4819_PlayBeep(1300, 60);
-        BK4819_PlayBeep(975, 60);
-        BK4819_PlayBeep(1180, 60);
-        BK4819_PlayBeep(1075, 60);
-        break;
+  case 6: // PlayRoger Police Italy
+    BK4819_PlayBeep(800, 60);
+    BK4819_PlayBeep(2200, 60);
+    BK4819_PlayBeep(885, 60);
+    BK4819_PlayBeep(1540, 60);
+    BK4819_PlayBeep(1300, 60);
+    BK4819_PlayBeep(975, 60);
+    BK4819_PlayBeep(1180, 60);
+    BK4819_PlayBeep(1075, 60);
+    break;
 #endif
 
 #ifdef ENABLE_ROGER_UV5RC
-    case 7: // Baofeng UV-5RC
-        BK4819_PlayBeep(1120, 135);
-        BK4819_PlayBeep(861, 200);
-        break;
+  case 7: // Baofeng UV-5RC
+    BK4819_PlayBeep(1120, 135);
+    BK4819_PlayBeep(861, 200);
+    break;
 #endif
 
 #ifdef ENABLE_ROGER_MARIO
-    case 8: // Mario Dies
-        BK4819_PlayBeep(494, 286 / 2);
-        BK4819_PlayBeep(698, 190 / 2);
-        BK4819_PlayBeep(0, 306 / 2);
-        BK4819_PlayBeep(698, 258 / 2);
-        BK4819_PlayBeep(698, 340 / 2);
-        BK4819_PlayBeep(659, 328 / 2);
-        BK4819_PlayBeep(587, 344 / 2);
-        BK4819_PlayBeep(523, 262 / 2);
-        break;
+  case 8: // Mario Dies
+    BK4819_PlayBeep(494, 286 / 2);
+    BK4819_PlayBeep(698, 190 / 2);
+    BK4819_PlayBeep(0, 306 / 2);
+    BK4819_PlayBeep(698, 258 / 2);
+    BK4819_PlayBeep(698, 340 / 2);
+    BK4819_PlayBeep(659, 328 / 2);
+    BK4819_PlayBeep(587, 344 / 2);
+    BK4819_PlayBeep(523, 262 / 2);
+    break;
 #endif
-
 
 #ifdef ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION
 
-	case 98: // TIMEOUT ROGER BEEP
-		for (int i = 0; i < 3; i++) {
-			BK4819_PlayBeep(500, 60);  // Frequency and duration can be adjusted
-			BK4819_PlayBeep(0, 30);
-		}
-    break; 
-#endif	
+  case 98: // TIMEOUT ROGER BEEP
+    for (int i = 0; i < 3; i++) {
+      BK4819_PlayBeep(500, 60); // Frequency and duration can be adjusted
+      BK4819_PlayBeep(0, 30);
+    }
+    break;
+#endif
 #ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
-    case 99: // NOKIA SMS Tone2
-      BK4819_PlayBeep(800, 200);  // Frequency and duration can be adjusted
-      BK4819_PlayBeep(600, 200);
-      BK4819_PlayBeep(1000, 200);
-	break;  
-#endif	
-
+  case 99:                     // NOKIA SMS Tone2
+    BK4819_PlayBeep(800, 200); // Frequency and duration can be adjusted
+    BK4819_PlayBeep(600, 200);
+    BK4819_PlayBeep(1000, 200);
+    break;
+#endif
   }
 
-	BK4819_WriteRegister(BK4819_REG_70, 0x0000);
-	BK4819_WriteRegister(BK4819_REG_30, 0xC1FE);   // 1 1 0000 0 1 1111 1 1 1 0
+  BK4819_WriteRegister(BK4819_REG_70, 0x0000);
+  BK4819_WriteRegister(BK4819_REG_30, 0xC1FE); // 1 1 0000 0 1 1111 1 1 1 0
 }
 #endif
 
@@ -1231,7 +1270,7 @@ void BK4819_SetScrambleFrequencyControlWord(uint32_t Frequency) {
   BK4819_WriteRegister(BK4819_REG_71,
                        (uint16_t)((Frequency * 1032444) / 100000));
 }
-//#ifdef ENABLE_DTMF_CALLING
+// #ifdef ENABLE_DTMF_CALLING
 
 void BK4819_PlayDTMFEx(bool bLocalLoopback, char Code) {
   BK4819_EnableDTMF();
@@ -1246,10 +1285,10 @@ void BK4819_PlayDTMFEx(bool bLocalLoopback, char Code) {
   SYSTEM_DelayMs(50);
 #ifdef ENABLE_DTMF_CALLING
   BK4819_PlayDTMF(Code);
-#endif  
+#endif
   BK4819_ExitTxMute();
 }
-//#endif
+// #endif
 void BK4819_ToggleAFBit(bool on) {
   uint16_t reg = BK4819_ReadRegister(BK4819_REG_47);
   reg &= ~(1 << 8);
