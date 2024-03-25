@@ -67,10 +67,7 @@ static const char MenuList[][8] = {
     "BatSave",
     "VOX",
     "Backlit",
-/*
-    #ifdef ENABLE_LCD_INVERT_OPTION
-    "Invert",
-    #endif*/
+
 #ifdef ENABLE_LCD_CONTRAST_OPTION
     "Contras",
 #endif
@@ -138,6 +135,9 @@ static const char MenuList[][8] = {
     "Upconv",
 #ifdef ENABLE_DOCK
     "Remote",
+#endif
+#if defined(ENABLE_LCD_INVERT_OPTION)
+    "LCD Inv",
 #endif
 #if defined(ENABLE_SATCOM_AMP)
     "Satcom",
@@ -461,6 +461,9 @@ void UI_DisplayMenu(void) {
 #ifdef ENABLE_DOCK
   case MENU_REMOTE_UI:
 #endif
+#if defined(ENABLE_LCD_INVERT_OPTION)
+  case MENU_LCD_INVERTER:
+#endif  
 #if defined(ENABLE_SATCOM_AMP)
   case MENU_SATCOM_AMP:
 #endif  

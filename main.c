@@ -17,7 +17,7 @@
 #include "app/app.h"
 #include "app/dtmf.h"
 #ifdef ENABLE_MESSENGER
-	#include "app/messenger.h"
+#include "app/messenger.h"
 #endif
 
 #include "audio.h"
@@ -92,14 +92,12 @@ void Main(void) {
   BK4819_Init();
   BOARD_ADC_GetBatteryInfo(&gBatteryCurrentVoltage, &gBatteryCurrent);
 
-
-
   BOARD_EEPROM_Init();
   BOARD_EEPROM_LoadCalibration();
 
-  #ifdef ENABLE_LCD_CONTRAST_OPTION
-    ST7565_SetContrast(gEeprom.LCD_CONTRAST);
-	#endif
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+  ST7565_SetContrast(gEeprom.LCD_CONTRAST);
+#endif
 
   RADIO_ConfigureChannel(0, 2);
   RADIO_ConfigureChannel(1, 2);
@@ -112,7 +110,7 @@ void Main(void) {
 
   BATTERY_GetReadings(false);
 #ifdef ENABLE_MESSENGER
-	MSG_Init();
+  MSG_Init();
 #endif
 #ifdef ENABLE_AM_FIX
   AM_fix_init();
@@ -123,46 +121,60 @@ void Main(void) {
     gReducedService = true;
   } else {
     BOOT_Mode_t BootMode;
-	/*
-    EEPROM_WriteBuffer(0x0E98, "\x4f");
-    EEPROM_WriteBuffer(0x0E99, "\xa5");
-    EEPROM_WriteBuffer(0x0E9A, "\x05");
-  //EEPROM_WriteBuffer(0x0E9B, "\x00");
-    SYSTEM_DelayMs(200);
-	*/
-	
-	
+    /*
+EEPROM_WriteBuffer(0x0E98, "\x4f");
+EEPROM_WriteBuffer(0x0E99, "\xa5");
+EEPROM_WriteBuffer(0x0E9A, "\x05");
+//EEPROM_WriteBuffer(0x0E9B, "\x00");
+SYSTEM_DelayMs(200);
+    */
+
     UI_DisplayWelcome();
     BACKLIGHT_TurnOn();
     SYSTEM_DelayMs(2500);
-#if defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP)	
-		gMenuListCount = 50;
-#elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
-		gMenuListCount = 50;		
-#elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP)		
-		gMenuListCount = 49;		
-#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP)		
-		gMenuListCount = 51;
-#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)		
-		gMenuListCount = 51;		
-#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP)		
-		gMenuListCount = 51;		
-#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && defined(ENABLE_ROGERBEEP)
-		gMenuListCount = 41;
-#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
-		gMenuListCount = 41;		
-#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) && !defined(ENABLE_ROGERBEEP)
-		gMenuListCount = 40;		
+#if defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) &&    \
+    defined(ENABLE_ROGERBEEP)
+    gMenuListCount = 50;
+#elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) &&  \
+    !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
+    gMenuListCount = 50;
+#elif defined(ENABLE_DTMF_CALLING) && !defined(ENABLE_STATUS_BATTERY_PERC) &&  \
+    !defined(ENABLE_ROGERBEEP)
+    gMenuListCount = 49;
+#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) &&   \
+    defined(ENABLE_ROGERBEEP)
+    gMenuListCount = 51;
+#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) &&   \
+    !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
+    gMenuListCount = 51;
+#elif defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) &&   \
+    !defined(ENABLE_ROGERBEEP)
+    gMenuListCount = 50;
+#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) &&  \
+    defined(ENABLE_ROGERBEEP) 
+    gMenuListCount = 40;
+#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) &&  \
+    defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
+    gMenuListCount = 40;
+#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) &&  \
+    !defined(ENABLE_ROGERBEEP) && defined(ENABLE_MDC)
+    gMenuListCount = 40;
+#elif !defined(ENABLE_DTMF_CALLING) && defined(ENABLE_STATUS_BATTERY_PERC) &&  \
+    !defined(ENABLE_ROGERBEEP)
+    gMenuListCount = 39;
 #else
-		gMenuListCount = 39;
-#endif	
+    gMenuListCount = 38;
+#endif
 #if defined(ENABLE_LCD_CONTRAST_OPTION)
-	gMenuListCount += 1;
+    gMenuListCount += 1;
 #endif
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
     gMenuListCount++;
 #endif
 #ifdef ENABLE_DOCK
+    gMenuListCount++;
+#endif
+#if defined(ENABLE_LCD_INVERT_OPTION)
     gMenuListCount++;
 #endif
 #if defined(ENABLE_SATCOM_AMP)
@@ -178,7 +190,7 @@ void Main(void) {
     gMenuListCount += 2;
 #ifdef ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION
     gMenuListCount++;
-#endif	
+#endif
 #ifdef ENABLE_MESSENGER_ENCRYPTION
     gMenuListCount += 2;
 #endif
@@ -205,8 +217,8 @@ void Main(void) {
     if (gNextTimeslice500ms) {
       APP_TimeSlice500ms();
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-	  CEC_TimeSlice500ms();
-#endif	  
+      CEC_TimeSlice500ms();
+#endif
       gNextTimeslice500ms = false;
     }
   }

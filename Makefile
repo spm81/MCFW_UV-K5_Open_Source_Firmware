@@ -9,6 +9,7 @@ TARGET = firmware
 ENABLE_AIRCOPY 										:= 0
 # 3856 bytes
 ENABLE_FMRADIO										:= 1
+ENABLE_FMRADIO_SMALL								:= 1
 # 84 bytes
 ENABLE_FLASHLIGHT_SOS       						:= 1
 ENABLE_UART                 						:= 1
@@ -28,10 +29,10 @@ ENABLE_ROGER_TPT						:= 1
 ENABLE_ROGER_MOTOTRBOT40				:= 1
 ENABLE_ROGER_MOTOTRBOTLKRT80			:= 1
 ENABLE_ROGER_ROGERCOBRAAM845			:= 1
-ENABLE_ROGER_POLICE_ITA					:= 0
+ENABLE_ROGER_POLICE_ITA					:= 1
 ENABLE_ROGER_UV5RC						:= 1
 ENABLE_ROGER_MARIO						:= 1
-ENABLE_MDC                  			:= 0
+ENABLE_MDC                  			:= 1
 
 #======================= MODIFICATIONS ======================#
 # AM Modulation Fix - 544 bytes
@@ -42,7 +43,7 @@ ENABLE_SQUELCH_MORE_SENSITIVE						:= 0
 ENABLE_SHOW_SQUELCH_LEVEL							:= 1
 # Restore FM in 1 second after RX - 0 bytes
 ENABLE_FMRADIO_FAST_RESTORE 						:= 1
-# Scan List Editor
+# Scan List Editor - 868 bytes
 ENABLE_SCANLIST										:= 1
 ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED 	:= 1
 # PTT-Hold - Press PTT to Start Transmit and Press again to STOP it
@@ -52,11 +53,11 @@ ENABLE_VOLTAGE_PERCENTAGE_WELCOME_MESSAGE			:= 1
 # Battery percentage - 296 bytes
 ENABLE_STATUS_BATTERY_PERC 				 			:= 1
 # Show current while charging - 136 bytes Thanks Tunas1337
-ENABLE_BATTERY_CHARGING								:= 0
+ENABLE_BATTERY_CHARGING								:= 1
 # Enable Bigger Battery Save - 20 bytes
 ENABLE_BIGGER_BATTERY_SAVE							:= 1
 # Invert LCD Colors
-ENABLE_LCD_INVERT_OPTION							:= 0 
+ENABLE_LCD_INVERT_OPTION							:= 1
 #ENABLE_LCD_CONTRAST_OPTION 			 			:= 0 # WIP
 # Mic Gain Bar while TXing - 255 bytes
 ENABLE_MIC_PLUS_GAIN_BAR_TX 						:= 1
@@ -68,9 +69,9 @@ ENABLE_FASTER_CHANNEL_SCAN  						:= 1
 # Enable Timeout beep at the end of timeout (TOT) - 44 bytes
 ENABLE_TIMEOUT_ROGERBEEP_NOTIFICATION				:= 1
 # Enable Amplifier for SATCOM
-#ENABLE_SATCOM_AMP									:= 1
+ENABLE_SATCOM_AMP									:= 0
 # CW Modulation
-ENABLE_CW                   						:= 1
+ENABLE_CW                   						:= 0
 
 #=============== EXTRA: MESSENGER ===============# 
 ENABLE_MESSENGER            				:= 1
@@ -88,7 +89,7 @@ ENABLE_MESSENGER_ROGERBEEP_NOTIFICATION 	:= 1
 
 # -------------- EXTRA: SPECTRUM --------------
 ENABLE_SPECTRUM            		 			:= 1
-ENABLE_SPECTRUM_NUNU           				:= 0
+#ENABLE_SPECTRUM_NUNU           			:= 0
 SPECTRUM_AUTOMATIC_SQUELCH  				:= 1
 SPECTRUM_EXTRA_VALUES       				:= 1
 # Apply fix to Spectrum - 40 bytes
@@ -96,7 +97,7 @@ ENABLE_AM_FIX_ON_SPECTRUM					:= 1
 # 3568 bytes
 ENABLE_ALL_REGISTERS        				:= 0
 # 0 bytes
-ENABLE_MATOZ_KEYS           				:= 1
+ENABLE_MATOZ_KEYS           				:= 0
 
 # https://github.com/nicsure/QuanshengDock
 # ---- EXTRA: DOCK ----
@@ -105,7 +106,7 @@ ENABLE_DOCK 	                  			:= 0
 
 # ----- LOGO: ON/OFF Thanks to PixelGirl
 # 1348 bytes
-ENABLE_LOGO									:= 0
+ENABLE_LOGO									:= 1
 
 #Thanks to KD8CEC for sharing his code / We have to check the code better, i just code & paste it to the right places...
 # 1476 bytes
@@ -358,6 +359,10 @@ ifeq ($(ENABLE_SQUELCH_MORE_SENSITIVE),1)
 endif
 ifeq ($(ENABLE_FMRADIO),1)
 	CFLAGS += -DENABLE_FMRADIO
+endif
+ifeq ($(ENABLE_FMRADIO_SMALL),1)
+	CFLAGS += -DENABLE_FMRADIO
+	CFLAGS += -DENABLE_FMRADIO_SMALL
 endif
 ifeq ($(ENABLE_FMRADIO_FAST_RESTORE),1)
 	CFLAGS += -DENABLE_FMRADIO_FAST_RESTORE

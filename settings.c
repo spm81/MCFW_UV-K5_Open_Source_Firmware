@@ -166,7 +166,7 @@ void SETTINGS_SaveSettings(void)
 	memset(State, 0xFF, sizeof(State));
 	State[0] = gEeprom.MESSENGER_CONFIG.__val;
 	#endif
-	EEPROM_WriteBufferMCFW(0x1BAA, State, 5);
+	EEPROM_WriteBuffer(0x1BAA, State);
 
 	State[0] = 0xFF;
 #if defined(ENABLE_ROGER_DEFAULT) || defined(ENABLE_ROGER_MOTOTRBO) || defined(ENABLE_ROGER_TPT) || defined(ENABLE_ROGER_MOTOTRBOT40) || defined(ENABLE_ROGER_MOTOTRBOTLKRT80) || defined(ENABLE_ROGER_ROGERCOBRAAM845) || defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) || defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)

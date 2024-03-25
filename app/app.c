@@ -400,7 +400,7 @@ void APP_StartListening(FUNCTION_Type_t Function, const bool resetAmFix) {
           (gEeprom.VOLUME_GAIN << 4) | // AF Rx Gain-2
           (gEeprom.DAC_GAIN << 0));    // AF DAC Gain (after Gain-1 and Gain-2)
 
-  BK4819_SetModulation(gRxVfo->ModulationType);
+  RADIO_SetModulation(gRxVfo->ModulationType);
 
   FUNCTION_Select(Function);
 
@@ -943,7 +943,20 @@ void APP_CheckKeys(void) {
   }
 }
 
+static bool lcd_initialized = false;
+
 void APP_TimeSlice10ms(void) {
+
+#ifdef ENABLE_LCD_INVERT_OPTION
+if (gSetting_LCD_Inverter && !lcd_initialized) {
+    ST7565_Init();
+    lcd_initialized = true;
+} else if (!gSetting_LCD_Inverter && lcd_initialized) {
+    ST7565_Init();
+    lcd_initialized = false; // Redefinir apenas quando gSetting_LCD_Inverter for falso
+}
+#endif
+
 #if defined(ENABLE_MISSED_CALL_NOTIFICATION_AND_BLINKING_LED)
   if (gSetting_Missed_Call_NBL) {
     gFlashLightNotifCounter++;
@@ -1579,14 +1592,14 @@ static void APP_ProcessKey(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
 
   bFlag = false;
 
-    if (gPttWasPressed && Key == KEY_PTT) {
-      bFlag = bKeyHeld;
-                if (!bKeyPressed) {
-        bFlag = true;
-        gPttWasPressed = false;
-      }
+  if (gPttWasPressed && Key == KEY_PTT) {
+    bFlag = bKeyHeld;
+    if (!bKeyPressed) {
+      bFlag = true;
+      gPttWasPressed = false;
     }
-  
+  }
+
   if (gPttWasReleased && Key != KEY_PTT) {
     if (bKeyHeld) {
       bFlag = true;

@@ -108,7 +108,10 @@ void ACTION_Scan(bool bRestart) {
           Frequency = gEeprom.FM_FrequencyPlaying;
         }
         BK1080_GetFrequencyDeviation(Frequency);
+        #ifdef ENABLE_FMRADIO_SMALL
+        #else
         FM_Tune(Frequency, 1, bRestart);
+        #endif
       }
     }
   } else

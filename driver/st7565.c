@@ -27,7 +27,7 @@ uint8_t gStatusLine[128];
 uint8_t gFrameBuffer[7][128];
 
 #ifdef ENABLE_LCD_CONTRAST_OPTION
-	uint8_t contrast = 31;  // 0 ~ 63
+uint8_t contrast = 31; // 0 ~ 63
 #endif
 
 void ST7565_DrawLine(uint8_t Column, uint8_t Line, uint16_t Size,
@@ -60,25 +60,28 @@ void ST7565_DrawLine(uint8_t Column, uint8_t Line, uint16_t Size,
 
 #if defined(ENABLE_LOGO)
 
-void ST7565_DrawFullScreenBitmap(const uint8_t *pBitmap){
-	unsigned int i;
+void ST7565_DrawFullScreenBitmap(const uint8_t *pBitmap) {
+  unsigned int i;
 
-	// reset some of the displays settings to try and overcome the radios hardware problem - RF corrupting the display
-	ST7565_Init();
-	SPI_ToggleMasterMode(&SPI0->CR, false);
+  // reset some of the displays settings to try and overcome the radios hardware
+  // problem - RF corrupting the display
+  ST7565_Init();
+  SPI_ToggleMasterMode(&SPI0->CR, false);
 
-	for (i = 0; i < 8; i++){
-		unsigned int j;
-		ST7565_SelectColumnAndLine(0, i);
-		GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_A0);
-		for (j = 0; j < 128; j++){
-			while ((SPI0->FIFOST & SPI_FIFOST_TFF_MASK) != SPI_FIFOST_TFF_BITS_NOT_FULL) {}
-			SPI0->WDR = pBitmap[j * 8 + i];
-		}
-		SPI_WaitForUndocumentedTxFifoStatusBit();
-	}
+  for (i = 0; i < 8; i++) {
+    unsigned int j;
+    ST7565_SelectColumnAndLine(0, i);
+    GPIO_SetBit(&GPIOB->DATA, GPIOB_PIN_ST7565_A0);
+    for (j = 0; j < 128; j++) {
+      while ((SPI0->FIFOST & SPI_FIFOST_TFF_MASK) !=
+             SPI_FIFOST_TFF_BITS_NOT_FULL) {
+      }
+      SPI0->WDR = pBitmap[j * 8 + i];
+    }
+    SPI_WaitForUndocumentedTxFifoStatusBit();
+  }
 
-	SPI_ToggleMasterMode(&SPI0->CR, true);
+  SPI_ToggleMasterMode(&SPI0->CR, true);
 }
 #endif
 
@@ -150,19 +153,23 @@ void ST7565_Init(void) {
   ST7565_WriteByte(0xA2);
   ST7565_WriteByte(0xC0);
   ST7565_WriteByte(0xA1);
-  #ifdef ENABLE_LCD_INVERT_OPTION  
-	ST7565_WriteByte(0xA7); // 0xA6: Normal; 0xA7: Invert Contrast;
-  #else
-	ST7565_WriteByte(0xA6); // 0xA6: Normal; 0xA7: Invert Contrast;
-  #endif
+#ifdef ENABLE_LCD_INVERT_OPTION
+  if (gSetting_LCD_Inverter) {
+    ST7565_WriteByte(0xA7); // 0xA6: Normal; 0xA7: Invert Contrast;
+  } else {
+    ST7565_WriteByte(0xA6); // 0xA6: Normal; 0xA7: Invert Contrast;
+  }
+#else
+  ST7565_WriteByte(0xA6); // 0xA6: Normal; 0xA7: Invert Contrast;
+#endif
   ST7565_WriteByte(0xA4);
   ST7565_WriteByte(0x24);
   ST7565_WriteByte(0x81);
-  #ifdef ENABLE_LCD_CONTRAST_OPTION
-		ST7565_WriteByte(contrast);  // brightness 0 ~ 63
-	#else
-		ST7565_WriteByte(31);        // brightness 0 ~ 63
-	#endif
+#ifdef ENABLE_LCD_CONTRAST_OPTION
+  ST7565_WriteByte(contrast); // brightness 0 ~ 63
+#else
+  ST7565_WriteByte(31); // brightness 0 ~ 63
+#endif
   ST7565_WriteByte(0x2B);
   SYSTEM_DelayMs(1);
   ST7565_WriteByte(0x2E);
@@ -210,13 +217,9 @@ void ST7565_WriteByte(uint8_t Value) {
 }
 
 #ifdef ENABLE_LCD_CONTRAST_OPTION
-	void ST7565_SetContrast(const uint8_t value)
-	{
-		contrast = (value > 45) ? 45 : (value < 26) ? 26 : value;
-	}
+void ST7565_SetContrast(const uint8_t value) {
+  contrast = (value > 45) ? 45 : (value < 26) ? 26 : value;
+}
 
-	uint8_t ST7565_GetContrast(void)
-	{
-		return contrast;
-	}
+uint8_t ST7565_GetContrast(void) { return contrast; }
 #endif

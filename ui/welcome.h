@@ -24,7 +24,6 @@ void UI_DisplayVersionFM(void);
 #if defined(ENABLE_LOGO)
 void UI_DisplayWelcomeBitmap(void);
 #endif
-void UI_Matoz(void);
 
 #endif
 

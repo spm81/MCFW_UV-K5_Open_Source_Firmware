@@ -16,8 +16,10 @@
 
 #ifndef SPECTRUM_H
 #define SPECTRUM_H
-
+#ifdef ENABLE_AM_FIX_ON_SPECTRUM
 #include "../am_fix.h"
+#include "app.h"
+#endif
 #include "../app/finput.h"
 #include "../app/uart.h"
 #include "../bitmaps.h"

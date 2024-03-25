@@ -791,6 +791,7 @@ void MSG_Init()
 	memset(cMessage, 0, sizeof(cMessage));
 	memset(lastcMessage, 0, sizeof(lastcMessage));
 	hasNewMessage = false;
+	gScheduleDualWatch = false;
 	msgStatus = READY;
 	prevKey = 0;
 	prevLetter = 0;

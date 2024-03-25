@@ -53,6 +53,7 @@ void EEPROM_WriteBuffer(uint16_t Address, const void *pBuffer)
 	SYSTEM_DelayMs(10);
 }
 
+/*
 void EEPROM_WriteBufferMCFW(uint16_t Address, const void *pBuffer, uint8_t Size)
 
 {
@@ -69,3 +70,4 @@ void EEPROM_WriteBufferMCFW(uint16_t Address, const void *pBuffer, uint8_t Size)
 
 	SYSTEM_DelayMs(10);
 }
+*/

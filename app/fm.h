@@ -26,6 +26,32 @@ enum {
 	FM_SCAN_OFF = 0U,
 };
 
+#ifdef ENABLE_FMRADIO_SMALL
+extern uint16_t gFM_Channels[20];
+
+extern volatile uint16_t gFmPlayCountdown;
+
+extern bool gFmRadioMode;
+extern uint8_t gFmRadioCountdown;
+
+extern volatile int8_t gFM_ScanState;
+extern bool gFM_AutoScan;
+extern uint8_t gFM_ChannelPosition;
+extern uint8_t gFM_ResumeCountdown;
+extern uint16_t gFM_RestoreCountdown;
+
+uint8_t FM_FindNextChannel(uint8_t Channel, uint8_t Direction);
+int FM_ConfigureChannelState(void);
+
+void FM_EraseChannels(void);
+void FM_TurnOff(void);
+
+void FM_PlayAndUpdate(void);
+void FM_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld);
+void FM_Play(void);
+void FM_Start(void);
+
+#else
 extern uint16_t gFM_Channels[20];
 extern bool gFmRadioMode;
 extern uint8_t gFmRadioCountdown;
@@ -39,7 +65,12 @@ extern bool gFM_FoundFrequency;
 extern bool gFM_AutoScan;
 extern uint8_t gFM_ResumeCountdown;
 extern uint16_t gFM_RestoreCountdown;
+#endif
 
+
+
+#ifdef ENABLE_FMRADIO_SMALL
+#else
 bool FM_CheckValidChannel(uint8_t Channel);
 uint8_t FM_FindNextChannel(uint8_t Channel, uint8_t Direction);
 int FM_ConfigureChannelState(void);
@@ -56,4 +87,4 @@ void FM_Play(void);
 void FM_Start(void);
 
 #endif
-
+#endif

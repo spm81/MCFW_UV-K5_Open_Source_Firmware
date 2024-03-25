@@ -766,11 +766,13 @@ void RADIO_SetupAGC(bool listeningAM, bool disable)
 
 	if(!listeningAM) { // if not actively listening AM we don't need any AM specific regulation
 		BK4819_SetAGC(!disable);
-		BK4819_SetAGC(0);
+		//BK4819_SetAGC(0);
+    		BK4819_InitAGC();
 	}
 	else {
 		BK4819_SetAGC(!disable);
-		BK4819_SetAGC(0);
+		//BK4819_SetAGC(0);
+    		BK4819_InitAGC();
 	}
 }
 

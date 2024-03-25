@@ -146,6 +146,9 @@ int MENU_GetLimits(uint8_t Cursor, uint8_t *pMin, uint8_t *pMax) {
 #if defined(ENABLE_PTT_HOLD)
   case MENU_PTT_HOLD:
 #endif
+#if defined(ENABLE_LCD_INVERT_OPTION)
+  case MENU_LCD_INVERTER:
+#endif
 #if defined(ENABLE_SATCOM_AMP)
   case MENU_SATCOM_AMP:
 #endif
@@ -415,6 +418,11 @@ void MENU_AcceptSetting(void) {
   case MENU_REMOTE_UI:
     gSetting_Remote_UI = gSubMenuSelection;
     break;
+#endif
+#if defined(ENABLE_LCD_INVERT_OPTION)
+  case MENU_LCD_INVERTER:
+  gSetting_LCD_Inverter = gSubMenuSelection;
+  break;
 #endif
 #if defined(ENABLE_SATCOM_AMP)
   case MENU_SATCOM_AMP:
@@ -826,6 +834,11 @@ void MENU_ShowCurrentSetting(void) {
   case MENU_REMOTE_UI:
     gSubMenuSelection = gSetting_Remote_UI;
     break;
+#endif
+#if defined(ENABLE_LCD_INVERT_OPTION)
+  case MENU_LCD_INVERTER:
+  gSubMenuSelection = gSetting_LCD_Inverter;
+  break;
 #endif
 #if defined(ENABLE_SATCOM_AMP)
   case MENU_SATCOM_AMP:

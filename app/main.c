@@ -149,14 +149,14 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     ACTION_FM();
 #endif
 
-/*
-#ifdef ENABLE_MESSENGER
-  hasNewMessage = false;
-  gUpdateStatus = true;
-	gRequestDisplayScreen = DISPLAY_MAIN;
-  gAppToDisplay = APP_MESSENGER;  
-#endif	
-*/
+    /*
+    #ifdef ENABLE_MESSENGER
+      hasNewMessage = false;
+      gUpdateStatus = true;
+            gRequestDisplayScreen = DISPLAY_MAIN;
+      gAppToDisplay = APP_MESSENGER;
+    #endif
+    */
     break;
 
   case KEY_1:
@@ -230,6 +230,9 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     if (vfoInfo->AM_CHANNEL_MODE == MOD_RAW) {
       vfoInfo->AM_CHANNEL_MODE = MOD_FM;
     } else {
+      if (gRxVfo->ModulationType == MOD_AM) {
+        BK4819_SetDefaultAmplifierSettings();
+      }
       vfoInfo->AM_CHANNEL_MODE++;
     }
     gRequestSaveChannel = 1;
@@ -330,39 +333,37 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld) {
   }
   if (gInputBoxIndex) {
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
-	//KD8CEC. ianlee 
-        if (!bKeyHeld && bKeyPressed)
-        {
-            gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
+    // KD8CEC. ianlee
+    if (!bKeyHeld && bKeyPressed) {
+      gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
 
-            if (gScanState == SCAN_OFF)
-            {
-                if (gInputBoxIndex == 0)
-                    return;
+      if (gScanState == SCAN_OFF) {
+        if (gInputBoxIndex == 0)
+          return;
 
-                if (gInputBoxIndex < 3 || (gTxVfo->pRX->Frequency >= 100000000 && gInputBoxIndex < 4))
-                {
-                    int pointDepth = gTxVfo->pRX->Frequency >= 100000000 /* 1 GHz in KHz*/ ? 4 : 3;
+        if (gInputBoxIndex < 3 ||
+            (gTxVfo->pRX->Frequency >= 100000000 && gInputBoxIndex < 4)) {
+          int pointDepth =
+              gTxVfo->pRX->Frequency >= 100000000 /* 1 GHz in KHz*/ ? 4 : 3;
 
-                    //0123
-                    //2__.__
-                    for (int i = gInputBoxIndex -1; i >= 0; i--)
-                        gInputBox[i + (pointDepth - gInputBoxIndex)] = gInputBox[i];
+          // 0123
+          // 2__.__
+          for (int i = gInputBoxIndex - 1; i >= 0; i--)
+            gInputBox[i + (pointDepth - gInputBoxIndex)] = gInputBox[i];
 
-                    for (int i = 0; i < pointDepth - gInputBoxIndex; i++)
-                        gInputBox[i] =0;
+          for (int i = 0; i < pointDepth - gInputBoxIndex; i++)
+            gInputBox[i] = 0;
 
-                    gInputBoxIndex = pointDepth;
-                }
-
-            }           
+          gInputBoxIndex = pointDepth;
         }
-        //end of ianlee for easy input frequency	  
-#else	  
+      }
+    }
+    // end of ianlee for easy input frequency
+#else
     if (!bKeyHeld && bKeyPressed) {
       gBeepToPlay = BEEP_500HZ_60MS_DOUBLE_BEEP_OPTIONAL;
     }
-    #endif	  
+#endif
     return;
   }
   if (bKeyHeld || !bKeyPressed) {
@@ -377,12 +378,12 @@ static void MAIN_Key_STAR(bool bKeyPressed, bool bKeyHeld) {
       return;
     }
     if (gScanState == SCAN_OFF && IS_NOT_NOAA_CHANNEL(gTxVfo->CHANNEL_SAVE)) {
-#ifdef ENABLE_DTMF_CALLING 		
+#ifdef ENABLE_DTMF_CALLING
       gDTMF_InputMode = true;
       memcpy(gDTMF_InputBox, gDTMF_String, 15);
       gDTMF_InputIndex = 0;
-      
-#endif	  
+
+#endif
       gRequestDisplayScreen = DISPLAY_MAIN;
       return;
     }
@@ -439,9 +440,9 @@ static void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld,
       if (IS_FREQ_CHANNEL(Channel)) {
         APP_SetFrequencyByStep(gTxVfo, Direction);
         gRequestSaveChannel = 1;
-#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD		
-		CEC_ApplyChangeRXFreq(11 + Direction);
-#endif						
+#ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
+        CEC_ApplyChangeRXFreq(11 + Direction);
+#endif
         return;
       }
       Next = RADIO_FindNextChannel(Channel + Direction, Direction, false, 0);
@@ -471,7 +472,7 @@ void MAIN_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
     return;
   }
 #endif
-#ifdef ENABLE_DTMF_CALLING 
+#ifdef ENABLE_DTMF_CALLING
   if (gDTMF_InputMode && !bKeyHeld && bKeyPressed) {
     char Character = DTMF_GetCharacter(Key);
     if (Character != 0xFF) {

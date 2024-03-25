@@ -31,8 +31,9 @@
 #include "settings.h"
 #include "ui/menu.h"
 #include "ui/ui.h"
-
+#include "ui/welcome.h"
 #include "../driver/eeprom.h"
+#include <stdio.h>
 
 BOOT_Mode_t BOOT_GetMode(void) {
   KEY_Code_t Keys[2];
@@ -71,7 +72,10 @@ BOOT_Mode_t BOOT_GetMode(void) {
     return BOOT_MODE_NORMAL;
     }
     */
-    ////Erase Password Lock & Messenger
+
+
+    
+      ////Erase Password Lock & Messenger
     if (Keys[0] == KEY_MENU) {
       char String[16];
       memset(String, 0, sizeof(String));
@@ -95,14 +99,14 @@ BOOT_Mode_t BOOT_GetMode(void) {
 
       // for (int i = 0x2000; i <= 0x10000; i += 16) {
       for (int i = 0x1D20; i <= 0x1D30; i += 16) {
-               EEPROM_WriteBuffer(i, data);
+        EEPROM_WriteBuffer(i, data);
       }
-EEPROM_WriteBuffer(0x0E98, "\xff\xff\xff\xff");
+      EEPROM_WriteBuffer(0x0E98, "\xff\xff\xff\xff");
 
-          NVIC_SystemReset();
+      NVIC_SystemReset();
     }
-  }
-return BOOT_MODE_NORMAL;
+      }
+  return BOOT_MODE_NORMAL;
 }
 
 void BOOT_ProcessMode(BOOT_Mode_t Mode) {
@@ -178,8 +182,7 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode) {
     defined(ENABLE_ROGER_MOTOTRBOTLKRT80) ||                                   \
     defined(ENABLE_ROGER_ROGERCOBRAAM845) ||                                   \
     defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) ||         \
-    defined(ENABLE_ROGER_MARIO) ||                                             \
-    defined(ENABLE_MDC)
+    defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
     gMenuListCount = 55;
 #elif defined(ENABLE_LCD_CONTRAST_OPTION)
     gMenuListCount++;
@@ -192,8 +195,7 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode) {
     defined(ENABLE_ROGER_MOTOTRBOTLKRT80) ||                                   \
     defined(ENABLE_ROGER_ROGERCOBRAAM845) ||                                   \
     defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) ||         \
-    defined(ENABLE_ROGER_MARIO) ||                                             \
-    defined(ENABLE_MDC)
+    defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
     gMenuListCount = 54;
 #elif defined(ENABLE_LCD_CONTRAST_OPTION)
     gMenuListCount++;
@@ -207,8 +209,7 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode) {
     defined(ENABLE_ROGER_MOTOTRBOTLKRT80) ||                                   \
     defined(ENABLE_ROGER_ROGERCOBRAAM845) ||                                   \
     defined(ENABLE_ROGER_POLICE_ITA) || defined(ENABLE_ROGER_UV5RC) ||         \
-    defined(ENABLE_ROGER_MARIO) ||                                             \
-    defined(ENABLE_MDC) 
+    defined(ENABLE_ROGER_MARIO) || defined(ENABLE_MDC)
     gMenuListCount = 46;
 #elif defined(ENABLE_LCD_CONTRAST_OPTION)
     gMenuListCount++;
@@ -220,6 +221,9 @@ void BOOT_ProcessMode(BOOT_Mode_t Mode) {
 #ifdef ENABLE_LIVESEEK_MHZ_KEYPAD
 #endif
 #ifdef ENABLE_DOCK
+    gMenuListCount++;
+#endif
+#if defined(ENABLE_LCD_INVERT_OPTION)
     gMenuListCount++;
 #endif
 #if defined(ENABLE_SATCOM_AMP)

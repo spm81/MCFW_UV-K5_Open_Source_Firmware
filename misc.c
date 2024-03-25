@@ -151,6 +151,9 @@ bool gSetting_Missed_Call_NBL = false;
 bool gSetting_Ptt_Hold = false;
 #endif
 
+#if defined(ENABLE_LCD_INVERT_OPTION)
+bool gSetting_LCD_Inverter = false;
+#endif
 #if defined(ENABLE_SATCOM_AMP)
 bool gSetting_Satcom_Amp = false;
 #endif

@@ -100,6 +100,9 @@ enum {
 #ifdef ENABLE_DOCK
 	MENU_REMOTE_UI,
 #endif	
+#if defined(ENABLE_LCD_INVERT_OPTION)
+	MENU_LCD_INVERTER,
+#endif	
 #if defined(ENABLE_SATCOM_AMP)
 	MENU_SATCOM_AMP,
   #endif

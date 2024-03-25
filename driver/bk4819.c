@@ -279,6 +279,12 @@ void BK4819_SetAGC(uint8_t Value) {
   }
 */
 
+void BK4819_SetDefaultAmplifierSettings()
+{
+	BK4819_WriteRegister(BK4819_REG_13, 0x03BE);
+}
+
+
 void BK4819_SetAGC(uint8_t Value) {
   uint16_t regVal = BK4819_ReadRegister(BK4819_REG_7E);
   uint16_t enable = (Value != 0);
@@ -294,6 +300,63 @@ void BK4819_SetAGC(uint8_t Value) {
                            (regVal & ~(1 << 15) & ~(0b111 << 12)));
     }
   }
+}
+
+void BK4819_InitAGC()
+{
+	// REG_10, REG_11, REG_12 REG_13, REG_14
+	//
+	// Rx AGC Gain Table[]. (Index Max->Min is 3,2,1,0,-1)
+	//
+	// <15:10> ???
+	//
+	// <9:8>   LNA Gain Short 
+	//         3 =   0dB  <<<		1o11				read from spectrum			reference manual
+	//         2 = 					-24dB  				-19     					 -11
+	//         1 = 					-30dB  				-24     					 -16
+	//         0 = 					-33dB  				-28     					 -19
+	//
+	// <7:5>   LNA Gain
+	//         7 =   0dB
+	//         6 =  -2dB
+	//         5 =  -4dB
+	//         4 =  -6dB
+	//         3 =  -9dB
+	//         2 = -14dB <<<
+	//         1 = -19dB
+	//         0 = -24dB
+	//
+	// <4:3>   MIXER Gain
+	//         3 =   0dB <<<
+	//         2 =  -3dB
+	//         1 =  -6dB
+	//         0 =  -8dB
+	//
+	// <2:0>   PGA Gain
+	//         7 =   0dB
+	//         6 =  -3dB <<<
+	//         5 =  -6dB
+	//         4 =  -9dB
+	//         3 = -15dB
+	//         2 = -21dB
+	//         1 = -27dB
+	//         0 = -33dB
+	//
+
+	BK4819_SetDefaultAmplifierSettings();         // 0x03BE / 000000 11 101 11 110 /  -7dB
+
+	BK4819_WriteRegister(BK4819_REG_12, 0x037B);  // 0x037B / 000000 11 011 11 011 / -24dB
+	BK4819_WriteRegister(BK4819_REG_11, 0x027B);  // 0x027B / 000000 10 011 11 011 / -43dB
+	BK4819_WriteRegister(BK4819_REG_10, 0x007A);  // 0x007A / 000000 00 011 11 010 / -58dB
+	BK4819_WriteRegister(BK4819_REG_14, 0x0019);  // 0x0019 / 000000 00 000 11 001 / -79dB
+	//30, 10 - doesn't overload but sound low
+	//50, 10 - best so far
+	//50, 15, - SOFT - signal doesn't fall too low - works best for now
+	//45, 25 - AGRESSIVE - lower histeresis, but volume jumps heavily, not good for music, might be good for aviation
+	//1 << 14 - way better, seems to open squelch and match squelch as opposed to 0
+	BK4819_WriteRegister(BK4819_REG_49, (0b00 << 14) | (50 << 7) | (15 << 0)); //0x2A38 / 00 1010100 0111000 / 84, 56
+	BK4819_WriteRegister(BK4819_REG_7B, 0x8420);
+
 }
 
 void BK4819_ToggleGpioOut(BK4819_GPIO_PIN_t Pin, bool bSet) {
@@ -417,15 +480,15 @@ void BK4819_SetupPowerAmplifier(uint16_t Bias, uint32_t Frequency) {
   }
 
 
- if (Frequency < 28000000) {
-    // Gain 1 = 1
-    // Gain 2 = 0
-    Gain = 0x08U;
-  } else {
-    // Gain 1 = 4
-    // Gain 2 = 2
-    Gain = 0x22U;
-  }
+    if (Frequency < 28000000) {
+        // Gain 1 = 1
+        // Gain 2 = 0
+        Gain = 0x08U;
+    } else {
+        // Gain 1 = 4
+        // Gain 2 = 2
+        Gain = 0x22U;
+    }
 
   // Enable PACTLoutput
   BK4819_WriteRegister(BK4819_REG_36, (Bias << 8) | 0x80U | Gain);
@@ -517,7 +580,7 @@ void BK4819_SetRegValue(RegisterSpec s, uint16_t v) {
 
 #ifdef ENABLE_CW
 
-void BK4819_SetModulation(ModulationType type) {
+void RADIO_SetModulation(ModulationType type) {
   const uint8_t modTypeReg47Values[] = {1, 7, 5,
                                         9, 4, 8}; // Added value for MOD_CW
 
@@ -531,7 +594,7 @@ void BK4819_SetModulation(ModulationType type) {
   BK4819_SetRegValue(afcDisableRegSpec, (type != MOD_FM) && (type != MOD_CW));
 }
 #else
-void BK4819_SetModulation(ModulationType type) {
+void RADIO_SetModulation(ModulationType type) {
   const uint8_t modTypeReg47Values[] = {1, 7, 5, 9, 4};
 
   BK4819_SetAF(modTypeReg47Values[type]);

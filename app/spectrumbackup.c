@@ -15,11 +15,15 @@
  */
 
 #include "../app/spectrum.h"
+#include "../app/main.h"
+#include "../helper/battery.h"
 #include "finput.h"
 #include <string.h>
 #define F_MIN FrequencyBandTable[0].lower
 #define F_MAX FrequencyBandTable[ARRAY_SIZE(FrequencyBandTable) - 1].upper
-
+#ifdef ENABLE_AM_FIX_ON_SPECTRUM
+#include "../am_fix.h"
+#endif
 #include "../driver/eeprom.h"
 
 const uint16_t RSSI_MAX_VALUE = 65535;
@@ -36,9 +40,8 @@ bool preventKeypress = true;
 
 bool isListening = false;
 bool isTransmitting = false;
-#ifdef ENABLE_AM_FIX_ON_SPECTRUM
 bool lockAGC = false;
-#endif
+
 State currentState = SPECTRUM, previousState = SPECTRUM;
 
 PeakInfo peak;
@@ -55,7 +58,8 @@ SpectrumSettings settings = {
     .rssiTriggerLevel = 150,
     .backlightState = true,
     .listenBw = BK4819_FILTER_BW_WIDE,
-    .modulationType = MOD_FM,
+    // .modulationType = MOD_FM,
+    .modulationType = false,
     .delayUS = 2500,
 };
 
@@ -283,7 +287,7 @@ static void ToggleRX(bool on) {
   if (on) {
     ToggleTX(false);
   }
-  // RADIO_SetupAGC(on, lockAGC);
+  RADIO_SetupAGC(on, lockAGC);
   BK4819_ToggleGpioOut(BK4819_GPIO0_PIN28_GREEN, on);
   BK4819_RX_TurnOn();
 
@@ -615,6 +619,8 @@ static void UpdateFreqChangeStep(bool inc) {
 }
 
 static void ToggleModulation() {
+  RADIO_SetModulation(settings.modulationType);
+
   if (settings.modulationType == MOD_RAW) {
     settings.modulationType = MOD_FM;
   } else {
@@ -622,14 +628,13 @@ static void ToggleModulation() {
   }
 #ifdef ENABLE_AM_FIX_ON_SPECTRUM
   if (settings.modulationType == MOD_AM) {
-    BK4819_InitAGC(false);
+    // BK4819_InitAGC(false);
     AM_fix_init();
-    APP_StartListening(FUNCTION_RECEIVE, true);
   }
 #endif
   RADIO_SetModulation(settings.modulationType);
-  RelaunchScan();
 
+  RelaunchScan();
   redrawScreen = true;
 }
 
@@ -785,7 +790,7 @@ static void DrawF(uint32_t f) {
   }
 #endif
   sprintf(String, "%u.%05u", f / 100000, f % 100000);
-  UI_PrintStringSmallBold(String, 8, 127, 0);
+  UI_PrintStringSmall(String, 8, 127, 0);
 
   sprintf(String, "%3s", modulationTypeOptions[settings.modulationType]);
   UI_PrintStringSmallest(String, 116, 1, false, true);
@@ -1472,11 +1477,9 @@ static void UpdateListening() {
   if (!isListening) {
     ToggleRX(true);
   }
-#ifdef ENABLE_AM_FIX_ON_SPECTRUM
   if (listenT % 10 == 0) {
     AM_fix_10ms(0);
   }
-#endif
   if (listenT) {
     listenT--;
     SYSTEM_DelayMs(1);
@@ -1501,9 +1504,8 @@ static void UpdateListening() {
   }
 
   peak.rssi = scanInfo.rssi;
-#ifdef ENABLE_AM_FIX_ON_SPECTRUM
   AM_fix_reset(0);
-#endif
+
   MoveHistory();
 
   if (IsPeakOverLevel() || monitorMode) {
@@ -1528,8 +1530,8 @@ static void Tick() {
      AM_fix_10ms(gEeprom.RX_CHANNEL);
  */
 
-  if (gNextTimeslice) {
-    gNextTimeslice = true;
+  if (gNextTimeslice500ms) {
+    gNextTimeslice500ms = true;
     if (gRxVfo->ModulationType == MOD_AM && !lockAGC) {
       AM_fix_10ms(gEeprom.RX_CHANNEL); // allow AM_Fix to apply its AGC action
     }

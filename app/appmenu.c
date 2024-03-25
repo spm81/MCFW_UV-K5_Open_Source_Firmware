@@ -17,7 +17,7 @@ void APPMENU_ProcessKeys(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld) {
 	  break;
 
   case KEY_0:
-	UI_DisplayWelcome();
+	  UI_DisplayWelcome();
     //gRequestDisplayScreen = DISPLAY_MAIN;
 	  break;
 #ifdef ENABLE_SCANLIST
